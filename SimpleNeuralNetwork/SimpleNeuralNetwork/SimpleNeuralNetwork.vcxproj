@@ -111,10 +111,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Connection.h" />
     <ClInclude Include="NeuralNetwork.h" />
+    <ClInclude Include="NeutralNode.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="NodeLayer.h" />
+    <ClInclude Include="RELUNode.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Connection.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
+    <ClCompile Include="NeutralNode.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="NodeLayer.cpp" />
+    <ClCompile Include="RELUNode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
