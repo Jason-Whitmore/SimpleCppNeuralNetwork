@@ -12,6 +12,10 @@ class NodeLayer {
 		void setNodes(std::vector<Node> n);
 		void addNode(Node n);
 
+		void forwardCompute();
+		void backwardCompute();
+
+
 	private:
 		std::vector<Node> nodes;
 };
