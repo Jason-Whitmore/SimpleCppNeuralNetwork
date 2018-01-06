@@ -11,7 +11,20 @@ NeuralNetwork::~NeuralNetwork(){
 }
 
 Node NeuralNetwork::pickRandomNode() {
-	int numberOfLayers = layers.size();
+	int nodeNumber = Helper::randomNumber(0, nodeCount());
+	
+	int currentNode = 0;
+	for (int l = 0; l < layers.size(); l++) {
+		
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+			if (currentNode != nodeNumber) {
+				currentNode++;
+			} else {
+				return layers[l].getNodes()[n];
+			}
+		}
+
+	}
 	
 
 }
