@@ -2,7 +2,8 @@
 #include "Node.h"
 #include "NodeLayer.h"
 #include "Connection.h"
-
+#include "Helper.h"
+#include <iostream>
 class NeuralNetwork {
 	public:
 		NeuralNetwork();

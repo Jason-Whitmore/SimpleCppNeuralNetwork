@@ -53,3 +53,4 @@ void NodeLayer::forwardCompute() {
 void NodeLayer::backwardCompute() {
 
 }
+
