@@ -23,6 +23,7 @@ class Node {
 
 
 
+
 	private:
 	std::vector<Connection> inputs;
 	std::vector<Connection> outputs;

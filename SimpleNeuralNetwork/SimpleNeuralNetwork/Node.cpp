@@ -48,4 +48,3 @@ void Node::changeNeutralStatus() {
 bool Node::isNeutral() {
 	return Neutral;
 }
-

@@ -12,7 +12,9 @@ NeuralNetwork::~NeuralNetwork(){
 }
 
 Node NeuralNetwork::pickRandomNode() {
-	return Node();
+	int numberOfLayers = layers.size();
+
+
 }
 
 

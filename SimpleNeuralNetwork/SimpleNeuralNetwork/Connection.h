@@ -1,14 +1,21 @@
 #pragma once
 class Connection {
-	class Node;
 
 	public:
-	Connection();
-	~Connection();
+		Connection();
+		~Connection();
+
+
+		void setValue(double v);
+		double getValue();
+
+		void setWeight(double w);
+		double getWeight();
 
 	private:
-		Node* start;
-		Node* destination;
+
+		double value;
+		double weight;
 		
 
 };
