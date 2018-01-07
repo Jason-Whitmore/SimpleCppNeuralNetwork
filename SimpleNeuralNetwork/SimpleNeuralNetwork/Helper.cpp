@@ -16,3 +16,7 @@ double Helper::randomNumber(double a, double b) {
 	return a + (rand() / ((double)RAND_MAX)) * (b-a);
 }
 
+double Helper::calculateLoss(double value, double target) {
+	return 0.0;
+}
+

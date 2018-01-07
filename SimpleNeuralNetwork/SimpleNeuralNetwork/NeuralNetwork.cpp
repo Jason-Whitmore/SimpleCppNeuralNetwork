@@ -41,6 +41,23 @@ unsigned long long NeuralNetwork::connectionCount() {
 	return connections;
 }
 
+double NeuralNetwork::calculateCurrentLoss() {
+
+
+}
+
+void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
+
+}
+
+void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
+
+}
+
+void NeuralNetwork::gradientDescentTraining(int iterations) {
+
+}
+
 
 
 
