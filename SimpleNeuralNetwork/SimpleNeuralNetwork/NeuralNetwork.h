@@ -7,6 +7,7 @@
 class NeuralNetwork {
 	public:
 		NeuralNetwork();
+		NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer);
 		~NeuralNetwork();
 
 		Node pickRandomNode();
