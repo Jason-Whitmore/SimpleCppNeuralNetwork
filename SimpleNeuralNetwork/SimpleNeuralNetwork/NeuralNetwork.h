@@ -16,11 +16,20 @@ class NeuralNetwork {
 		unsigned long long nodeCount();
 		unsigned long long connectionCount();
 
+		std::vector<std::vector<double>> getTrainingInputs();
+		std::vector<std::vector<double>> getTrainingOutputs();
+
+		void setTrainingInputs(std::vector<std::vector<double>> i);
+		void setTrainingOutputs(std::vector<std::vector<double>> o);
+
+
 		double calculateCurrentLoss();
 
 		void gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize);
 		void gradientDescentTraining(double targetLoss, int iterations);
 		void gradientDescentTraining(int iterations);
+
+
 
 
 	private:

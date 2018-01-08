@@ -48,9 +48,7 @@ Connection NeuralNetwork::pickRandomConnection() {
 				}
 			}
 		}
-
 	}
-
 }
 
 unsigned long long NeuralNetwork::nodeCount() {
@@ -59,6 +57,22 @@ unsigned long long NeuralNetwork::nodeCount() {
 
 unsigned long long NeuralNetwork::connectionCount() {
 	return connections;
+}
+
+std::vector<std::vector<double>> NeuralNetwork::getTrainingInputs() {
+	return trainingInputs;
+}
+
+std::vector<std::vector<double>> NeuralNetwork::getTrainingOutputs() {
+	return trainingOutputs;
+}
+
+void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
+	trainingInputs = i;
+}
+
+void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
+	trainingOutputs = o;
 }
 
 double NeuralNetwork::calculateCurrentLoss() {
