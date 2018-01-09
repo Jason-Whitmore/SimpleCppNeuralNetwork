@@ -22,7 +22,7 @@ class NeuralNetwork {
 		void setTrainingInputs(std::vector<std::vector<double>> i);
 		void setTrainingOutputs(std::vector<std::vector<double>> o);
 
-
+		std::vector<double> forwardCompute(std::vector<double> inputs);
 		double calculateCurrentLoss();
 
 		void gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize);

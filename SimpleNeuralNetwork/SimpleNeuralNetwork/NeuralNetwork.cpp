@@ -75,9 +75,43 @@ void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
 	trainingOutputs = o;
 }
 
-double NeuralNetwork::calculateCurrentLoss() {
-	return 0.0;
+std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
+	if (inputs.size() != layers[0].getNodes().size()) {
+		//exception here
+	}
+	//move inputs to the first layer of nodes
 
+	for (int i = 0; i < layers[0].getNodes().size(); i++) {
+		layers[0].getNodes()[i].setValue(inputs[i]);
+	}
+
+
+
+	//run compute on each layer
+
+	for (int l = 1; l < layers.size(); l++) {
+		layers[l].forwardCompute();
+	}
+
+
+	//return results
+
+	std::vector<double> results = std::vector<double>();
+
+	for (int i = 0; i < layers[layers.size() - 1].getNodes().size(); i++) {
+		results.push_back(layers[layers.size() - 1].getNodes()[i].getValue());
+	}
+
+	return results;
+}
+
+double NeuralNetwork::calculateCurrentLoss() {
+	double total = 0;
+	
+	for(int p = 0; p < getTrainingInputs().size(); p++) {
+		
+	}
+	return 0;
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
@@ -95,8 +129,5 @@ void NeuralNetwork::gradientDescentTraining(int iterations) {
 
 
 int main() {
-
-	NeuralNetwork n = NeuralNetwork();
-	n.getTrainingInputs().push_back(std::vector(3.0));
 	return 0;
 }
