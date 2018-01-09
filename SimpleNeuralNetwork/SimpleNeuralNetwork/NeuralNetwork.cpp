@@ -95,5 +95,8 @@ void NeuralNetwork::gradientDescentTraining(int iterations) {
 
 
 int main() {
+
+	NeuralNetwork n = NeuralNetwork();
+	n.getTrainingInputs().push_back(std::vector(3.0));
 	return 0;
 }

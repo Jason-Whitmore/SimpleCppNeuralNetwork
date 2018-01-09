@@ -17,6 +17,32 @@ double Helper::randomNumber(double a, double b) {
 }
 
 double Helper::calculateLoss(double value, double target) {
-	return 0.0;
+	double similarity;
+
+	if (value > target) {
+		if (value == 0) {
+			return 0;
+		}
+
+		similarity = target / value;
+	} else {
+		if (target == 0) {
+			return 0;
+		}
+
+		similarity = value / target;
+	}
+
+	return 1 - similarity;
+}
+
+double Helper::activationFunctionRELU(double sum, double bias) {
+	double input = sum + bias;
+
+	if (input >= 0) {
+		return input;
+	} else {
+		return input * 0.1;
+	}
 }
 

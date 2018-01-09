@@ -8,5 +8,6 @@ class Helper {
 	static double randomNumber(double a, double b);
 
 	static double calculateLoss(double value, double target);
+	static double activationFunctionRELU(double sum, double bias);
 };
 
