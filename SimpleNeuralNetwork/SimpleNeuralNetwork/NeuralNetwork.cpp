@@ -136,6 +136,8 @@ double NeuralNetwork::calculateCurrentLoss() {
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
 	
 	for (int i = 0; i < iterations; i++) {
+		randomizeAllVariables(lowerRandomizationBound, upperRandomizationBound);
+
 
 		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 3; pass++) {
 			if (Helper::randomNumber(0.0,1.0) < ((double)nodeCount() / (connectionCount() + nodeCount()))) {
@@ -144,19 +146,20 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3))));
 			}
 		}
-	
+		
+
+
 	}
 
 
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
-
+	gradientDescentTraining(targetLoss, iterations, -50, 50, 10, 5);
 }
 
 void NeuralNetwork::gradientDescentTraining(int iterations) {
-
-
+	gradientDescentTraining(0, iterations, -50, 50, 10, 5);
 }
 
 void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
@@ -203,9 +206,13 @@ void NeuralNetwork::optimizeWeight(Connection c, int steps, double stepSize) {
 
 }
 
-void NeuralNetwork::randomizeAllVariables() {
+void NeuralNetwork::randomizeAllVariables(double min, double max) {
 	for (int n = 0; n < nodeCount(); n++) {
-		
+		getNode(n).setBias(Helper::randomNumber(min,max));
+	}
+
+	for (int c = 0; c < connectionCount(); c++) {
+		getConnection(c).setWeight(Helper::randomNumber(min,max));
 	}
 }
 
@@ -245,6 +252,20 @@ Connection NeuralNetwork::getConnection(unsigned long long index) {
 			}
 		}
 	}
+}
+
+std::vector<double> NeuralNetwork::getAllWeights() {
+	return std::vector<double>();
+}
+
+std::vector<double> NeuralNetwork::getAllBiases() {
+	return std::vector<double>();
+}
+
+void NeuralNetwork::setWeights(std::vector<double> w) {
+}
+
+void NeuralNetwork::setBiases(std::vector<double> b) {
 }
 
 

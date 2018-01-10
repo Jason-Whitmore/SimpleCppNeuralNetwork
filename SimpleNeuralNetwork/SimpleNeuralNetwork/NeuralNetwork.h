@@ -45,9 +45,15 @@ class NeuralNetwork {
 
 		void optimizeBias(Node n, int steps, double stepSize);
 		void optimizeWeight(Connection c, int steps, double stepSize);
-		void randomizeAllVariables();
+		void randomizeAllVariables(double min, double max);
 
 		Node getNode(unsigned long long index);
 		Connection getConnection(unsigned long long index);
+
+		std::vector<double> getAllWeights();
+		std::vector<double> getAllBiases();
+
+		void setWeights(std::vector<double> w);
+		void setBiases(std::vector<double> b);
 };
 
