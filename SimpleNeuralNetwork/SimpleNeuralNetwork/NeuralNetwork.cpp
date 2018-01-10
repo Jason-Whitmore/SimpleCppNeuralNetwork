@@ -134,6 +134,19 @@ double NeuralNetwork::calculateCurrentLoss() {
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
+	
+	for (int i = 0; i < iterations; i++) {
+
+		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 3; pass++) {
+			if (Helper::randomNumber(0.0,1.0) < ((double)nodeCount() / (connectionCount() + nodeCount()))) {
+				optimizeBias(pickRandomNode(), numberOfSteps, stepSize * (1 - (pass / ((double)(nodeCount() + connectionCount()) * 3))));
+			} else {
+				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3))));
+			}
+		}
+	
+	}
+
 
 }
 
@@ -144,6 +157,94 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
 void NeuralNetwork::gradientDescentTraining(int iterations) {
 
 
+}
+
+void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
+
+	double oldLoss = 0;
+	double newLoss = 0;
+
+	double currentStep = stepSize;
+
+	for (int i = 0; i < steps; i++) {
+		oldLoss = calculateCurrentLoss();
+		n.setBias(n.getBias() + currentStep);
+		newLoss = calculateCurrentLoss();
+
+		if (oldLoss < newLoss) {
+			currentStep *= -.5;
+		}
+
+	}
+
+
+}
+
+void NeuralNetwork::optimizeWeight(Connection c, int steps, double stepSize) {
+
+
+	double oldLoss = 0;
+	double newLoss = 0;
+
+	double currentStep = stepSize;
+
+	for (int i = 0; i < steps; i++) {
+		oldLoss = calculateCurrentLoss();
+		c.setWeight(c.getWeight() + currentStep);
+		newLoss = calculateCurrentLoss();
+
+		if (oldLoss < newLoss) {
+			currentStep *= -.5;
+		}
+
+	}
+
+
+
+}
+
+void NeuralNetwork::randomizeAllVariables() {
+	for (int n = 0; n < nodeCount(); n++) {
+		
+	}
+}
+
+Node NeuralNetwork::getNode(unsigned long long index) {
+
+	
+
+	unsigned long long currentNode = 0;
+	for (int l = 0; l < layers.size(); l++) {
+
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+			if (currentNode != index) {
+				currentNode++;
+			} else {
+				return layers[l].getNodes()[n];
+			}
+		}
+
+	}
+
+
+}
+
+Connection NeuralNetwork::getConnection(unsigned long long index) {
+	
+	unsigned long long currentConnection = 0;
+
+	for (int l = 1; l < layers.size(); l++) {
+
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
+				if (currentConnection != index) {
+					currentConnection++;
+				} else {
+					return layers[l].getNodes()[n].getInputs()[c];
+				}
+			}
+		}
+	}
 }
 
 

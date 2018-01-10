@@ -29,6 +29,8 @@ class NeuralNetwork {
 		void gradientDescentTraining(double targetLoss, int iterations);
 		void gradientDescentTraining(int iterations);
 
+		
+
 
 
 
@@ -40,5 +42,12 @@ class NeuralNetwork {
 
 		std::vector<std::vector<double>> trainingInputs;
 		std::vector<std::vector<double>> trainingOutputs;
+
+		void optimizeBias(Node n, int steps, double stepSize);
+		void optimizeWeight(Connection c, int steps, double stepSize);
+		void randomizeAllVariables();
+
+		Node getNode(unsigned long long index);
+		Connection getConnection(unsigned long long index);
 };
 
