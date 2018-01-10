@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "Node.h"
-
+#include "Helper.h"
 
 class NodeLayer {
 	public:
