@@ -107,11 +107,30 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 
 double NeuralNetwork::calculateCurrentLoss() {
 	double total = 0;
+
+	std::vector<double> currentInputRow;
+	std::vector<double> currentOutputRow;
+
+	std::vector<double> outputFromCompute;
 	
-	for(int p = 0; p < getTrainingInputs().size(); p++) {
+	for(int r = 0; r < getTrainingInputs().size(); r++) {
+
+		currentInputRow = trainingInputs[r];
+		currentOutputRow = trainingOutputs[r];
+
+		outputFromCompute = forwardCompute(currentInputRow);
+
+		//compare results
+
+		for (int i = 0; i < getTrainingOutputs().size(); i++) {
+			total += Helper::calculateLoss(outputFromCompute[i], getTrainingOutputs()[r][i]);
+		}
+
 		
 	}
-	return 0;
+
+
+	return total / currentInputRow.size();
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
