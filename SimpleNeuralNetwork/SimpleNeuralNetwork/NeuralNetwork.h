@@ -1,5 +1,5 @@
 #pragma once
-#include "Node.h"
+#include "RELUNode.h"
 #include "NodeLayer.h"
 #include "Connection.h"
 #include "Helper.h"

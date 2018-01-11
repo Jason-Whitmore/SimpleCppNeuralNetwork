@@ -7,6 +7,50 @@ NeuralNetwork::NeuralNetwork(){
 
 NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer) {
 
+	//create layers
+	for (int l = 0; l < layerCount + 2; l++) {
+		layers.push_back(NodeLayer());
+	}
+
+	//nodes for first layer
+	for (int i = 0; i < numInputs; i++) {
+		layers[0].addNode(RELUNode());
+	}
+
+	//nodes for last layer
+	for (int i = 0; i < numOutputs; i++) {
+		layers[layers.size() - 1].addNode(RELUNode());
+	}
+
+
+
+
+	//create the nodes for the sandwhich layer
+	for (int l = 1; l < layerCount - 1; l++) {
+
+		for (int n = 0; n < nodesPerLayer; n++) {
+
+			layers[l].addNode(RELUNode());
+
+		}
+
+	}
+
+	//add connections to the layers
+	Connection c;
+	for (int l = 1; l < layers.size(); l++) {
+		for (int s = 0; s < layers[l-1].getNodes().size(); s++) {
+			for (int d = 0; d < layers[l].getNodes().size(); d++) {
+				c = Connection();
+				layers[l-1].getNodes()[s].getOutputs().push_back(c);
+				layers[l].getNodes()[d].getInputs().push_back(c);
+
+			}
+		}
+	}
+
+
+
 }
 
 
@@ -83,6 +127,10 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 
 	for (int i = 0; i < layers[0].getNodes().size(); i++) {
 		layers[0].getNodes()[i].setValue(inputs[i]);
+
+		for (int x = 0; x < layers[0].getNodes()[i].getOutputs().size(); x++) {
+			layers[0].getNodes()[i].getOutputs()[x].setValue(inputs[i]);
+		}
 	}
 
 
