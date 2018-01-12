@@ -15,28 +15,37 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for first layer
 	for (int i = 0; i < numInputs; i++) {
 		layers[0].addNode(RELUNode());
+		nodes++;
 	}
-
-	//nodes for last layer
-	for (int i = 0; i < numOutputs; i++) {
-		layers[layers.size() - 1].addNode(RELUNode());
-	}
-
-
 
 
 	//create the nodes for the sandwhich layer
-	for (int l = 1; l < layerCount - 1; l++) {
+	for (int l = 1; l < layerCount + 1; l++) {
 
 		for (int n = 0; n < nodesPerLayer; n++) {
 
 			layers[l].addNode(RELUNode());
-
+			nodes++;
 		}
 
 	}
 
+
+
+	//nodes for last layer
+	for (int i = 0; i < numOutputs; i++) {
+		layers[layers.size() - 1].addNode(RELUNode());
+		nodes++;
+	}
+
+
+
+
+
+
 	//add connections to the layers
+	
+
 	Connection c;
 	for (int l = 1; l < layers.size(); l++) {
 		for (int s = 0; s < layers[l-1].getNodes().size(); s++) {
@@ -44,7 +53,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 				c = Connection();
 				layers[l-1].getNodes()[s].getOutputs().push_back(c);
 				layers[l].getNodes()[d].getInputs().push_back(c);
-
+				connections++;
 			}
 		}
 	}
@@ -115,8 +124,18 @@ void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
 	trainingInputs = i;
 }
 
+void NeuralNetwork::setTrainingInputs(std::string filePath, std::string entrySeparator, std::string pointSeperator) {
+
+
+}
+
 void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
 	trainingOutputs = o;
+}
+
+void NeuralNetwork::setTrainingOutputs(std::string filePath, std::string entrySeparator, std::string pointSeperator) {
+
+
 }
 
 std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
@@ -210,6 +229,60 @@ void NeuralNetwork::gradientDescentTraining(int iterations) {
 	gradientDescentTraining(0, iterations, -50, 50, 10, 5);
 }
 
+
+
+
+void NeuralNetwork::loadWeights(std::string filePath) {
+
+}
+
+void NeuralNetwork::loadBiases(std::string filePath) {
+
+}
+
+void NeuralNetwork::saveBiases(std::string filePath) {
+	std::string s = "";
+
+	for (int l = 0; l < layers.size() - 1; l++) {
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+			s += layers[l].getNodes()[n].getBias();
+			s += " ";
+		}
+	}
+
+}
+
+void NeuralNetwork::saveWeights(std::string filePath) {
+	std::string s = "";
+	for (int l = 1; l < layers.size(); l++) {
+
+		
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+
+			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
+
+				s += layers[l].getNodes()[n].getInputs()[c].getWeight();
+				s += " ";
+
+			}
+
+		}
+
+	}
+
+	std::ofstream file ("weights.txt");
+	if (!file.is_open()) {
+		std::cout << "error";
+		std::cin >> s;
+	}
+	file << s;
+	
+	file.close();
+}
+
+
+
+
 void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
 
 	double oldLoss = 0;
@@ -302,21 +375,12 @@ Connection NeuralNetwork::getConnection(unsigned long long index) {
 	}
 }
 
-std::vector<double> NeuralNetwork::getAllWeights() {
-	return std::vector<double>();
-}
-
-std::vector<double> NeuralNetwork::getAllBiases() {
-	return std::vector<double>();
-}
-
-void NeuralNetwork::setWeights(std::vector<double> w) {
-}
-
-void NeuralNetwork::setBiases(std::vector<double> b) {
-}
 
 
 int main() {
+
+	NeuralNetwork n = NeuralNetwork(1,1, 1, 5);
+	n.saveWeights("test");
+	
 	return 0;
 }

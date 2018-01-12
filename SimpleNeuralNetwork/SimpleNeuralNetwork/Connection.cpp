@@ -3,7 +3,8 @@
 class Node;
 
 Connection::Connection() {
-
+	weight = 0;
+	setValue(0);
 }
 
 

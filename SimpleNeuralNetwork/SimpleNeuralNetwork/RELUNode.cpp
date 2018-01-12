@@ -3,6 +3,8 @@
 
 
 RELUNode::RELUNode() {
+	setBias(0);
+	setValue(0);
 }
 
 

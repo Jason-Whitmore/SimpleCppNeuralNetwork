@@ -3,7 +3,9 @@
 #include "NodeLayer.h"
 #include "Connection.h"
 #include "Helper.h"
+#include <string>
 #include <iostream>
+#include <fstream>
 class NeuralNetwork {
 	public:
 		NeuralNetwork();
@@ -17,10 +19,14 @@ class NeuralNetwork {
 		unsigned long long connectionCount();
 
 		std::vector<std::vector<double>> getTrainingInputs();
+
 		std::vector<std::vector<double>> getTrainingOutputs();
 
 		void setTrainingInputs(std::vector<std::vector<double>> i);
+		void setTrainingInputs(std::string filePath, std::string entrySeparator, std::string pointSeperator);
+
 		void setTrainingOutputs(std::vector<std::vector<double>> o);
+		void setTrainingOutputs(std::string filePath, std::string entrySeparator, std::string pointSeperator);
 
 		std::vector<double> forwardCompute(std::vector<double> inputs);
 		double calculateCurrentLoss();
@@ -28,6 +34,13 @@ class NeuralNetwork {
 		void gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize);
 		void gradientDescentTraining(double targetLoss, int iterations);
 		void gradientDescentTraining(int iterations);
+
+
+		void loadWeights(std::string filePath);
+		void loadBiases(std::string filePath);
+
+		void saveBiases(std::string filePath);
+		void saveWeights(std::string filePath);
 
 		
 
@@ -50,10 +63,5 @@ class NeuralNetwork {
 		Node getNode(unsigned long long index);
 		Connection getConnection(unsigned long long index);
 
-		std::vector<double> getAllWeights();
-		std::vector<double> getAllBiases();
-
-		void setWeights(std::vector<double> w);
-		void setBiases(std::vector<double> b);
 };
 

@@ -9,5 +9,7 @@ class Helper {
 
 	static double calculateLoss(double value, double target);
 	static double activationFunctionRELU(double sum, double bias);
+
+	
 };
 
