@@ -44,7 +44,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 
 	//add connections to the layers
-	
+	//use pointers here
 
 	Connection c;
 	for (int l = 1; l < layers.size(); l++) {
