@@ -10,7 +10,7 @@ class Node {
 	std::vector<Connection> getOutputs();
 
 	void setInputs(std::vector<Connection> i);
-	void setOutPuts(std::vector<Connection> o);
+	void setOutputs(std::vector<Connection> o);
 
 	void setValue(double v);
 	double getValue();
@@ -20,6 +20,9 @@ class Node {
 
 	void changeNeutralStatus();
 	bool isNeutral();
+
+	void addOutput(Connection c);
+	void addInput(Connection c);
 
 
 

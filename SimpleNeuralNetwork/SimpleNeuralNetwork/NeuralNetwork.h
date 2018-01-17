@@ -8,7 +8,6 @@
 #include <fstream>
 class NeuralNetwork {
 	public:
-		NeuralNetwork();
 		NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer);
 		~NeuralNetwork();
 
@@ -62,6 +61,7 @@ class NeuralNetwork {
 
 		Node getNode(unsigned long long index);
 		Connection getConnection(unsigned long long index);
+
 
 };
 

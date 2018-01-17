@@ -3,6 +3,7 @@
 
 
 Node::Node() {
+
 }
 
 
@@ -21,7 +22,7 @@ void Node::setInputs(std::vector<Connection> i) {
 	inputs = i;
 }
 
-void Node::setOutPuts(std::vector<Connection> o) {
+void Node::setOutputs(std::vector<Connection> o) {
 	outputs = o;
 }
 
@@ -47,4 +48,15 @@ void Node::changeNeutralStatus() {
 
 bool Node::isNeutral() {
 	return Neutral;
+}
+
+void Node::addOutput(Connection c) {
+	outputs.reserve(outputs.size() + 1);
+	outputs.push_back(c);
+	
+}
+
+void Node::addInput(Connection c) {
+	inputs.reserve(inputs.size() + 1);
+	inputs.push_back(c);
 }

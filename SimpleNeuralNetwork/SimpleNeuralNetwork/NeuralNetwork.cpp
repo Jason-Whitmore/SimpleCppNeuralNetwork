@@ -1,9 +1,6 @@
 #include "NeuralNetwork.h"
 
 
-NeuralNetwork::NeuralNetwork(){
-	
-}
 
 NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer) {
 
@@ -23,7 +20,6 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	for (int l = 1; l < layerCount + 1; l++) {
 
 		for (int n = 0; n < nodesPerLayer; n++) {
-
 			layers[l].addNode(RELUNode());
 			nodes++;
 		}
@@ -46,19 +42,29 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//add connections to the layers
 	//use pointers here
 
-	Connection c;
+	
 	for (int l = 1; l < layers.size(); l++) {
 		for (int s = 0; s < layers[l-1].getNodes().size(); s++) {
 			for (int d = 0; d < layers[l].getNodes().size(); d++) {
-				c = Connection();
-				layers[l-1].getNodes()[s].getOutputs().push_back(c);
-				layers[l].getNodes()[d].getInputs().push_back(c);
+				Connection c = Connection();
+				
+
+				//vector doesnt grow? wtf????
+				//also, impossible to change anything else in this data structure (check the biases)
+				std::cout << layers[l - 1].getNodes()[s].getOutputs().size();
+				layers[l-1].getNodes()[s].addOutput(c);
+				std::cout << layers[l - 1].getNodes()[s].getOutputs().size();
+				
+				layers[l].getNodes()[d].addInput(c);
+
+
 				connections++;
+				
 			}
 		}
 	}
 
-
+	layers[0].getNodes()[0].setBias(-5);
 
 }
 
@@ -377,9 +383,11 @@ Connection NeuralNetwork::getConnection(unsigned long long index) {
 
 
 
+
 int main() {
 
 	NeuralNetwork n = NeuralNetwork(1,1, 1, 5);
+	
 	n.saveWeights("test");
 	
 	return 0;
