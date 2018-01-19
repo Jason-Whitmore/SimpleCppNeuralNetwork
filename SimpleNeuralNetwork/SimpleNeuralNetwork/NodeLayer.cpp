@@ -4,6 +4,7 @@
 
 NodeLayer::NodeLayer() {
 	
+	nodes = std::vector<Node>();
 
 }
 

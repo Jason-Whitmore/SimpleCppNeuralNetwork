@@ -36,6 +36,10 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 
 
+	for (int i = 0; i < layers[0].getNodes().size(); i++) {
+		layers[0].getNodes()[i].setBias(5);
+	}
+
 
 
 
@@ -51,20 +55,21 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 				//vector doesnt grow? wtf????
 				//also, impossible to change anything else in this data structure (check the biases)
-				std::cout << layers[l - 1].getNodes()[s].getOutputs().size();
+
+				//maybe use references instead?
 				layers[l-1].getNodes()[s].addOutput(c);
-				std::cout << layers[l - 1].getNodes()[s].getOutputs().size();
-				
+
 				layers[l].getNodes()[d].addInput(c);
 
-
+				layers[0].getNodes()[0].changeNeutralStatus();
+				
 				connections++;
 				
 			}
 		}
 	}
 
-	layers[0].getNodes()[0].setBias(-5);
+	
 
 }
 

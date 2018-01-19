@@ -3,7 +3,9 @@
 
 
 Node::Node() {
-
+	value = 0;
+	bias = 0;
+	Neutral = true;
 }
 
 
