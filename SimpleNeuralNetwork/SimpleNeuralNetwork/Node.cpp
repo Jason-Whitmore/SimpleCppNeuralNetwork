@@ -12,11 +12,11 @@ Node::Node() {
 Node::~Node() {
 }
 
-std::vector<Connection> Node::getInputs() {
+std::vector<Connection>& Node::getInputs() {
 	return inputs;
 }
 
-std::vector<Connection> Node::getOutputs() {
+std::vector<Connection>& Node::getOutputs() {
 	return outputs;
 }
 

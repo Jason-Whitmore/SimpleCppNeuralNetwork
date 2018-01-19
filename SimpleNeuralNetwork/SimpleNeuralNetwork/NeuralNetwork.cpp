@@ -52,7 +52,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 			for (int d = 0; d < layers[l].getNodes().size(); d++) {
 				Connection c = Connection();
 				
-
+				c.setWeight(Helper::randomNumber(0.0,10.0));
 				//vector doesnt grow? wtf????
 				//also, impossible to change anything else in this data structure (check the biases)
 
@@ -61,7 +61,6 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 				layers[l].getNodes()[d].addInput(c);
 
-				layers[0].getNodes()[0].setBias(5.0);
 				
 				connections++;
 				

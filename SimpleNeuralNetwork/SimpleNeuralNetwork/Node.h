@@ -6,8 +6,8 @@ class Node {
 	Node();
 	~Node();
 
-	std::vector<Connection> getInputs();
-	std::vector<Connection> getOutputs();
+	std::vector<Connection>& getInputs();
+	std::vector<Connection>& getOutputs();
 
 	void setInputs(std::vector<Connection> i);
 	void setOutputs(std::vector<Connection> o);
