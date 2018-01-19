@@ -56,12 +56,12 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 				//vector doesnt grow? wtf????
 				//also, impossible to change anything else in this data structure (check the biases)
 
-				//maybe use references instead?
+				//maybe use references instead? <-----fixed the problem, for now atleast.
 				layers[l-1].getNodes()[s].addOutput(c);
 
 				layers[l].getNodes()[d].addInput(c);
 
-				layers[0].getNodes()[0].changeNeutralStatus();
+				layers[0].getNodes()[0].setBias(5.0);
 				
 				connections++;
 				

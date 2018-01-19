@@ -38,6 +38,8 @@ double Node::getValue() {
 
 void Node::setBias(double b) {
 	bias = b;
+
+
 }
 
 double Node::getBias() {

@@ -8,9 +8,9 @@ class NodeLayer {
 		NodeLayer();
 		~NodeLayer();
 
-		std::vector<Node> getNodes();
+		std::vector<Node>& getNodes();
 		void setNodes(std::vector<Node> n);
-		void addNode(Node n);
+		void addNode(Node& n);
 
 		void forwardCompute();
 		void backwardCompute();
