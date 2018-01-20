@@ -35,11 +35,11 @@ class NeuralNetwork {
 		void gradientDescentTraining(int iterations);
 
 
-		void loadWeights(std::string filePath);
-		void loadBiases(std::string filePath);
+		void loadWeights();
+		void loadBiases();
 
-		void saveBiases(std::string filePath);
-		void saveWeights(std::string filePath);
+		void saveBiases();
+		void saveWeights();
 
 		
 
@@ -61,6 +61,8 @@ class NeuralNetwork {
 
 		Node getNode(unsigned long long index);
 		Connection getConnection(unsigned long long index);
+
+		double extractDoubleFromString(std::string s);
 
 
 };

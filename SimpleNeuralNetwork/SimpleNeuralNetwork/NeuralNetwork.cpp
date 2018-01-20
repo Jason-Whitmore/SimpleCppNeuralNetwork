@@ -69,7 +69,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	}
 
 	
-
+	randomizeAllVariables(-10,10);
 }
 
 
@@ -242,27 +242,48 @@ void NeuralNetwork::gradientDescentTraining(int iterations) {
 
 
 
-void NeuralNetwork::loadWeights(std::string filePath) {
-
-}
-
-void NeuralNetwork::loadBiases(std::string filePath) {
-
-}
-
-void NeuralNetwork::saveBiases(std::string filePath) {
+void NeuralNetwork::loadWeights() {
+	std::ifstream file ("weights.txt");
 	std::string s = "";
 
-	for (int l = 0; l < layers.size() - 1; l++) {
+
+	std::getline(file, s);
+
+	for (int l = 1; l < layers.size(); l++) {
 		for (int n = 0; n < layers[l].getNodes().size(); n++) {
-			s += layers[l].getNodes()[n].getBias();
+			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
+				
+			}
+		}
+	}
+}
+
+void NeuralNetwork::loadBiases() {
+
+}
+
+void NeuralNetwork::saveBiases() {
+	std::string s = "";
+
+	for (int l = 0; l < layers.size(); l++) {
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+			s += std::to_string(layers[l].getNodes()[n].getBias());
 			s += " ";
 		}
 	}
 
+	std::ofstream file("biases.txt");
+	if (!file.is_open()) {
+		std::cout << "error";
+		std::cin >> s;
+	}
+	file << s;
+
+	file.close();
+
 }
 
-void NeuralNetwork::saveWeights(std::string filePath) {
+void NeuralNetwork::saveWeights() {
 	std::string s = "";
 	for (int l = 1; l < layers.size(); l++) {
 
@@ -271,7 +292,7 @@ void NeuralNetwork::saveWeights(std::string filePath) {
 
 			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
 
-				s += layers[l].getNodes()[n].getInputs()[c].getWeight();
+				s += std::to_string(layers[l].getNodes()[n].getInputs()[c].getWeight());
 				s += " ";
 
 			}
@@ -385,6 +406,17 @@ Connection NeuralNetwork::getConnection(unsigned long long index) {
 	}
 }
 
+double NeuralNetwork::extractDoubleFromString(std::string s) {
+	std::string d = "";
+
+	int spaceIndex = s.find(" ");
+
+	d = s.substr(0, spaceIndex - 1);
+	s = s.substr(spaceIndex);
+
+	return std::stoi(d);
+}
+
 
 
 
@@ -392,7 +424,8 @@ int main() {
 
 	NeuralNetwork n = NeuralNetwork(1,1, 1, 5);
 	
-	n.saveWeights("test");
+	n.saveWeights();
+	n.saveBiases();
 	
 	return 0;
 }

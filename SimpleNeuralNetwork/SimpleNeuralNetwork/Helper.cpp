@@ -46,3 +46,4 @@ double Helper::activationFunctionRELU(double sum, double bias) {
 	}
 }
 
+
