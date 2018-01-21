@@ -134,7 +134,7 @@ void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
 	trainingInputs = i;
 }
 
-void NeuralNetwork::setTrainingInputs(std::string filePath, std::string entrySeparator, std::string pointSeperator) {
+void NeuralNetwork::setTrainingInputs(std::string entrySeparator, std::string pointSeperator) {
 
 
 }
@@ -143,7 +143,7 @@ void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
 	trainingOutputs = o;
 }
 
-void NeuralNetwork::setTrainingOutputs(std::string filePath, std::string entrySeparator, std::string pointSeperator) {
+void NeuralNetwork::setTrainingOutputs(std::string entrySeparator, std::string pointSeperator) {
 
 
 }
@@ -310,7 +310,6 @@ void NeuralNetwork::saveWeights() {
 	
 	file.close();
 }
-
 
 
 
