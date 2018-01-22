@@ -36,9 +36,6 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 
 
-	for (int i = 0; i < layers[0].getNodes().size(); i++) {
-		layers[0].getNodes()[i].setBias(5);
-	}
 
 
 
@@ -52,7 +49,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 			for (int d = 0; d < layers[l].getNodes().size(); d++) {
 				Connection c = Connection();
 				
-				c.setWeight(Helper::randomNumber(0.0,10.0));
+				
 				//vector doesnt grow? wtf????
 				//also, impossible to change anything else in this data structure (check the biases)
 
@@ -134,7 +131,7 @@ void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
 	trainingInputs = i;
 }
 
-void NeuralNetwork::setTrainingInputs(std::string entrySeparator, std::string pointSeperator) {
+void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySeparator, std::string pointSeperator) {
 
 
 }
@@ -143,7 +140,7 @@ void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
 	trainingOutputs = o;
 }
 
-void NeuralNetwork::setTrainingOutputs(std::string entrySeparator, std::string pointSeperator) {
+void NeuralNetwork::setTrainingOutputs(std::string fileName, std::string entrySeparator, std::string pointSeperator) {
 
 
 }
@@ -211,9 +208,21 @@ double NeuralNetwork::calculateCurrentLoss() {
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
-	
-	for (int i = 0; i < iterations; i++) {
+	int improvements = 0;
+
+	double bestLoss = 99999999999;
+	double currentLoss = 9999999999999;
+
+
+	for (int i = 0; i < iterations && bestLoss < targetLoss; i++) {
 		randomizeAllVariables(lowerRandomizationBound, upperRandomizationBound);
+
+		//update info
+		system("CLS");
+		std::cout << "Best Loss: " << std::to_string(bestLoss) << std::endl;
+		std::cout << "Current Loss: " + std::to_string(currentLoss) << std::endl;
+		std::cout << "Number of loss improvements: " + std::to_string(improvements) << std::endl;
+		std::cout << "Progress: " << (int)((i/((double)iterations))* 100)  << "%" << std::endl;
 
 
 		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 3; pass++) {
@@ -224,6 +233,15 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 			}
 		}
 		
+
+		currentLoss = calculateCurrentLoss();
+
+		if (currentLoss < bestLoss) {
+			improvements++;
+			bestLoss = currentLoss;
+			saveBiases();
+			saveWeights();
+		}
 
 
 	}
@@ -425,6 +443,9 @@ int main() {
 	
 	n.saveWeights();
 	n.saveBiases();
+
+	n.loadBiases();
+	n.loadWeights();
 	
 	return 0;
 }
