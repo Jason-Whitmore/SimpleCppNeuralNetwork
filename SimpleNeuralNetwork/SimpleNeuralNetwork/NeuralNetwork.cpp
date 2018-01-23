@@ -132,7 +132,7 @@ void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
 }
 
 void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySeparator, std::string pointSeperator) {
-
+	std::ifstream file(fileName + ".csv");
 
 }
 
