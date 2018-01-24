@@ -134,6 +134,13 @@ void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
 void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySeparator, std::string pointSeperator) {
 	std::ifstream file(fileName + ".csv");
 
+	std::string s = "";
+
+
+	std::getline(file, s);
+
+
+
 }
 
 void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
