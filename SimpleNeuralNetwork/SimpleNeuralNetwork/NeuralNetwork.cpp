@@ -136,6 +136,7 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 
 	std::string s = "";
 	std::string line = "";
+	std::string temp = "";
 
 	std::getline(file, s);
 
@@ -143,10 +144,24 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 
 	//remember to add the line part here
 
+	int separatorIndex;
+	int lineSeparator;
 
-	while (line.size() > 0) {
+	while (s.size() > 0) {
 
+		lineSeparator = s.find_first_of(pointSeperator);
+		line = s.substr(0, lineSeparator);
+		s = s.substr(lineSeparator);
+
+		while (line.size() > 0) {
+			separatorIndex = line.find(entrySeparator);
+			temp = line.substr(0, separatorIndex);
+			line = line.substr(separatorIndex);
+
+		}
 	}
+
+	
 
 
 
