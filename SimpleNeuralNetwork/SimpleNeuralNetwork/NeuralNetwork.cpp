@@ -138,28 +138,52 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 	std::string line = "";
 	std::string temp = "";
 
-	std::getline(file, s);
-
-	std::vector<double> dp = std::vector<double>();
-
-	//remember to add the line part here
 
 	int separatorIndex;
 	int lineSeparator;
+	int index = 0;
+
+	std::vector<double> dp = std::vector<double>();
+
+	std::stringstream b;
+	b << file.rdbuf();
+
+	s = b.str();
 
 	while (s.size() > 0) {
+		lineSeparator = line.find(pointSeperator);
+		line = s.substr(0, line.find(pointSeperator));
 
-		lineSeparator = s.find_first_of(pointSeperator);
-		line = s.substr(0, lineSeparator);
-		s = s.substr(lineSeparator);
+		s = s.substr(line.find(pointSeperator) + pointSeperator.size());
+		
 
-		while (line.size() > 0) {
-			separatorIndex = line.find(entrySeparator);
-			temp = line.substr(0, separatorIndex);
-			line = line.substr(separatorIndex);
-
-		}
+		dp = Helper::parseLine(line, entrySeparator);
 	}
+
+
+	
+
+	
+
+	//remember to add the line part here
+
+
+	//while (s.size() > 0) {
+
+	//	lineSeparator = s.find_first_of(pointSeperator);
+	//	line = s.substr(0, lineSeparator);
+	//	s = s.substr(lineSeparator);
+
+	//	while (line.size() > 0) {
+	//		separatorIndex = line.find(entrySeparator);
+	//		temp = line.substr(0, separatorIndex);
+	//		line = line.substr(separatorIndex);
+	//		dp.push_back(std::stod(temp));
+	//	}
+
+	//	getTrainingInputs().push_back(dp);
+	//	dp.clear();
+	//}
 
 	
 
@@ -477,6 +501,14 @@ int main() {
 
 	n.loadBiases();
 	n.loadWeights();
+
+
+	std::vector<double> test = std::vector<double>();
+	//std::string t = "5,4,3,2,1";
+
+	//test = Helper::parseLine(t, ",");
+
+	n.setTrainingInputs("TInputs", ",", "\n");
 	
 	return 0;
 }

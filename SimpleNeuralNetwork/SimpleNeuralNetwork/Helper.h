@@ -1,4 +1,9 @@
 #pragma once
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <string>
+
 class Helper {
 
 	
@@ -12,6 +17,8 @@ class Helper {
 	static double calculateLoss(double value, double target);
 	static double activationFunctionRELU(double sum, double bias);
 
+
+	static std::vector<double> parseLine(std::string target, std::string entrySeparator);
 	
 };
 

@@ -47,3 +47,39 @@ double Helper::activationFunctionRELU(double sum, double bias) {
 }
 
 
+
+
+
+std::vector<double> Helper::parseLine(std::string target, std::string entrySeparator) {
+	std::vector<double> r = std::vector<double>();
+
+	int separatorIndex = target.find_first_of(entrySeparator);
+
+	std::string number = "";
+	while (target.size() > 0) {
+		//do the parse
+
+		
+		
+		if (separatorIndex >= 0) {
+			number = target.substr(0, separatorIndex);
+
+			r.push_back(std::stod(number));
+
+			target = target.substr(separatorIndex + 1);
+		} else {
+			r.push_back(std::stod(target));
+		}
+		
+		
+
+
+
+		separatorIndex = target.find_first_of(entrySeparator);
+	}
+
+
+	return r;
+}
+
+
