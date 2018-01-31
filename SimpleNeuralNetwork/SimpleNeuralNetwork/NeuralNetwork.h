@@ -18,9 +18,9 @@ class NeuralNetwork {
 		unsigned long long nodeCount();
 		unsigned long long connectionCount();
 
-		std::vector<std::vector<double>> getTrainingInputs();
+		std::vector<std::vector<double>>& getTrainingInputs();
 
-		std::vector<std::vector<double>> getTrainingOutputs();
+		std::vector<std::vector<double>>& getTrainingOutputs();
 
 		void setTrainingInputs(std::vector<std::vector<double>> i);
 		void setTrainingInputs(std::string fileName, std::string entrySeparator, char pointSeperator);

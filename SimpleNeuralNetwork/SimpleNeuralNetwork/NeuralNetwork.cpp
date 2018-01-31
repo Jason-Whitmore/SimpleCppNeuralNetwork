@@ -119,11 +119,11 @@ unsigned long long NeuralNetwork::connectionCount() {
 	return connections;
 }
 
-std::vector<std::vector<double>> NeuralNetwork::getTrainingInputs() {
+std::vector<std::vector<double>>& NeuralNetwork::getTrainingInputs() {
 	return trainingInputs;
 }
 
-std::vector<std::vector<double>> NeuralNetwork::getTrainingOutputs() {
+std::vector<std::vector<double>>& NeuralNetwork::getTrainingOutputs() {
 	return trainingOutputs;
 }
 
@@ -151,9 +151,9 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 	s = b.str();
 
 	while (s.size() > 0) {
-		lineSeparator = line.find_first_of(pointSeperator);
+		
 		line = s.substr(0, line.find(pointSeperator));
-
+		lineSeparator = s.find_first_of(pointSeperator);
 		s = s.substr(line.find(pointSeperator) + 1);
 		
 

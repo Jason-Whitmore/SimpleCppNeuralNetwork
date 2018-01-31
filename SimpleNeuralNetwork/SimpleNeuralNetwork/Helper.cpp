@@ -58,7 +58,7 @@ std::vector<double> Helper::parseLine(std::string target, std::string entrySepar
 	std::string number = "";
 	while (target.size() > 0) {
 		//do the parse
-
+		separatorIndex = target.find_first_of(entrySeparator);
 		
 		
 		if (separatorIndex >= 0) {
@@ -69,6 +69,7 @@ std::vector<double> Helper::parseLine(std::string target, std::string entrySepar
 			target = target.substr(separatorIndex + 1);
 		} else {
 			r.push_back(std::stod(target));
+			target = "";
 		}
 		
 		
