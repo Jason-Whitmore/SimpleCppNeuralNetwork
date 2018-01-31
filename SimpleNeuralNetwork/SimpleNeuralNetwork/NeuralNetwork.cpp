@@ -131,7 +131,7 @@ void NeuralNetwork::setTrainingInputs(std::vector<std::vector<double>> i) {
 	trainingInputs = i;
 }
 
-void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySeparator, std::string pointSeperator) {
+void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySeparator, char pointSeperator) {
 	std::ifstream file(fileName + ".csv");
 
 	std::string s = "";
@@ -151,10 +151,10 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 	s = b.str();
 
 	while (s.size() > 0) {
-		lineSeparator = line.find(pointSeperator);
+		lineSeparator = line.find_first_of(pointSeperator);
 		line = s.substr(0, line.find(pointSeperator));
 
-		s = s.substr(line.find(pointSeperator) + pointSeperator.size());
+		s = s.substr(line.find(pointSeperator) + 1);
 		
 
 		dp = Helper::parseLine(line, entrySeparator);
@@ -508,7 +508,7 @@ int main() {
 
 	//test = Helper::parseLine(t, ",");
 
-	n.setTrainingInputs("TInputs", ",", "\n");
+	n.setTrainingInputs("TInputs", ",", '\n');
 	
 	return 0;
 }

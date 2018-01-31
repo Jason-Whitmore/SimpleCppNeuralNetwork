@@ -23,7 +23,7 @@ class NeuralNetwork {
 		std::vector<std::vector<double>> getTrainingOutputs();
 
 		void setTrainingInputs(std::vector<std::vector<double>> i);
-		void setTrainingInputs(std::string fileName, std::string entrySeparator, std::string pointSeperator);
+		void setTrainingInputs(std::string fileName, std::string entrySeparator, char pointSeperator);
 
 		void setTrainingOutputs(std::vector<std::vector<double>> o);
 		void setTrainingOutputs(std::string fileName, std::string entrySeparator, std::string pointSeperator);
