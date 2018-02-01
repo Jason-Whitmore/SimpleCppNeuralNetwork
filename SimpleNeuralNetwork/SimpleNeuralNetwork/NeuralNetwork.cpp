@@ -67,6 +67,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 	
 	randomizeAllVariables(-10,10);
+
 }
 
 
@@ -403,7 +404,7 @@ void NeuralNetwork::optimizeBias(Node& n, int steps, double stepSize) {
 	double newLoss = 0;
 
 	double currentStep = stepSize;
-
+	//values not changing
 	for (int i = 0; i < steps; i++) {
 		oldLoss = calculateCurrentLoss();
 		n.setBias(n.getBias() + currentStep);
@@ -412,7 +413,7 @@ void NeuralNetwork::optimizeBias(Node& n, int steps, double stepSize) {
 		if (oldLoss < newLoss) {
 			currentStep *= -.5;
 		}
-
+		std::cout << std::to_string(calculateCurrentLoss()) << std::endl;
 	}
 
 
@@ -507,8 +508,8 @@ int main() {
 
 	NeuralNetwork n = NeuralNetwork(1,1, 3, 5);
 	
-	n.saveWeights();
-	n.saveBiases();
+	//n.saveWeights();
+	//n.saveBiases();
 
 	n.loadBiases();
 	n.loadWeights();
@@ -525,7 +526,7 @@ int main() {
 
 	
 	
-	test.push_back(1.3);
+	test.push_back(5.1);
 
 	n.gradientDescentTraining(0.1, 100, -50, 50, 5, 25);
 

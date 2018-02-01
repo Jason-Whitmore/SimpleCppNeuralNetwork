@@ -33,7 +33,7 @@ double Helper::calculateLoss(double value, double target) {
 		similarity = value / target;
 	}
 
-	return 1 - similarity;
+	return std::abs(1 - similarity);
 }
 
 double Helper::activationFunctionRELU(double sum, double bias) {
