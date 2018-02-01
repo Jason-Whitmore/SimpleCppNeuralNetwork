@@ -74,7 +74,7 @@ NeuralNetwork::~NeuralNetwork(){
 	
 }
 
-Node NeuralNetwork::pickRandomNode() {
+Node& NeuralNetwork::pickRandomNode() {
 	int nodeNumber = Helper::randomNumber(0, nodeCount());
 	
 	int currentNode = 0;
@@ -93,7 +93,7 @@ Node NeuralNetwork::pickRandomNode() {
 
 }
 
-Connection NeuralNetwork::pickRandomConnection() {
+Connection& NeuralNetwork::pickRandomConnection() {
 	int connectionNumber = Helper::randomNumber(0, connectionCount());
 	int currentConnection = 0;
 
@@ -152,41 +152,15 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 
 	while (s.size() > 0) {
 		
-		line = s.substr(0, line.find(pointSeperator));
+		line = s.substr(0, s.find(pointSeperator));
 		lineSeparator = s.find_first_of(pointSeperator);
-		s = s.substr(line.find(pointSeperator) + 1);
+		s = s.substr(lineSeparator + 1);
 		
 
 		dp = Helper::parseLine(line, entrySeparator);
+		getTrainingInputs().push_back(dp);
+		dp.clear();
 	}
-
-
-	
-
-	
-
-	//remember to add the line part here
-
-
-	//while (s.size() > 0) {
-
-	//	lineSeparator = s.find_first_of(pointSeperator);
-	//	line = s.substr(0, lineSeparator);
-	//	s = s.substr(lineSeparator);
-
-	//	while (line.size() > 0) {
-	//		separatorIndex = line.find(entrySeparator);
-	//		temp = line.substr(0, separatorIndex);
-	//		line = line.substr(separatorIndex);
-	//		dp.push_back(std::stod(temp));
-	//	}
-
-	//	getTrainingInputs().push_back(dp);
-	//	dp.clear();
-	//}
-
-	
-
 
 
 }
@@ -195,8 +169,36 @@ void NeuralNetwork::setTrainingOutputs(std::vector<std::vector<double>> o) {
 	trainingOutputs = o;
 }
 
-void NeuralNetwork::setTrainingOutputs(std::string fileName, std::string entrySeparator, std::string pointSeperator) {
+void NeuralNetwork::setTrainingOutputs(std::string fileName, std::string entrySeparator, char pointSeperator) {
+	std::ifstream file(fileName + ".csv");
 
+	std::string s = "";
+	std::string line = "";
+	std::string temp = "";
+
+
+	int separatorIndex;
+	int lineSeparator;
+	int index = 0;
+
+	std::vector<double> dp = std::vector<double>();
+
+	std::stringstream b;
+	b << file.rdbuf();
+
+	s = b.str();
+
+	while (s.size() > 0) {
+
+		line = s.substr(0, s.find(pointSeperator));
+		lineSeparator = s.find_first_of(pointSeperator);
+		s = s.substr(lineSeparator + 1);
+
+
+		dp = Helper::parseLine(line, entrySeparator);
+		getTrainingOutputs().push_back(dp);
+		dp.clear();
+	}
 
 }
 
@@ -242,7 +244,12 @@ double NeuralNetwork::calculateCurrentLoss() {
 
 	std::vector<double> outputFromCompute;
 	
-	for(int r = 0; r < getTrainingInputs().size(); r++) {
+	double a = 0;
+	double b;
+	double c;
+
+	//test each row
+	for(int r = 0; r < trainingInputs.size(); r++) {
 
 		currentInputRow = trainingInputs[r];
 		currentOutputRow = trainingOutputs[r];
@@ -250,9 +257,13 @@ double NeuralNetwork::calculateCurrentLoss() {
 		outputFromCompute = forwardCompute(currentInputRow);
 
 		//compare results
+		//compare columns
+		for (int i = 0; i < getTrainingOutputs()[0].size(); i++) {
+			b = outputFromCompute[i];
+			c = currentOutputRow[i];
+			a = Helper::calculateLoss(outputFromCompute[i], currentOutputRow[i]);
 
-		for (int i = 0; i < getTrainingOutputs().size(); i++) {
-			total += Helper::calculateLoss(outputFromCompute[i], getTrainingOutputs()[r][i]);
+			total += a;
 		}
 
 		
@@ -269,22 +280,17 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 	double currentLoss = 9999999999999;
 
 
-	for (int i = 0; i < iterations && bestLoss < targetLoss; i++) {
+	for (int i = 0; i < iterations && bestLoss > targetLoss; i++) {
 		randomizeAllVariables(lowerRandomizationBound, upperRandomizationBound);
 
-		//update info
-		system("CLS");
-		std::cout << "Best Loss: " << std::to_string(bestLoss) << std::endl;
-		std::cout << "Current Loss: " + std::to_string(currentLoss) << std::endl;
-		std::cout << "Number of loss improvements: " + std::to_string(improvements) << std::endl;
-		std::cout << "Progress: " << (int)((i/((double)iterations))* 100)  << "%" << std::endl;
+		
 
 
 		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 3; pass++) {
 			if (Helper::randomNumber(0.0,1.0) < ((double)nodeCount() / (connectionCount() + nodeCount()))) {
-				optimizeBias(pickRandomNode(), numberOfSteps, stepSize * (1 - (pass / ((double)(nodeCount() + connectionCount()) * 3))));
+				optimizeBias(pickRandomNode(), numberOfSteps, stepSize * (1 - (pass / ((double)(nodeCount() + connectionCount()) * 3.0))));
 			} else {
-				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3))));
+				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3.0))));
 			}
 		}
 		
@@ -298,7 +304,12 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 			saveWeights();
 		}
 
-
+		//update info
+		system("CLS");
+		std::cout << "Best Loss: " << std::to_string(bestLoss) << std::endl;
+		std::cout << "Current Loss: " + std::to_string(currentLoss) << std::endl;
+		std::cout << "Number of loss improvements: " + std::to_string(improvements) << std::endl;
+		std::cout << "Progress: " << (int)((i / ((double)iterations)) * 100) << "%" << std::endl;
 	}
 
 
@@ -386,7 +397,7 @@ void NeuralNetwork::saveWeights() {
 
 
 
-void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
+void NeuralNetwork::optimizeBias(Node& n, int steps, double stepSize) {
 
 	double oldLoss = 0;
 	double newLoss = 0;
@@ -407,7 +418,7 @@ void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
 
 }
 
-void NeuralNetwork::optimizeWeight(Connection c, int steps, double stepSize) {
+void NeuralNetwork::optimizeWeight(Connection& c, int steps, double stepSize) {
 
 
 	double oldLoss = 0;
@@ -440,7 +451,7 @@ void NeuralNetwork::randomizeAllVariables(double min, double max) {
 	}
 }
 
-Node NeuralNetwork::getNode(unsigned long long index) {
+Node& NeuralNetwork::getNode(unsigned long long index) {
 
 	
 
@@ -460,7 +471,7 @@ Node NeuralNetwork::getNode(unsigned long long index) {
 
 }
 
-Connection NeuralNetwork::getConnection(unsigned long long index) {
+Connection& NeuralNetwork::getConnection(unsigned long long index) {
 	
 	unsigned long long currentConnection = 0;
 
@@ -494,7 +505,7 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1,1, 1, 5);
+	NeuralNetwork n = NeuralNetwork(1,1, 3, 5);
 	
 	n.saveWeights();
 	n.saveBiases();
@@ -507,8 +518,19 @@ int main() {
 	//std::string t = "5,4,3,2,1";
 
 	//test = Helper::parseLine(t, ",");
+	
 
 	n.setTrainingInputs("TInputs", ",", '\n');
+	n.setTrainingOutputs("TOutputs", ",", '\n');
+
 	
+	
+	test.push_back(1.3);
+
+	n.gradientDescentTraining(0.1, 100, -50, 50, 5, 25);
+
+
+	std::vector<double> r = n.forwardCompute(test);
+
 	return 0;
 }

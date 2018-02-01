@@ -12,8 +12,8 @@ class NeuralNetwork {
 		NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer);
 		~NeuralNetwork();
 
-		Node pickRandomNode();
-		Connection pickRandomConnection();
+		Node& pickRandomNode();
+		Connection& pickRandomConnection();
 
 		unsigned long long nodeCount();
 		unsigned long long connectionCount();
@@ -26,7 +26,7 @@ class NeuralNetwork {
 		void setTrainingInputs(std::string fileName, std::string entrySeparator, char pointSeperator);
 
 		void setTrainingOutputs(std::vector<std::vector<double>> o);
-		void setTrainingOutputs(std::string fileName, std::string entrySeparator, std::string pointSeperator);
+		void setTrainingOutputs(std::string fileName, std::string entrySeparator, char pointSeperator);
 
 		std::vector<double> forwardCompute(std::vector<double> inputs);
 		double calculateCurrentLoss();
@@ -57,12 +57,12 @@ class NeuralNetwork {
 		std::vector<std::vector<double>> trainingInputs;
 		std::vector<std::vector<double>> trainingOutputs;
 
-		void optimizeBias(Node n, int steps, double stepSize);
-		void optimizeWeight(Connection c, int steps, double stepSize);
+		void optimizeBias(Node& n, int steps, double stepSize);
+		void optimizeWeight(Connection& c, int steps, double stepSize);
 		void randomizeAllVariables(double min, double max);
 
-		Node getNode(unsigned long long index);
-		Connection getConnection(unsigned long long index);
+		Node& getNode(unsigned long long index);
+		Connection& getConnection(unsigned long long index);
 
 		double extractDoubleFromString(std::string s);
 
