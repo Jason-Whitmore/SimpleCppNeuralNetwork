@@ -237,6 +237,7 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 	return results;
 }
 
+//probably the issue
 double NeuralNetwork::calculateCurrentLoss() {
 	double total = 0;
 
@@ -259,7 +260,7 @@ double NeuralNetwork::calculateCurrentLoss() {
 
 		//compare results
 		//compare columns
-		for (int i = 0; i < getTrainingOutputs()[0].size(); i++) {
+		for (int i = 0; i < trainingInputs[0].size(); i++) {
 			b = outputFromCompute[i];
 			c = currentOutputRow[i];
 			a = Helper::calculateLoss(outputFromCompute[i], currentOutputRow[i]);
@@ -269,9 +270,9 @@ double NeuralNetwork::calculateCurrentLoss() {
 
 		
 	}
-
-
-	return total / currentInputRow.size();
+	
+	double ans = total / trainingInputs.size();
+	return total / trainingInputs.size();
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
@@ -289,12 +290,12 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 
 		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 3; pass++) {
 			if (Helper::randomNumber(0.0,1.0) < ((double)nodeCount() / (connectionCount() + nodeCount()))) {
-				optimizeBias(pickRandomNode(), numberOfSteps, stepSize * (1 - (pass / ((double)(nodeCount() + connectionCount()) * 3.0))));
+				optimizeBias(pickRandomNode(), numberOfSteps, stepSize);
 			} else {
-				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3.0))));
+				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize);
 			}
 		}
-		
+		//dynamic stepsize thing: stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3.0)))
 
 		currentLoss = calculateCurrentLoss();
 
@@ -398,16 +399,24 @@ void NeuralNetwork::saveWeights() {
 
 
 
-void NeuralNetwork::optimizeBias(Node& n, int steps, double stepSize) {
+
+
+void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
 
 	double oldLoss = 0;
 	double newLoss = 0;
 
 	double currentStep = stepSize;
+	double b = 0;
+	double a = 0;
 	//values not changing
 	for (int i = 0; i < steps; i++) {
 		oldLoss = calculateCurrentLoss();
+
+		b = n.getBias();
 		n.setBias(n.getBias() + currentStep);
+		a = n.getBias();
+
 		newLoss = calculateCurrentLoss();
 
 		if (oldLoss < newLoss) {
@@ -419,7 +428,7 @@ void NeuralNetwork::optimizeBias(Node& n, int steps, double stepSize) {
 
 }
 
-void NeuralNetwork::optimizeWeight(Connection& c, int steps, double stepSize) {
+void NeuralNetwork::optimizeWeight(Connection c, int steps, double stepSize) {
 
 
 	double oldLoss = 0;
@@ -502,11 +511,26 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 }
 
 
+void NeuralNetwork::testMethod() {
+
+
+	std::vector<double> t = std::vector<double>();
+	t.push_back(3.1);
+
+
+	for (int i = 0; i < 5; i++) {
+		layers[0].getNodes()[0].getOutputs()[0].setWeight(i);
+		//std::cout << calculateCurrentLoss() << " " << forwardCompute(t)[0] << std::endl;
+	}
+
+
+}
+
 
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1,1, 3, 5);
+	NeuralNetwork n = NeuralNetwork(1,1, 3, 10);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -528,8 +552,8 @@ int main() {
 	
 	test.push_back(5.1);
 
-	n.gradientDescentTraining(0.1, 100, -50, 50, 5, 25);
-
+	n.gradientDescentTraining(0.1, 50, -50, 50, 5, 10);
+	//n.testMethod();
 
 	std::vector<double> r = n.forwardCompute(test);
 

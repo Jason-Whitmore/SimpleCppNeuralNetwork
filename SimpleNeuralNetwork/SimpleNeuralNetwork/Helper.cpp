@@ -17,23 +17,11 @@ double Helper::randomNumber(double a, double b) {
 }
 
 double Helper::calculateLoss(double value, double target) {
-	double similarity;
-
-	if (value > target) {
-		if (value == 0) {
-			return 0;
-		}
-
-		similarity = target / value;
+	if (target != 0) {
+		return (value - target)/ std::abs(target);
 	} else {
-		if (target == 0) {
-			return 0;
-		}
-
-		similarity = value / target;
+		(value - target) / DBL_EPSILON;
 	}
-
-	return std::abs(1 - similarity);
 }
 
 double Helper::activationFunctionRELU(double sum, double bias) {

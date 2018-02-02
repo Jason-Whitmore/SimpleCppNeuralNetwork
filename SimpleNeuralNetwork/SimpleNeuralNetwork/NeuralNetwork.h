@@ -46,7 +46,7 @@ class NeuralNetwork {
 		void readInputsFromCSV();
 		void readOutputsFromCSV();
 
-
+		void testMethod();
 
 	private:
 		std::vector<NodeLayer> layers;
@@ -57,8 +57,8 @@ class NeuralNetwork {
 		std::vector<std::vector<double>> trainingInputs;
 		std::vector<std::vector<double>> trainingOutputs;
 
-		void optimizeBias(Node& n, int steps, double stepSize);
-		void optimizeWeight(Connection& c, int steps, double stepSize);
+		void optimizeBias(Node n, int steps, double stepSize);
+		void optimizeWeight(Connection c, int steps, double stepSize);
 		void randomizeAllVariables(double min, double max);
 
 		Node& getNode(unsigned long long index);
