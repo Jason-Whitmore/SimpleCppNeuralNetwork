@@ -6,11 +6,11 @@ class Node {
 	Node();
 	~Node();
 
-	std::vector<Connection>& getInputs();
-	std::vector<Connection>& getOutputs();
+	std::vector<Connection*>& getInputs();
+	std::vector<Connection*>& getOutputs();
 
-	void setInputs(std::vector<Connection> i);
-	void setOutputs(std::vector<Connection> o);
+	void setInputs(std::vector<Connection*> i);
+	void setOutputs(std::vector<Connection*> o);
 
 	void setValue(double v);
 	double getValue();
@@ -21,15 +21,15 @@ class Node {
 	void changeNeutralStatus();
 	bool isNeutral();
 
-	void addOutput(Connection c);
-	void addInput(Connection c);
+	void addOutput(Connection* c);
+	void addInput(Connection* c);
 
 
 
 
 	private:
-	std::vector<Connection> inputs;
-	std::vector<Connection> outputs;
+	std::vector<Connection*> inputs;
+	std::vector<Connection*> outputs;
 
 	double value;
 	double bias;

@@ -16,12 +16,34 @@ double Helper::randomNumber(double a, double b) {
 	return a + (rand() / ((double)RAND_MAX)) * (b-a);
 }
 
-double Helper::calculateLoss(double value, double target) {
-	if (target != 0) {
-		return (value - target)/ std::abs(target);
+
+
+double Helper::calculateSimilarity(double a, double b) {
+	//return Math.Abs(a - b);
+
+
+	if (a > b) {
+		if (a == 0) {
+			return 0;
+		}
+
+		return b / a;
 	} else {
-		(value - target) / DBL_EPSILON;
+		if (b == 0) {
+			return 0;
+		}
+
+		return a / b;
 	}
+}
+
+
+
+
+double Helper::calculateLoss(double a, double b) {
+
+	return 1 - calculateSimilarity(a,b);
+
 }
 
 double Helper::activationFunctionRELU(double sum, double bias) {

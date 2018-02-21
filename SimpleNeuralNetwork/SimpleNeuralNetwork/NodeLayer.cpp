@@ -58,16 +58,18 @@ void NodeLayer::forwardCompute() {
 		}
 
 
-		//debug thing
-
-		for (int i = 0; i < nodes.size(); i++) {
-			std::cout << "Node: " << i << " Value: " << nodeValue << std::endl;
-		}
+		
 		
 		//reset variables
 		sum = 0;
 		nodeValue = 0;
 		
+	}
+
+	//debug thing
+
+	for (int i = 0; i < nodes.size(); i++) {
+		//std::cout << "Node: " << i << " Value: " << nodes[i].getValue() << std::endl;
 	}
 
 }

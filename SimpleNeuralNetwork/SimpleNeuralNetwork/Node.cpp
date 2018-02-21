@@ -12,19 +12,19 @@ Node::Node() {
 Node::~Node() {
 }
 
-std::vector<Connection>& Node::getInputs() {
+std::vector<Connection*>& Node::getInputs() {
 	return inputs;
 }
 
-std::vector<Connection>& Node::getOutputs() {
+std::vector<Connection*>& Node::getOutputs() {
 	return outputs;
 }
 
-void Node::setInputs(std::vector<Connection> i) {
+void Node::setInputs(std::vector<Connection*> i) {
 	inputs = i;
 }
 
-void Node::setOutputs(std::vector<Connection> o) {
+void Node::setOutputs(std::vector<Connection*> o) {
 	outputs = o;
 }
 
@@ -54,13 +54,13 @@ bool Node::isNeutral() {
 	return Neutral;
 }
 
-void Node::addOutput(Connection c) {
+void Node::addOutput(Connection* c) {
 	outputs.reserve(outputs.size() + 1);
 	outputs.push_back(c);
 	
 }
 
-void Node::addInput(Connection c) {
+void Node::addInput(Connection* c) {
 	inputs.reserve(inputs.size() + 1);
 	inputs.push_back(c);
 }

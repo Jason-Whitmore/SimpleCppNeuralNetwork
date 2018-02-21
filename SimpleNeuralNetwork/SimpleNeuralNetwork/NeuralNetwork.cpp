@@ -3,7 +3,7 @@
 
 
 NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer) {
-
+	srand(NULL);
 	//create layers
 	for (int l = 0; l < layerCount + 2; l++) {
 		layers.push_back(NodeLayer());
@@ -47,12 +47,8 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	for (int l = 1; l < layers.size(); l++) {
 		for (int s = 0; s < layers[l-1].getNodes().size(); s++) {
 			for (int d = 0; d < layers[l].getNodes().size(); d++) {
-				Connection c = Connection();
-				
-				
-				//vector doesnt grow? wtf????
-				//also, impossible to change anything else in this data structure (check the biases)
-
+				Connection* c = new Connection();
+				std::cout << &c << std::endl;
 				//maybe use references instead? <-----fixed the problem, for now atleast.
 				layers[l-1].getNodes()[s].addOutput(c);
 
@@ -222,6 +218,7 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 	//run compute on each layer
 
 	for (int l = 1; l < layers.size(); l++) {
+		//std::cout << "Compute called on layer " << l << std::endl;
 		layers[l].forwardCompute();
 	}
 
@@ -250,29 +247,24 @@ double NeuralNetwork::calculateCurrentLoss() {
 	double b;
 	double c;
 
+	double loss = 0;
 	//test each row
 	for(int r = 0; r < trainingInputs.size(); r++) {
 
-		currentInputRow = trainingInputs[r];
-		currentOutputRow = trainingOutputs[r];
+		
 
-		outputFromCompute = forwardCompute(currentInputRow);
+		for (int dp = 0; dp < trainingInputs.size(); dp++) {
+			for (int c = 0; c < trainingOutputs[0].size(); c++) {
 
-		//compare results
-		//compare columns
-		for (int i = 0; i < trainingInputs[0].size(); i++) {
-			b = outputFromCompute[i];
-			c = currentOutputRow[i];
-			a = Helper::calculateLoss(outputFromCompute[i], currentOutputRow[i]);
+				//answer = Helper.calculateSimilarity(compute(Helper.toList(Helper.isolateRow(trainingInputs, dp)))[c], trainingOutputs[dp, c]);
 
-			total += a;
+				loss += Helper::calculateLoss(forwardCompute(trainingInputs[dp])[c], trainingOutputs[dp][c]);
+			}
 		}
 
-		
 	}
-	
-	double ans = total / trainingInputs.size();
-	return total / trainingInputs.size();
+
+		return loss / trainingInputs.size();
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
@@ -422,7 +414,7 @@ void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
 		if (oldLoss < newLoss) {
 			currentStep *= -.5;
 		}
-		std::cout << std::to_string(calculateCurrentLoss()) << std::endl;
+		//std::cout << std::to_string(calculateCurrentLoss()) << std::endl;
 	}
 
 
@@ -457,7 +449,11 @@ void NeuralNetwork::randomizeAllVariables(double min, double max) {
 	}
 
 	for (int c = 0; c < connectionCount(); c++) {
-		getConnection(c).setWeight(Helper::randomNumber(min,max));
+		Connection co = getConnection(c);
+		//std::cout << &co;
+		double b = co.getWeight();
+		co.setWeight(Helper::randomNumber(min,max));
+		double a = co.getWeight();
 	}
 }
 
@@ -514,15 +510,12 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 void NeuralNetwork::testMethod() {
 
 
-	std::vector<double> t = std::vector<double>();
-	t.push_back(3.1);
+	randomizeAllVariables(-10.0, 10.0);
+	std::cout << getConnection(0).getWeight();
 
-
-	for (int i = 0; i < 5; i++) {
-		layers[0].getNodes()[0].getOutputs()[0].setWeight(i);
-		//std::cout << calculateCurrentLoss() << " " << forwardCompute(t)[0] << std::endl;
+	for (int i = 0; i < connectionCount(); i++) {
+		//std::cout << getConnection(i).getWeight() << std::endl;
 	}
-
 
 }
 
@@ -530,7 +523,7 @@ void NeuralNetwork::testMethod() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1,1, 3, 10);
+	NeuralNetwork n = NeuralNetwork(1,1, 1, 20);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -550,12 +543,12 @@ int main() {
 
 	
 	
-	test.push_back(5.1);
+	n.testMethod();
 
-	n.gradientDescentTraining(0.1, 50, -50, 50, 5, 10);
+	//n.gradientDescentTraining(0.1, 50, -50, 50, 5, 10);
 	//n.testMethod();
 
-	std::vector<double> r = n.forwardCompute(test);
+	//std::vector<double> r = n.forwardCompute(test);
 
 	return 0;
 }

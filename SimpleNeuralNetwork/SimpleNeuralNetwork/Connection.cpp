@@ -4,7 +4,7 @@ class Node;
 
 Connection::Connection() {
 	weight = 0;
-	setValue(0);
+	value = 0;
 }
 
 
@@ -23,6 +23,7 @@ double Connection::getValue() {
 
 void Connection::setWeight(double w) {
 	weight = w;
+	
 }
 
 double Connection::getWeight() {
