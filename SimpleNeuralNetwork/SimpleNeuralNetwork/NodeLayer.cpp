@@ -43,7 +43,7 @@ void NodeLayer::forwardCompute() {
 		//inner loop, through the node inputs
 		for(int i = 0; i < nodes[n].getInputs().size(); i++) {
 			
-			sum += nodes[n].getInputs()[i].getValue() * nodes[n].getInputs()[i].getWeight();
+			sum += nodes[n].getInputs()[i]->getValue() * nodes[n].getInputs()[i]->getWeight();
 			
 		}
 
@@ -54,7 +54,7 @@ void NodeLayer::forwardCompute() {
 		
 		//apply values to the outputs
 		for(int i = 0; i < nodes[n].getOutputs().size(); i++) {
-			nodes[n].getOutputs()[i].setValue(nodeValue);
+			nodes[n].getOutputs()[i]->setValue(nodeValue);
 		}
 
 
@@ -85,7 +85,7 @@ void NodeLayer::backwardCompute() {
 		//inner loop, through the node outputs
 		for (int i = 0; i < nodes[n].getOutputs().size(); i++) {
 
-			sum += nodes[n].getOutputs()[i].getValue() * nodes[n].getOutputs()[i].getWeight();
+			sum += nodes[n].getOutputs()[i]->getValue() * nodes[n].getOutputs()[i]->getWeight();
 
 		}
 
@@ -96,7 +96,7 @@ void NodeLayer::backwardCompute() {
 
 		//apply values to the inputs
 		for (int i = 0; i < nodes[n].getInputs().size(); i++) {
-			nodes[n].getInputs()[i].setValue(nodeValue);
+			nodes[n].getInputs()[i]->setValue(nodeValue);
 		}
 
 		//reset variables

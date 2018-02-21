@@ -48,7 +48,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 		for (int s = 0; s < layers[l-1].getNodes().size(); s++) {
 			for (int d = 0; d < layers[l].getNodes().size(); d++) {
 				Connection* c = new Connection();
-				std::cout << &c << std::endl;
+				//std::cout << &c << std::endl;
 				//maybe use references instead? <-----fixed the problem, for now atleast.
 				layers[l-1].getNodes()[s].addOutput(c);
 
@@ -90,7 +90,7 @@ Node& NeuralNetwork::pickRandomNode() {
 
 }
 
-Connection& NeuralNetwork::pickRandomConnection() {
+Connection* NeuralNetwork::pickRandomConnection() {
 	int connectionNumber = Helper::randomNumber(0, connectionCount());
 	int currentConnection = 0;
 
@@ -209,7 +209,7 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 		layers[0].getNodes()[i].setValue(inputs[i]);
 
 		for (int x = 0; x < layers[0].getNodes()[i].getOutputs().size(); x++) {
-			layers[0].getNodes()[i].getOutputs()[x].setValue(inputs[i]);
+			layers[0].getNodes()[i].getOutputs()[x]->setValue(inputs[i]);
 		}
 	}
 
@@ -264,7 +264,7 @@ double NeuralNetwork::calculateCurrentLoss() {
 
 	}
 
-		return loss / trainingInputs.size();
+		return std::abs(loss / trainingInputs.size());
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
@@ -370,7 +370,7 @@ void NeuralNetwork::saveWeights() {
 
 			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
 
-				s += std::to_string(layers[l].getNodes()[n].getInputs()[c].getWeight());
+				s += std::to_string(layers[l].getNodes()[n].getInputs()[c]->getWeight());
 				s += " ";
 
 			}
@@ -420,7 +420,7 @@ void NeuralNetwork::optimizeBias(Node n, int steps, double stepSize) {
 
 }
 
-void NeuralNetwork::optimizeWeight(Connection c, int steps, double stepSize) {
+void NeuralNetwork::optimizeWeight(Connection* c, int steps, double stepSize) {
 
 
 	double oldLoss = 0;
@@ -430,7 +430,7 @@ void NeuralNetwork::optimizeWeight(Connection c, int steps, double stepSize) {
 
 	for (int i = 0; i < steps; i++) {
 		oldLoss = calculateCurrentLoss();
-		c.setWeight(c.getWeight() + currentStep);
+		c->setWeight(c->getWeight() + currentStep);
 		newLoss = calculateCurrentLoss();
 
 		if (oldLoss < newLoss) {
@@ -449,11 +449,7 @@ void NeuralNetwork::randomizeAllVariables(double min, double max) {
 	}
 
 	for (int c = 0; c < connectionCount(); c++) {
-		Connection co = getConnection(c);
-		//std::cout << &co;
-		double b = co.getWeight();
-		co.setWeight(Helper::randomNumber(min,max));
-		double a = co.getWeight();
+		getConnection(c)->setWeight(Helper::randomNumber(min, max));
 	}
 }
 
@@ -477,7 +473,7 @@ Node& NeuralNetwork::getNode(unsigned long long index) {
 
 }
 
-Connection& NeuralNetwork::getConnection(unsigned long long index) {
+Connection* NeuralNetwork::getConnection(unsigned long long index) {
 	
 	unsigned long long currentConnection = 0;
 
@@ -511,7 +507,7 @@ void NeuralNetwork::testMethod() {
 
 
 	randomizeAllVariables(-10.0, 10.0);
-	std::cout << getConnection(0).getWeight();
+	//std::cout << getConnection(0)->getWeight();
 
 	for (int i = 0; i < connectionCount(); i++) {
 		//std::cout << getConnection(i).getWeight() << std::endl;
@@ -523,7 +519,7 @@ void NeuralNetwork::testMethod() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1,1, 1, 20);
+	NeuralNetwork n = NeuralNetwork(1, 1, 3, 5);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -545,7 +541,7 @@ int main() {
 	
 	n.testMethod();
 
-	//n.gradientDescentTraining(0.1, 50, -50, 50, 5, 10);
+	n.gradientDescentTraining(0.1, 50, -50, 50, 5, 10);
 	//n.testMethod();
 
 	//std::vector<double> r = n.forwardCompute(test);

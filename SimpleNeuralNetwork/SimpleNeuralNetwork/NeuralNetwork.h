@@ -13,7 +13,7 @@ class NeuralNetwork {
 		~NeuralNetwork();
 
 		Node& pickRandomNode();
-		Connection& pickRandomConnection();
+		Connection* pickRandomConnection();
 
 		unsigned long long nodeCount();
 		unsigned long long connectionCount();
@@ -58,11 +58,11 @@ class NeuralNetwork {
 		std::vector<std::vector<double>> trainingOutputs;
 
 		void optimizeBias(Node n, int steps, double stepSize);
-		void optimizeWeight(Connection c, int steps, double stepSize);
+		void optimizeWeight(Connection* c, int steps, double stepSize);
 		void randomizeAllVariables(double min, double max);
 
 		Node& getNode(unsigned long long index);
-		Connection& getConnection(unsigned long long index);
+		Connection* getConnection(unsigned long long index);
 
 		double extractDoubleFromString(std::string s);
 
