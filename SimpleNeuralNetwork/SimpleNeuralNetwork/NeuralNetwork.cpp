@@ -248,23 +248,25 @@ double NeuralNetwork::calculateCurrentLoss() {
 	double c;
 
 	double loss = 0;
+
+	
 	//test each row
-	for(int r = 0; r < trainingInputs.size(); r++) {
+	
 
 		
 
 		for (int dp = 0; dp < trainingInputs.size(); dp++) {
 			for (int c = 0; c < trainingOutputs[0].size(); c++) {
 
-				//answer = Helper.calculateSimilarity(compute(Helper.toList(Helper.isolateRow(trainingInputs, dp)))[c], trainingOutputs[dp, c]);
+				outputFromCompute = forwardCompute(trainingInputs[dp]);
 
-				loss += Helper::calculateLoss(forwardCompute(trainingInputs[dp])[c], trainingOutputs[dp][c]);
+				loss += std::pow((outputFromCompute[c] - trainingOutputs.at(dp).at(c)), 2);
 			}
 		}
 
-	}
+	
 
-		return std::abs(loss / trainingInputs.size());
+		return std::sqrt(loss / (trainingInputs.size() - 1.0));
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
@@ -306,6 +308,9 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 		std::cout << "Progress: " << (int)((i / ((double)iterations)) * 100) << "%" << std::endl;
 	}
 
+
+	loadBiases();
+	loadWeights();
 
 }
 
@@ -504,10 +509,12 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 
 
 void NeuralNetwork::testMethod() {
+	getConnection(5)->setWeight(0);
+	std::cout << calculateCurrentLoss() << std::endl;
+	getConnection(5)->setWeight(-10);
+	std::cout << calculateCurrentLoss() << std::endl;
+	
 
-
-	randomizeAllVariables(-10.0, 10.0);
-	//std::cout << getConnection(0)->getWeight();
 
 	for (int i = 0; i < connectionCount(); i++) {
 		//std::cout << getConnection(i).getWeight() << std::endl;
@@ -519,7 +526,7 @@ void NeuralNetwork::testMethod() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 3, 5);
+	NeuralNetwork n = NeuralNetwork(1, 1, 4, 4);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -539,12 +546,12 @@ int main() {
 
 	
 	
-	n.testMethod();
-
-	n.gradientDescentTraining(0.1, 50, -50, 50, 5, 10);
 	//n.testMethod();
 
-	//std::vector<double> r = n.forwardCompute(test);
+	//n.gradientDescentTraining(0.01, 200, -50, 50, 10, 5);
+	//n.testMethod();
+	test.push_back(2);
+	std::vector<double> r = n.forwardCompute(test);
 
 	return 0;
 }

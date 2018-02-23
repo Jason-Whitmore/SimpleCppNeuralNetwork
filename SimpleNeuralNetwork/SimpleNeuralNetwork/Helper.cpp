@@ -42,7 +42,7 @@ double Helper::calculateSimilarity(double a, double b) {
 
 double Helper::calculateLoss(double a, double b) {
 
-	return std::abs(1 - calculateSimilarity(a,b));
+	return (1 - calculateSimilarity(a,b));
 
 }
 
@@ -52,7 +52,7 @@ double Helper::activationFunctionRELU(double sum, double bias) {
 	if (input >= 0) {
 		return input;
 	} else {
-		return input * 0.1;
+		return input * 0.001;
 	}
 }
 
