@@ -321,7 +321,7 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
 void NeuralNetwork::gradientDescentTraining(int iterations) {
 	gradientDescentTraining(0, iterations, -50, 50, 10, 5);
 }
-//test2
+//test3
 
 
 
