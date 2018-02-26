@@ -548,7 +548,7 @@ int main() {
 	
 	//n.testMethod();
 
-	//n.gradientDescentTraining(0.01, 200, -50, 50, 10, 5);
+	n.gradientDescentTraining(0.01, 200, -50, 50, 10, 20);
 	//n.testMethod();
 	test.push_back(2);
 	std::vector<double> r = n.forwardCompute(test);
