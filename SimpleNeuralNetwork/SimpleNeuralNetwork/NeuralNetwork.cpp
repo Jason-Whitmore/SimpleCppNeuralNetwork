@@ -328,14 +328,32 @@ void NeuralNetwork::gradientDescentTraining(int iterations) {
 void NeuralNetwork::loadWeights() {
 	std::ifstream file ("weights.txt");
 	std::string s = "";
+	std::string l = "";
 
+	
 
-	std::getline(file, s);
+	if (file.is_open()) {
+		while (file.good()) {
+			std::getline(file, l);
 
+			s += l;
+		}
+	} else {
+		std::cout << "error";
+	}
+
+	//file >> s;
+
+	//std::getline(file, s);
+
+	std::vector<double> w = Helper::parseLine(s, " ");
+
+	unsigned long long i = 0;
 	for (int l = 1; l < layers.size(); l++) {
 		for (int n = 0; n < layers[l].getNodes().size(); n++) {
 			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
-				
+				layers[l].getNodes()[n].getInputs()[c]->setWeight(w[i]);
+				i++;
 			}
 		}
 	}
@@ -526,7 +544,7 @@ void NeuralNetwork::testMethod() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 1, 5);
+	NeuralNetwork n = NeuralNetwork(1, 1, 2, 2);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -549,6 +567,7 @@ int main() {
 	//n.testMethod();
 
 	//n.gradientDescentTraining(0.01, 2000, -100, 100, 25, 20);
+	double loss = n.calculateCurrentLoss();
 	//n.testMethod();
 	test.push_back(10);
 	std::vector<double> r = n.forwardCompute(test);
