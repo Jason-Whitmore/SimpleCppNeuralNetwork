@@ -360,7 +360,35 @@ void NeuralNetwork::loadWeights() {
 }
 
 void NeuralNetwork::loadBiases() {
+	std::ifstream file("biases.txt");
+	std::string s = "";
+	std::string l = "";
 
+
+
+	if (file.is_open()) {
+		while (file.good()) {
+			std::getline(file, l);
+
+			s += l;
+		}
+	} else {
+		std::cout << "error";
+	}
+
+	//file >> s;
+
+	//std::getline(file, s);
+
+	std::vector<double> b = Helper::parseLine(s, " ");
+
+	unsigned long long i = 0;
+	for (int l = 1; l < layers.size(); l++) {
+		for (int n = 0; n < layers[l].getNodes().size(); n++) {
+			layers[l].getNodes()[n].setBias(b[i]);
+			i++;
+		}
+	}
 }
 
 void NeuralNetwork::saveBiases() {
