@@ -275,18 +275,19 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 	double bestLoss = 99999999999;
 	double currentLoss = 9999999999999;
 
+	double currentStepSize;
 
 	for (int i = 0; i < iterations && bestLoss > targetLoss; i++) {
 		randomizeAllVariables(lowerRandomizationBound, upperRandomizationBound);
 
-		
+		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 10; pass++) {
+			currentStepSize = stepSize * (1 - (pass / ((nodeCount() + connectionCount()) * 10.0)));
 
-
-		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 3; pass++) {
+			
 			if (Helper::randomNumber(0.0,1.0) < ((double)nodeCount() / (connectionCount() + nodeCount()))) {
-				optimizeBias(pickRandomNode(), numberOfSteps, stepSize);
+				optimizeBias(pickRandomNode(), numberOfSteps, currentStepSize);
 			} else {
-				optimizeWeight(pickRandomConnection(), numberOfSteps, stepSize);
+				optimizeWeight(pickRandomConnection(), numberOfSteps, currentStepSize);
 			}
 		}
 		//dynamic stepsize thing: stepSize * (1 -(pass / ((double)(nodeCount() + connectionCount()) * 3.0)))
@@ -315,13 +316,12 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
-	gradientDescentTraining(targetLoss, iterations, -50, 50, 10, 5);
+	gradientDescentTraining(targetLoss, iterations, -50, 50, 5, 10);
 }
 
 void NeuralNetwork::gradientDescentTraining(int iterations) {
-	gradientDescentTraining(0, iterations, -50, 50, 10, 5);
+	gradientDescentTraining(0, iterations, -50, 50, 5, 10);
 }
-//test3
 
 
 
@@ -526,7 +526,7 @@ void NeuralNetwork::testMethod() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 4, 4);
+	NeuralNetwork n = NeuralNetwork(1, 1, 1, 5);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -548,9 +548,9 @@ int main() {
 	
 	//n.testMethod();
 
-	n.gradientDescentTraining(0.01, 200, -50, 50, 10, 20);
+	//n.gradientDescentTraining(0.01, 2000, -100, 100, 25, 20);
 	//n.testMethod();
-	test.push_back(2);
+	test.push_back(10);
 	std::vector<double> r = n.forwardCompute(test);
 
 	return 0;
