@@ -594,7 +594,7 @@ int main() {
 	
 	//n.testMethod();
 
-	//n.gradientDescentTraining(0.01, 2000, -100, 100, 25, 20);
+	//n.gradientDescentTraining(0.01, 200, -100, 100, 25, 20);
 	double loss = n.calculateCurrentLoss();
 	//n.testMethod();
 	test.push_back(10);
