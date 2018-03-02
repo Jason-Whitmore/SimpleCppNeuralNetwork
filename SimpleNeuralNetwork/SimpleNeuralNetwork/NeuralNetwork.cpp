@@ -256,17 +256,21 @@ double NeuralNetwork::calculateCurrentLoss() {
 		
 
 		for (int dp = 0; dp < trainingInputs.size(); dp++) {
+
+			outputFromCompute = forwardCompute(trainingInputs[dp]);
+
 			for (int c = 0; c < trainingOutputs[0].size(); c++) {
 
-				outputFromCompute = forwardCompute(trainingInputs[dp]);
+				a = outputFromCompute[c];
+				b = trainingOutputs[dp][c];
 
-				loss += std::pow((outputFromCompute[c] - trainingOutputs.at(dp).at(c)), 2);
+				loss += Helper::calculateLoss(outputFromCompute[c],trainingOutputs[dp][c]);
 			}
 		}
 
 	
 
-		return std::sqrt(loss / (trainingInputs.size() - 1.0));
+		return loss / trainingInputs.size();
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
@@ -594,11 +598,25 @@ int main() {
 	
 	//n.testMethod();
 
-	//n.gradientDescentTraining(0.01, 200, -100, 100, 25, 20);
+	n.gradientDescentTraining(.001, 200, -100, 100, 25, 20);
 	double loss = n.calculateCurrentLoss();
 	//n.testMethod();
-	test.push_back(10);
+	test.push_back(0);
 	std::vector<double> r = n.forwardCompute(test);
+
+	std::cout << "0: " << n.forwardCompute(test)[0] << std::endl;
+
+	test.clear();
+	test.push_back(1);
+	std::cout << "1: " << n.forwardCompute(test)[0] << std::endl;
+
+	test.clear();
+	test.push_back(2);
+	std::cout << "2: " << n.forwardCompute(test)[0] << std::endl;
+
+	test.clear();
+	test.push_back(3);
+	std::cout << "3: " << n.forwardCompute(test)[0] << std::endl;
 
 	return 0;
 }
