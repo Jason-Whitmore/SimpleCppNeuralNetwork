@@ -391,11 +391,11 @@ void NeuralNetwork::loadBiases() {
 void NeuralNetwork::saveBiases() {
 	std::string s = "";
 
-	for (int l = 0; l < layers.size(); l++) {
-		for (int n = 0; n < layers[l].getNodes().size(); n++) {
-			s += std::to_string(layers[l].getNodes()[n].getBias());
-			s += " ";
-		}
+
+
+	for (unsigned long long i = 0; i < nodeCount(); i++) {
+		s += std::to_string(getNode(i).getBias());
+		s += " ";
 	}
 
 	std::ofstream file("biases.txt");
@@ -411,21 +411,12 @@ void NeuralNetwork::saveBiases() {
 
 void NeuralNetwork::saveWeights() {
 	std::string s = "";
-	for (int l = 1; l < layers.size(); l++) {
 
-		
-		for (int n = 0; n < layers[l].getNodes().size(); n++) {
-
-			for (int c = 0; c < layers[l].getNodes()[n].getInputs().size(); c++) {
-
-				s += std::to_string(layers[l].getNodes()[n].getInputs()[c]->getWeight());
-				s += " ";
-
-			}
-
-		}
-
+	for (unsigned long long i = 0; i < connectionCount(); i++) {
+		s += std::to_string(getConnection(i)->getWeight());
+		s += " ";
 	}
+
 
 	std::ofstream file ("weights.txt");
 	if (!file.is_open()) {
@@ -559,10 +550,16 @@ void NeuralNetwork::testMethod() {
 		getNode(i).setBias(i);
 	}
 
+	for (int i = 0; i < connectionCount(); i++) {
+		getConnection(i)->setWeight(i);
+	}
+
 	saveBiases();
+	saveWeights();
 	randomizeAllVariables(-10, 10);
 
 	loadBiases();
+	loadWeights();
 
 }
 
@@ -577,7 +574,7 @@ int main() {
 
 	n.loadBiases();
 	n.loadWeights();
-
+	
 
 	std::vector<double> test = std::vector<double>();
 	//std::string t = "5,4,3,2,1";
@@ -587,13 +584,13 @@ int main() {
 
 	n.setTrainingInputs("TInputs", ",", '\n');
 	n.setTrainingOutputs("TOutputs", ",", '\n');
-
+	double loss = n.calculateCurrentLoss();
 	
 	
 	//n.testMethod();
 
-	n.gradientDescentTraining(.001, 10, -10, 10, 25, 20);
-	double loss = n.calculateCurrentLoss();
+	//n.gradientDescentTraining(.001, 10, -10, 10, 25, 20);
+	
 	//n.testMethod();
 
 
