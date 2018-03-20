@@ -48,6 +48,9 @@ class NeuralNetwork {
 
 		void testMethod();
 
+		void debugWeights();
+		void debugBiases();
+
 	private:
 		std::vector<NodeLayer> layers;
 
@@ -65,6 +68,8 @@ class NeuralNetwork {
 		Connection* getConnection(unsigned long long index);
 
 		double extractDoubleFromString(std::string s);
+
+		void cleanOutNetwork();
 
 		
 };

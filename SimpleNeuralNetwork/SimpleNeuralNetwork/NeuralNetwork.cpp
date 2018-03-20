@@ -231,6 +231,9 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 		results.push_back(layers[layers.size() - 1].getNodes()[i].getValue());
 	}
 
+	cleanOutNetwork();
+
+
 	return results;
 }
 
@@ -353,7 +356,7 @@ void NeuralNetwork::loadWeights() {
 	std::vector<double> w = Helper::parseLine(s, " ");
 
 	
-	for (unsigned long long i = 0; i < nodeCount(); i++) {
+	for (unsigned long long i = 0; i < connectionCount(); i++) {
 		getConnection(i)->setWeight(w[i]);
 	}
 }
@@ -541,6 +544,16 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 	return std::stoi(d);
 }
 
+void NeuralNetwork::cleanOutNetwork() {
+	for (unsigned long long i = 0; i < connectionCount(); i++) {
+		getConnection(i)->setValue(0);
+	}
+
+	for (unsigned long long i = 0; i < nodeCount(); i++) {
+		getNode(i).setValue(0);
+	}
+}
+
 
 void NeuralNetwork::testMethod() {
 	
@@ -556,11 +569,38 @@ void NeuralNetwork::testMethod() {
 
 	saveBiases();
 	saveWeights();
+	std::cout << "Loss with trained variables: " << calculateCurrentLoss() << std::endl;
+
+	debugBiases();
+	debugWeights();
+
 	randomizeAllVariables(-10, 10);
+	std::cout << "Loss with random variables: " << calculateCurrentLoss() << std::endl;
+
+	debugBiases();
+	debugWeights();
+
 
 	loadBiases();
 	loadWeights();
+	std::cout << "Loss with trained variables: " << calculateCurrentLoss() << std::endl;
 
+	debugBiases();
+	debugWeights();
+
+}
+
+void NeuralNetwork::debugWeights() {
+	for (unsigned long long i = 0; i < connectionCount(); i++) {
+		std::cout << "Connection : " << i << " Weight: " << getConnection(i)->getWeight() << std::endl;
+	}
+	
+}
+
+void NeuralNetwork::debugBiases() {
+	for (unsigned long long i = 0; i < nodeCount(); i++) {
+		std::cout << "Node : " << i << " Bias: " << getNode(i).getBias() << std::endl;
+	}
 }
 
 
@@ -589,13 +629,14 @@ int main() {
 	
 	//n.testMethod();
 
-	//n.gradientDescentTraining(.001, 10, -10, 10, 25, 20);
+	n.gradientDescentTraining(.001, 10, -10, 10, 25, 20);
 	
 	//n.testMethod();
 
 
-	//n.testMethod();
+	n.testMethod();
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
+
 	test.push_back(0);
 	std::vector<double> r = n.forwardCompute(test);
 
