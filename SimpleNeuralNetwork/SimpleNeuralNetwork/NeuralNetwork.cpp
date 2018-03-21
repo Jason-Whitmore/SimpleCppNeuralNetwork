@@ -12,7 +12,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for first layer
 	for (int i = 0; i < numInputs; i++) {
 		layers[0].addNode(RELUNode());
-		nodes++;
+		nodeCount++;
 	}
 
 
@@ -21,7 +21,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 		for (int n = 0; n < nodesPerLayer; n++) {
 			layers[l].addNode(RELUNode());
-			nodes++;
+			nodeCount++;
 		}
 
 	}
@@ -31,7 +31,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for last layer
 	for (int i = 0; i < numOutputs; i++) {
 		layers[layers.size() - 1].addNode(RELUNode());
-		nodes++;
+		nodeCount++;
 	}
 
 
@@ -55,7 +55,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 				layers[l].getNodes()[d].addInput(c);
 
 				
-				connections++;
+				connectionCount++;
 				
 			}
 		}
@@ -72,7 +72,7 @@ NeuralNetwork::~NeuralNetwork(){
 }
 
 Node& NeuralNetwork::pickRandomNode() {
-	int nodeNumber = Helper::randomNumber(0, nodeCount());
+	int nodeNumber = Helper::randomNumber(0, getNodeCount());
 	
 	int currentNode = 0;
 	for (int l = 0; l < layers.size(); l++) {
@@ -91,7 +91,7 @@ Node& NeuralNetwork::pickRandomNode() {
 }
 
 Connection* NeuralNetwork::pickRandomConnection() {
-	int connectionNumber = Helper::randomNumber(0, connectionCount());
+	int connectionNumber = Helper::randomNumber(0, getConnectionCount());
 	int currentConnection = 0;
 
 	for (int l = 1; l < layers.size(); l++) {
@@ -108,12 +108,12 @@ Connection* NeuralNetwork::pickRandomConnection() {
 	}
 }
 
-unsigned long long NeuralNetwork::nodeCount() {
-	return nodes;
+unsigned long long NeuralNetwork::getNodeCount() {
+	return nodeCount;
 }
 
-unsigned long long NeuralNetwork::connectionCount() {
-	return connections;
+unsigned long long NeuralNetwork::getConnectionCount() {
+	return connectionCount;
 }
 
 std::vector<std::vector<double>>& NeuralNetwork::getTrainingInputs() {
@@ -287,11 +287,11 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 	for (int i = 0; i < iterations && bestLoss > targetLoss; i++) {
 		randomizeAllVariables(lowerRandomizationBound, upperRandomizationBound);
 
-		for (unsigned long long pass = 0; pass < (nodeCount() + connectionCount()) * 10; pass++) {
-			currentStepSize = stepSize * (1 - (pass / ((nodeCount() + connectionCount()) * 10.0)));
+		for (unsigned long long pass = 0; pass < (getNodeCount() + getConnectionCount()) * 10; pass++) {
+			currentStepSize = stepSize * (1 - (pass / ((getNodeCount() + getConnectionCount()) * 10.0)));
 
 			
-			if (Helper::randomNumber(0.0,1.0) < ((double)nodeCount() / (connectionCount() + nodeCount()))) {
+			if (Helper::randomNumber(0.0,1.0) < ((double)getNodeCount() / (getConnectionCount() + getNodeCount()))) {
 				optimizeBias(pickRandomNode(), numberOfSteps, currentStepSize);
 			} else {
 				optimizeWeight(pickRandomConnection(), numberOfSteps, currentStepSize);
@@ -356,7 +356,7 @@ void NeuralNetwork::loadWeights() {
 	std::vector<double> w = Helper::parseLine(s, " ");
 
 	
-	for (unsigned long long i = 0; i < connectionCount(); i++) {
+	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
 		getConnection(i)->setWeight(w[i]);
 	}
 }
@@ -386,7 +386,7 @@ void NeuralNetwork::loadBiases() {
 
 	
 	
-	for (unsigned long long i = 0; i < nodeCount(); i++) {
+	for (unsigned long long i = 0; i < getNodeCount(); i++) {
 		getNode(i).setBias(b[i]);
 	}
 }
@@ -396,7 +396,7 @@ void NeuralNetwork::saveBiases() {
 
 
 
-	for (unsigned long long i = 0; i < nodeCount(); i++) {
+	for (unsigned long long i = 0; i < getNodeCount(); i++) {
 		s += std::to_string(getNode(i).getBias());
 		s += " ";
 	}
@@ -415,7 +415,7 @@ void NeuralNetwork::saveBiases() {
 void NeuralNetwork::saveWeights() {
 	std::string s = "";
 
-	for (unsigned long long i = 0; i < connectionCount(); i++) {
+	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
 		s += std::to_string(getConnection(i)->getWeight());
 		s += " ";
 	}
@@ -486,11 +486,11 @@ void NeuralNetwork::optimizeWeight(Connection* c, int steps, double stepSize) {
 }
 
 void NeuralNetwork::randomizeAllVariables(double min, double max) {
-	for (int n = 0; n < nodeCount(); n++) {
+	for (int n = 0; n < getNodeCount(); n++) {
 		getNode(n).setBias(Helper::randomNumber(min,max));
 	}
 
-	for (int c = 0; c < connectionCount(); c++) {
+	for (int c = 0; c < getConnectionCount(); c++) {
 		getConnection(c)->setWeight(Helper::randomNumber(min, max));
 	}
 }
@@ -545,11 +545,11 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 }
 
 void NeuralNetwork::cleanOutNetwork() {
-	for (unsigned long long i = 0; i < connectionCount(); i++) {
+	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
 		getConnection(i)->setValue(0);
 	}
 
-	for (unsigned long long i = 0; i < nodeCount(); i++) {
+	for (unsigned long long i = 0; i < getNodeCount(); i++) {
 		getNode(i).setValue(0);
 	}
 }
@@ -559,11 +559,11 @@ void NeuralNetwork::testMethod() {
 	
 
 
-	for (int i = 0; i < nodeCount(); i++) {
+	for (int i = 0; i < getNodeCount(); i++) {
 		getNode(i).setBias(i);
 	}
 
-	for (int i = 0; i < connectionCount(); i++) {
+	for (int i = 0; i < getConnectionCount(); i++) {
 		getConnection(i)->setWeight(i);
 	}
 
@@ -591,14 +591,14 @@ void NeuralNetwork::testMethod() {
 }
 
 void NeuralNetwork::debugWeights() {
-	for (unsigned long long i = 0; i < connectionCount(); i++) {
+	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
 		std::cout << "Connection : " << i << " Weight: " << getConnection(i)->getWeight() << std::endl;
 	}
 	
 }
 
 void NeuralNetwork::debugBiases() {
-	for (unsigned long long i = 0; i < nodeCount(); i++) {
+	for (unsigned long long i = 0; i < getNodeCount(); i++) {
 		std::cout << "Node : " << i << " Bias: " << getNode(i).getBias() << std::endl;
 	}
 }
@@ -607,13 +607,13 @@ void NeuralNetwork::debugBiases() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 2, 2);
+	NeuralNetwork n = NeuralNetwork(1, 1, 3, 4);
 	
 	//n.saveWeights();
 	//n.saveBiases();
 
-	n.loadBiases();
-	n.loadWeights();
+	//n.loadBiases();
+	//n.loadWeights();
 	
 
 	std::vector<double> test = std::vector<double>();
@@ -629,30 +629,19 @@ int main() {
 	
 	//n.testMethod();
 
-	n.gradientDescentTraining(.001, 10, -10, 10, 25, 20);
+	n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
 	
 	//n.testMethod();
 
 
-	n.testMethod();
+	//n.testMethod();
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
 
-	test.push_back(0);
-	std::vector<double> r = n.forwardCompute(test);
-
-	std::cout << "0: " << n.forwardCompute(test)[0] << std::endl;
-
-	test.clear();
-	test.push_back(1);
-	std::cout << "1: " << n.forwardCompute(test)[0] << std::endl;
-
-	test.clear();
-	test.push_back(2);
-	std::cout << "2: " << n.forwardCompute(test)[0] << std::endl;
-
-	test.clear();
-	test.push_back(3);
-	std::cout << "3: " << n.forwardCompute(test)[0] << std::endl;
+	for (int i = -10; i < 11; i++) {
+		test.push_back(i);
+		std::cout << i << ": " << n.forwardCompute(test)[0] << std::endl;
+		test.clear();
+	}
 
 	return 0;
 }
