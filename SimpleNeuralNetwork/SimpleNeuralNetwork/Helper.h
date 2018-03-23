@@ -18,8 +18,9 @@ class Helper {
 	static double activationFunctionRELU(double sum, double bias);
 
 
-	static std::vector<double> parseLine(std::string target, std::string entrySeparator);
 	
+	static std::vector<double> parseLineDouble(std::string target, std::string entrySeparator);
+	static std::vector<std::string> parseLineString(std::string target, std::string entrySeparator);
 
 	private:
 	

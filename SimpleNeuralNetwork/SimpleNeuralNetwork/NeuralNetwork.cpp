@@ -151,7 +151,7 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 		s = s.substr(lineSeparator + 1);
 		
 
-		dp = Helper::parseLine(line, entrySeparator);
+		dp = Helper::parseLineDouble(line, entrySeparator);
 		getTrainingInputs().push_back(dp);
 		dp.clear();
 	}
@@ -189,7 +189,7 @@ void NeuralNetwork::setTrainingOutputs(std::string fileName, std::string entrySe
 		s = s.substr(lineSeparator + 1);
 
 
-		dp = Helper::parseLine(line, entrySeparator);
+		dp = Helper::parseLineDouble(line, entrySeparator);
 		getTrainingOutputs().push_back(dp);
 		dp.clear();
 	}
@@ -350,7 +350,7 @@ void NeuralNetwork::loadWeights() {
 
 	//std::getline(file, s);
 
-	std::vector<double> w = Helper::parseLine(s, " ");
+	std::vector<double> w = Helper::parseLineDouble(s, " ");
 
 	
 	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
@@ -379,7 +379,7 @@ void NeuralNetwork::loadBiases() {
 
 	//std::getline(file, s);
 
-	std::vector<double> b = Helper::parseLine(s, " ");
+	std::vector<double> b = Helper::parseLineDouble(s, " ");
 
 	
 	
@@ -616,17 +616,20 @@ int main() {
 	std::vector<double> test = std::vector<double>();
 	//std::string t = "5,4,3,2,1";
 
-	//test = Helper::parseLine(t, ",");
+	//test = Helper::parseLineDouble(t, ",");
 	
 
-	n.setTrainingInputs("TInputs", ",", '\n');
-	n.setTrainingOutputs("TOutputs", ",", '\n');
-	double loss = n.calculateCurrentLoss();
+	//n.setTrainingInputs("TInputs", ",", '\n');
+	//n.setTrainingOutputs("TOutputs", ",", '\n');
+	//double loss = n.calculateCurrentLoss();
 	
 	
 	//n.testMethod();
+	std::string testString = "1,2,3,4,5,";
+	std::vector<double> testVector = Helper::parseLineDouble(testString, ",");
 
-	n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
+
+	//n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
 	
 	//n.testMethod();
 

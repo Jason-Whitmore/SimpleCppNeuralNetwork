@@ -60,31 +60,45 @@ double Helper::activationFunctionRELU(double sum, double bias) {
 
 
 
-std::vector<double> Helper::parseLine(std::string target, std::string entrySeparator) {
+std::vector<double> Helper::parseLineDouble(std::string target, std::string entrySeparator) {
+
+	std::vector<std::string> aux = parseLineString(target, entrySeparator);
+
 	std::vector<double> r = std::vector<double>();
+
+	for (unsigned long long i = 0; i < aux.size(); i++) {
+		r.push_back(std::stod(aux[i]));
+	}
+
+	return r;
+}
+
+std::vector<std::string> Helper::parseLineString(std::string target, std::string entrySeparator) {
+	std::vector<std::string> r = std::vector<std::string>();
 
 	int separatorIndex = target.find_first_of(entrySeparator);
 
-	std::string number = "";
+	std::string entry = "";
 	while (target.size() > 0) {
 		//do the parse
 		separatorIndex = target.find_first_of(entrySeparator);
-		
-		
-		if (separatorIndex >= 0) {
-			number = target.substr(0, separatorIndex);
 
-			r.push_back(std::stod(number));
+		//separator is still in the string
+		if (separatorIndex >= 0) {
+			entry = target.substr(0, separatorIndex);
+
+			r.push_back(entry);
 
 			target = target.substr(separatorIndex + 1);
+			
 		} else {
-			r.push_back(std::stod(target));
+			//no more separator, nearing the end of the list
+			if (target.length() != 0) {
+				r.push_back(target);
+			}
+
 			target = "";
 		}
-		
-		
-
-
 
 		separatorIndex = target.find_first_of(entrySeparator);
 	}
