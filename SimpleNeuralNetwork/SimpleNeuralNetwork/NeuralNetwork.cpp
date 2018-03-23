@@ -1,7 +1,4 @@
 #include "NeuralNetwork.h"
-
-
-
 NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer) {
 	srand(NULL);
 	//create layers
@@ -12,7 +9,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for first layer
 	for (int i = 0; i < numInputs; i++) {
 		layers[0].addNode(RELUNode());
-		nodeCount++;
+		nodes++;
 	}
 
 
@@ -21,7 +18,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 		for (int n = 0; n < nodesPerLayer; n++) {
 			layers[l].addNode(RELUNode());
-			nodeCount++;
+			nodes++;
 		}
 
 	}
@@ -31,7 +28,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for last layer
 	for (int i = 0; i < numOutputs; i++) {
 		layers[layers.size() - 1].addNode(RELUNode());
-		nodeCount++;
+		nodes++;
 	}
 
 
@@ -55,7 +52,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 				layers[l].getNodes()[d].addInput(c);
 
 				
-				connectionCount++;
+				connections++;
 				
 			}
 		}
@@ -109,11 +106,11 @@ Connection* NeuralNetwork::pickRandomConnection() {
 }
 
 unsigned long long NeuralNetwork::getNodeCount() {
-	return nodeCount;
+	return nodes;
 }
 
 unsigned long long NeuralNetwork::getConnectionCount() {
-	return connectionCount;
+	return connections;
 }
 
 std::vector<std::vector<double>>& NeuralNetwork::getTrainingInputs() {

@@ -15,8 +15,8 @@ class NeuralNetwork {
 		Node& pickRandomNode();
 		Connection* pickRandomConnection();
 
-		unsigned long long nodeCount();
-		unsigned long long connectionCount();
+		unsigned long long getNodeCount();
+		unsigned long long getConnectionCount();
 
 		std::vector<std::vector<double>>& getTrainingInputs();
 
