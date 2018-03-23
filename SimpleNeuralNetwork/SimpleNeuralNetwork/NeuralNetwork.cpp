@@ -625,8 +625,8 @@ int main() {
 	
 	
 	//n.testMethod();
-	std::string testString = "1,2,3,4,5,";
-	std::vector<double> testVector = Helper::parseLineDouble(testString, ",");
+	std::string path = "C:/GithubProjects/Test_csv.csv";
+	std::vector<std::vector<std::string>> testCSV = Helper::csvToVector(path, "\n", ",");
 
 
 	//n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);

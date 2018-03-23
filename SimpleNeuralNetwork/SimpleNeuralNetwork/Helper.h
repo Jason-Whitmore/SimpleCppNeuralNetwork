@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 class Helper {
 
@@ -21,6 +24,8 @@ class Helper {
 	
 	static std::vector<double> parseLineDouble(std::string target, std::string entrySeparator);
 	static std::vector<std::string> parseLineString(std::string target, std::string entrySeparator);
+
+	static std::vector<std::vector<std::string>> csvToVector(std::string filePath, std::string rowSeparator, std::string entrySeparator);
 
 	private:
 	

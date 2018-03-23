@@ -108,3 +108,36 @@ std::vector<std::string> Helper::parseLineString(std::string target, std::string
 }
 
 
+
+std::vector<std::vector<std::string>> Helper::csvToVector(std::string filePath, std::string rowSeparator, std::string entrySeparator) {
+	std::string s = "";
+
+	//put the contents of the file into the string
+
+	std::ifstream file(filePath);
+
+	std::stringstream b;
+	b << file.rdbuf();
+
+	s = b.str();
+
+	//set up the variables
+	std::vector<std::vector<std::string>> r = std::vector<std::vector<std::string>>();
+
+	std::vector<std::string> rows = parseLineString(s, rowSeparator);
+
+	std::vector<std::string> entries = std::vector<std::string>();
+
+	//parse the rows and entries
+	for (unsigned long long row = 0; row < rows.size(); row++) {
+		
+		entries = parseLineString(rows[row], entrySeparator);
+		r.push_back(entries);
+		entries.clear();
+
+	}
+
+	return r;
+}
+
+
