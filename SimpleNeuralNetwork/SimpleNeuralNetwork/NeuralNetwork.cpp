@@ -626,7 +626,7 @@ int main() {
 	
 	//n.testMethod();
 	std::string path = "C:/GithubProjects/Test_csv.csv";
-	std::vector<std::vector<std::string>> testCSV = Helper::csvToVector(path, "\n", ",");
+	std::vector<std::vector<double>> testCSV = Helper::csvToTable(path, "\n", ",", 1, 4, 0, 3);
 
 
 	//n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);

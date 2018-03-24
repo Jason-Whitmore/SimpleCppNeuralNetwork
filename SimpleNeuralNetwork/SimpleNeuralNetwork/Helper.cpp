@@ -107,6 +107,30 @@ std::vector<std::string> Helper::parseLineString(std::string target, std::string
 	return r;
 }
 
+std::vector<std::vector<double>> Helper::csvToTable(std::string filePath, std::string rowSeparator, std::string entrySeparator, int rowStart, int rowEnd, int columnStart, int columnEnd) {
+	//create the 2d Vector, but as a string for simplicity
+	std::vector<std::vector<std::string>> stringTable = csvToVector(filePath, rowSeparator, entrySeparator);
+
+	//create return vector
+	std::vector<std::vector<double>> r = std::vector<std::vector<double>>();
+
+	unsigned long long rRows = 0;
+	unsigned long long rCols = 0;
+
+	//create other vector variables
+	std::vector<double> rowData = std::vector<double>();
+
+	for (int row = rowStart; row <= rowEnd; row++) {
+		rowData.clear();
+		for (int col = columnStart; col <= columnEnd; col++) {
+			rowData.push_back(std::stod(stringTable[row][col]));
+		}
+		r.push_back(rowData);
+	}
+
+	return r;
+}
+
 
 
 std::vector<std::vector<std::string>> Helper::csvToVector(std::string filePath, std::string rowSeparator, std::string entrySeparator) {
