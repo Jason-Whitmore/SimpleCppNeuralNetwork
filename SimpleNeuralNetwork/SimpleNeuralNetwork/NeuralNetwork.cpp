@@ -604,7 +604,7 @@ void NeuralNetwork::debugBiases() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 3, 4);
+	NeuralNetwork n = NeuralNetwork(1, 1, 4, 4);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -618,23 +618,13 @@ int main() {
 
 	//test = Helper::parseLineDouble(t, ",");
 	
-
-	//n.setTrainingInputs("TInputs", ",", '\n');
-	//n.setTrainingOutputs("TOutputs", ",", '\n');
-	//double loss = n.calculateCurrentLoss();
+	n.setTrainingInputs(Helper::csvToTable("c:/GithubProjects/Test_csv.csv", "\n", ",", 1, 24, 0, 0));
+	n.setTrainingOutputs(Helper::csvToTable("c:/GithubProjects/Test_csv.csv", "\n", ",", 1, 24, 1, 1));
 	
-	
-	//n.testMethod();
-	std::string path = "C:/GithubProjects/Test_csv.csv";
-	std::vector<std::vector<double>> testCSV = Helper::csvToTable(path, "\n", ",", 1, 4, 0, 3);
 
 
-	//n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
-	
-	//n.testMethod();
+	n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
 
-
-	//n.testMethod();
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
 
 	for (int i = -10; i < 11; i++) {
@@ -642,6 +632,7 @@ int main() {
 		std::cout << i << ": " << n.forwardCompute(test)[0] << std::endl;
 		test.clear();
 	}
+
 
 	return 0;
 }
