@@ -9,7 +9,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for first layer
 	for (int i = 0; i < numInputs; i++) {
 		layers[0].addNode(RELUNode());
-		nodes++;
+		nodeCount++;
 	}
 
 
@@ -18,7 +18,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 		for (int n = 0; n < nodesPerLayer; n++) {
 			layers[l].addNode(RELUNode());
-			nodes++;
+			nodeCount++;
 		}
 
 	}
@@ -28,7 +28,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for last layer
 	for (int i = 0; i < numOutputs; i++) {
 		layers[layers.size() - 1].addNode(RELUNode());
-		nodes++;
+		nodeCount++;
 	}
 
 
@@ -52,7 +52,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 				layers[l].getNodes()[d].addInput(c);
 
 				
-				connections++;
+				connectionCount++;
 				
 			}
 		}
@@ -106,11 +106,11 @@ Connection* NeuralNetwork::pickRandomConnection() {
 }
 
 unsigned long long NeuralNetwork::getNodeCount() {
-	return nodes;
+	return nodeCount;
 }
 
 unsigned long long NeuralNetwork::getConnectionCount() {
-	return connections;
+	return connectionCount;
 }
 
 std::vector<std::vector<double>>& NeuralNetwork::getTrainingInputs() {
