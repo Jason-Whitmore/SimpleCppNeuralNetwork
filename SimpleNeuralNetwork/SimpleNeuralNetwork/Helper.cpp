@@ -60,35 +60,106 @@ double Helper::activationFunctionRELU(double sum, double bias) {
 
 
 
-std::vector<double> Helper::parseLine(std::string target, std::string entrySeparator) {
+std::vector<double> Helper::parseLineDouble(std::string target, std::string entrySeparator) {
+
+	std::vector<std::string> aux = parseLineString(target, entrySeparator);
+
 	std::vector<double> r = std::vector<double>();
+
+	for (unsigned long long i = 0; i < aux.size(); i++) {
+		r.push_back(std::stod(aux[i]));
+	}
+
+	return r;
+}
+
+std::vector<std::string> Helper::parseLineString(std::string target, std::string entrySeparator) {
+	std::vector<std::string> r = std::vector<std::string>();
 
 	int separatorIndex = target.find_first_of(entrySeparator);
 
-	std::string number = "";
+	std::string entry = "";
 	while (target.size() > 0) {
 		//do the parse
 		separatorIndex = target.find_first_of(entrySeparator);
-		
-		
-		if (separatorIndex >= 0) {
-			number = target.substr(0, separatorIndex);
 
-			r.push_back(std::stod(number));
+		//separator is still in the string
+		if (separatorIndex >= 0) {
+			entry = target.substr(0, separatorIndex);
+
+			r.push_back(entry);
 
 			target = target.substr(separatorIndex + 1);
+			
 		} else {
-			r.push_back(std::stod(target));
+			//no more separator, nearing the end of the list
+			if (target.length() != 0) {
+				r.push_back(target);
+			}
+
 			target = "";
 		}
-		
-		
-
-
 
 		separatorIndex = target.find_first_of(entrySeparator);
 	}
 
+
+	return r;
+}
+
+std::vector<std::vector<double>> Helper::csvToTable(std::string filePath, std::string rowSeparator, std::string entrySeparator, int rowStart, int rowEnd, int columnStart, int columnEnd) {
+	//create the 2d Vector, but as a string for simplicity
+	std::vector<std::vector<std::string>> stringTable = csvToVector(filePath, rowSeparator, entrySeparator);
+
+	//create return vector
+	std::vector<std::vector<double>> r = std::vector<std::vector<double>>();
+
+	unsigned long long rRows = 0;
+	unsigned long long rCols = 0;
+
+	//create other vector variables
+	std::vector<double> rowData = std::vector<double>();
+
+	for (int row = rowStart; row <= rowEnd; row++) {
+		rowData.clear();
+		for (int col = columnStart; col <= columnEnd; col++) {
+			rowData.push_back(std::stod(stringTable[row][col]));
+		}
+		r.push_back(rowData);
+	}
+
+	return r;
+}
+
+
+
+std::vector<std::vector<std::string>> Helper::csvToVector(std::string filePath, std::string rowSeparator, std::string entrySeparator) {
+	std::string s = "";
+
+	//put the contents of the file into the string
+
+	std::ifstream file(filePath);
+
+	std::stringstream b;
+	b << file.rdbuf();
+
+	s = b.str();
+
+	//set up the variables
+	std::vector<std::vector<std::string>> r = std::vector<std::vector<std::string>>();
+
+	std::vector<std::string> rows = parseLineString(s, rowSeparator);
+
+	std::vector<std::string> entries = std::vector<std::string>();
+
+	//parse the rows and entries
+	for (unsigned long long row = 0; row < rows.size(); row++) {
+		
+		entries = parseLineString(rows[row], entrySeparator);
+		r.push_back(entries);
+		entries.clear();
+
+	}
 
 	return r;
 }

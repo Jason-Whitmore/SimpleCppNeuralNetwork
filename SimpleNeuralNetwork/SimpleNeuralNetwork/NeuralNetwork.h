@@ -4,9 +4,7 @@
 #include "Connection.h"
 #include "Helper.h"
 #include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+
 class NeuralNetwork {
 	public:
 		NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer);

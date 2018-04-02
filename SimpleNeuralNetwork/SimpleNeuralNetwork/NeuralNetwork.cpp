@@ -1,7 +1,4 @@
 #include "NeuralNetwork.h"
-
-
-
 NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer) {
 	srand(NULL);
 	//create layers
@@ -12,7 +9,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for first layer
 	for (int i = 0; i < numInputs; i++) {
 		layers[0].addNode(RELUNode());
-		nodeCount++;
+		nodes++;
 	}
 
 
@@ -21,7 +18,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 
 		for (int n = 0; n < nodesPerLayer; n++) {
 			layers[l].addNode(RELUNode());
-			nodeCount++;
+			nodes++;
 		}
 
 	}
@@ -31,7 +28,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 	//nodes for last layer
 	for (int i = 0; i < numOutputs; i++) {
 		layers[layers.size() - 1].addNode(RELUNode());
-		nodeCount++;
+		nodes++;
 	}
 
 
@@ -55,7 +52,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 				layers[l].getNodes()[d].addInput(c);
 
 				
-				connectionCount++;
+				connections++;
 				
 			}
 		}
@@ -109,11 +106,11 @@ Connection* NeuralNetwork::pickRandomConnection() {
 }
 
 unsigned long long NeuralNetwork::getNodeCount() {
-	return nodeCount;
+	return nodes;
 }
 
 unsigned long long NeuralNetwork::getConnectionCount() {
-	return connectionCount;
+	return connections;
 }
 
 std::vector<std::vector<double>>& NeuralNetwork::getTrainingInputs() {
@@ -154,7 +151,7 @@ void NeuralNetwork::setTrainingInputs(std::string fileName, std::string entrySep
 		s = s.substr(lineSeparator + 1);
 		
 
-		dp = Helper::parseLine(line, entrySeparator);
+		dp = Helper::parseLineDouble(line, entrySeparator);
 		getTrainingInputs().push_back(dp);
 		dp.clear();
 	}
@@ -192,7 +189,7 @@ void NeuralNetwork::setTrainingOutputs(std::string fileName, std::string entrySe
 		s = s.substr(lineSeparator + 1);
 
 
-		dp = Helper::parseLine(line, entrySeparator);
+		dp = Helper::parseLineDouble(line, entrySeparator);
 		getTrainingOutputs().push_back(dp);
 		dp.clear();
 	}
@@ -353,7 +350,7 @@ void NeuralNetwork::loadWeights() {
 
 	//std::getline(file, s);
 
-	std::vector<double> w = Helper::parseLine(s, " ");
+	std::vector<double> w = Helper::parseLineDouble(s, " ");
 
 	
 	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
@@ -382,7 +379,7 @@ void NeuralNetwork::loadBiases() {
 
 	//std::getline(file, s);
 
-	std::vector<double> b = Helper::parseLine(s, " ");
+	std::vector<double> b = Helper::parseLineDouble(s, " ");
 
 	
 	
@@ -607,7 +604,7 @@ void NeuralNetwork::debugBiases() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 3, 4);
+	NeuralNetwork n = NeuralNetwork(1, 1, 4, 4);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -619,22 +616,15 @@ int main() {
 	std::vector<double> test = std::vector<double>();
 	//std::string t = "5,4,3,2,1";
 
-	//test = Helper::parseLine(t, ",");
+	//test = Helper::parseLineDouble(t, ",");
+	
+	n.setTrainingInputs(Helper::csvToTable("c:/GithubProjects/Test_csv.csv", "\n", ",", 1, 24, 0, 0));
+	n.setTrainingOutputs(Helper::csvToTable("c:/GithubProjects/Test_csv.csv", "\n", ",", 1, 24, 1, 1));
 	
 
-	n.setTrainingInputs("TInputs", ",", '\n');
-	n.setTrainingOutputs("TOutputs", ",", '\n');
-	double loss = n.calculateCurrentLoss();
-	
-	
-	//n.testMethod();
 
 	n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
-	
-	//n.testMethod();
 
-
-	//n.testMethod();
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
 
 	for (int i = -10; i < 11; i++) {
@@ -642,6 +632,7 @@ int main() {
 		std::cout << i << ": " << n.forwardCompute(test)[0] << std::endl;
 		test.clear();
 	}
+
 
 	return 0;
 }
