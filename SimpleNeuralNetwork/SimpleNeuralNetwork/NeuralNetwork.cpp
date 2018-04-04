@@ -273,7 +273,7 @@ double NeuralNetwork::calculateCurrentLoss() {
 		return loss / trainingInputs.size();
 }
 
-void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, int numberOfSteps, double stepSize) {
+void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, double passMultiple, int numberOfSteps, double stepSize) {
 	int improvements = 0;
 
 	double bestLoss = 99999999999;
@@ -284,8 +284,8 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 	for (int i = 0; i < iterations && bestLoss > targetLoss; i++) {
 		randomizeAllVariables(lowerRandomizationBound, upperRandomizationBound);
 
-		for (unsigned long long pass = 0; pass < (getNodeCount() + getConnectionCount()) * 10; pass++) {
-			currentStepSize = stepSize * (1 - (pass / ((getNodeCount() + getConnectionCount()) * 10.0)));
+		for (unsigned long long pass = 0; pass < (getNodeCount() + getConnectionCount()) * passMultiple; pass++) {
+			currentStepSize = stepSize * (1 - (pass / ((getNodeCount() + getConnectionCount()) * passMultiple)));
 
 			
 			if (Helper::randomNumber(0.0,1.0) < ((double)getNodeCount() / (getConnectionCount() + getNodeCount()))) {
@@ -320,11 +320,11 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
-	gradientDescentTraining(targetLoss, iterations, -50, 50, 5, 10);
+	gradientDescentTraining(targetLoss, iterations, -50, 50, 2, 5, 10);
 }
 
 void NeuralNetwork::gradientDescentTraining(int iterations) {
-	gradientDescentTraining(0, iterations, -50, 50, 5, 10);
+	gradientDescentTraining(0, iterations, -50, 50, 2, 5, 10);
 }
 
 
@@ -604,7 +604,7 @@ void NeuralNetwork::debugBiases() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 4, 4);
+	NeuralNetwork n = NeuralNetwork(1, 1, 3, 1);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -618,12 +618,12 @@ int main() {
 
 	//test = Helper::parseLineDouble(t, ",");
 	
-	n.setTrainingInputs(Helper::csvToTable("c:/GithubProjects/Test_csv.csv", "\n", ",", 1, 24, 0, 0));
-	n.setTrainingOutputs(Helper::csvToTable("c:/GithubProjects/Test_csv.csv", "\n", ",", 1, 24, 1, 1));
+	n.setTrainingInputs(Helper::csvToTable("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/TInputs.csv", "\n", ",", 1, 20, 0, 0));
+	n.setTrainingOutputs(Helper::csvToTable("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/TOutputs.csv", "\n", ",", 1, 20, 0, 0));
 	
 
 
-	n.gradientDescentTraining(.001, 100, -100, 100, 5, 20);
+	n.gradientDescentTraining(.001, 1000, -100, 100, 2, 5, 20);
 
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
 
