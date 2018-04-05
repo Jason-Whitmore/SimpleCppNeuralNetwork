@@ -40,10 +40,6 @@ class NeuralNetwork {
 		void saveBiases();
 		void saveWeights();
 
-		
-		void readInputsFromCSV();
-		void readOutputsFromCSV();
-
 		void testMethod();
 
 		void debugWeights();

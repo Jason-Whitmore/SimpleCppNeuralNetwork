@@ -604,7 +604,7 @@ void NeuralNetwork::debugBiases() {
 
 int main() {
 
-	NeuralNetwork n = NeuralNetwork(1, 1, 3, 1);
+	NeuralNetwork n = NeuralNetwork(1, 1, 3, 3);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -623,7 +623,7 @@ int main() {
 	
 
 
-	n.gradientDescentTraining(.001, 1000, -100, 100, 2, 5, 20);
+	n.gradientDescentTraining(.001, 1000, -100, 100, 1, 5, 20);
 
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
 
