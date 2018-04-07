@@ -603,7 +603,7 @@ void NeuralNetwork::debugBiases() {
 
 
 int main() {
-	//TEST LINE HERE THAT SHOULD ONLY BE IN THE TEST BRANCH
+	
 	NeuralNetwork n = NeuralNetwork(1, 1, 3, 3);
 	
 	//n.saveWeights();
