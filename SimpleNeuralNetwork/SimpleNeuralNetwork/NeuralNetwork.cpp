@@ -402,7 +402,7 @@ void NeuralNetwork::saveBiases() {
 		s += " ";
 	}
 
-	std::ofstream file("biases.txt");
+	std::ofstream file(biasSaveLocation);
 	if (!file.is_open()) {
 		std::cout << "error";
 		std::cin >> s;
@@ -422,7 +422,7 @@ void NeuralNetwork::saveWeights() {
 	}
 
 
-	std::ofstream file ("weights.txt");
+	std::ofstream file (weightSaveLocation);
 	if (!file.is_open()) {
 		std::cout << "error";
 		std::cin >> s;
@@ -430,6 +430,22 @@ void NeuralNetwork::saveWeights() {
 	file << s;
 	
 	file.close();
+}
+
+std::string NeuralNetwork::getBiasSaveLocation() {
+	return biasSaveLocation;
+}
+
+std::string NeuralNetwork::getWeightSaveLocation() {
+	return weightSaveLocation;
+}
+
+void NeuralNetwork::setBiasSaveLocation(std::string location) {
+	biasSaveLocation = location;
+}
+
+void NeuralNetwork::setWeightSaveLocation(std::string location) {
+	weightSaveLocation = location;
 }
 
 
@@ -606,6 +622,28 @@ void NeuralNetwork::debugBiases() {
 
 
 
+
+void NeuralNetwork::findMostEfficientNetworkParameters(int maxNodeCount) {
+
+	int bestLayerNum = 1;
+	int bestNodesPerLayer;
+
+	double bestLoss = 9999999999999999;
+
+	int currentNodeCount = 1;
+
+	while (maxNodeCount > currentNodeCount) {
+
+
+
+
+	}
+
+
+}
+
+
+
 int main() {
 	
 	NeuralNetwork n = NeuralNetwork(1, 1, 3, 3);
@@ -621,6 +659,10 @@ int main() {
 	//std::string t = "5,4,3,2,1";
 
 	//test = Helper::parseLineDouble(t, ",");
+
+	n.setWeightSaveLocation("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/weights.txt");
+	n.setBiasSaveLocation("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/bias.txt");
+
 	
 	n.setTrainingInputs(Helper::csvToTable("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/TInputs.csv", "\n", ",", 1, 20, 0, 0));
 	n.setTrainingOutputs(Helper::csvToTable("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/TOutputs.csv", "\n", ",", 1, 20, 0, 0));

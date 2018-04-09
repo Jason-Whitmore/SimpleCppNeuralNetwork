@@ -40,10 +40,20 @@ class NeuralNetwork {
 		void saveBiases();
 		void saveWeights();
 
+		std::string getBiasSaveLocation();
+		std::string getWeightSaveLocation();
+
+		void setBiasSaveLocation(std::string location);
+		void setWeightSaveLocation(std::string location);
+
 		void testMethod();
 
 		void debugWeights();
 		void debugBiases();
+
+
+		void findMostEfficientNetworkParameters(int maxNodeCount);
+
 
 	private:
 		std::vector<NodeLayer> layers;
@@ -53,6 +63,9 @@ class NeuralNetwork {
 
 		std::vector<std::vector<double>> trainingInputs;
 		std::vector<std::vector<double>> trainingOutputs;
+
+		std::string weightSaveLocation;
+		std::string biasSaveLocation;
 
 		void optimizeBias(Node n, int steps, double stepSize);
 		void optimizeWeight(Connection* c, int steps, double stepSize);
