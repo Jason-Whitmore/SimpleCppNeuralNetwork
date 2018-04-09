@@ -607,7 +607,7 @@ void NeuralNetwork::debugBiases() {
 
 
 int main() {
-
+	
 	NeuralNetwork n = NeuralNetwork(1, 1, 3, 3);
 	
 	//n.saveWeights();
