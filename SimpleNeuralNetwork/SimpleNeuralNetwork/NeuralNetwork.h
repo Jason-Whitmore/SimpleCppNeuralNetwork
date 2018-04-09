@@ -29,7 +29,7 @@ class NeuralNetwork {
 		std::vector<double> forwardCompute(std::vector<double> inputs);
 		double calculateCurrentLoss();
 
-		void gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, double passMultiple, int numberOfSteps, double stepSize);
+		void gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, double passMultiple, int numberOfSteps, double stepSize, bool printInfo);
 		void gradientDescentTraining(double targetLoss, int iterations);
 		void gradientDescentTraining(int iterations);
 

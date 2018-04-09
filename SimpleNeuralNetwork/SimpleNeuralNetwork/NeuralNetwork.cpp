@@ -273,7 +273,7 @@ double NeuralNetwork::calculateCurrentLoss() {
 		return loss / trainingInputs.size();
 }
 
-void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, double passMultiple, int numberOfSteps, double stepSize) {
+void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, double lowerRandomizationBound, double upperRandomizationBound, double passMultiple, int numberOfSteps, double stepSize, bool printInfo) {
 	int improvements = 0;
 
 	double bestLoss = 99999999999;
@@ -306,11 +306,15 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 		}
 
 		//update info
-		system("CLS");
-		std::cout << "Best Loss: " << std::to_string(bestLoss) << std::endl;
-		std::cout << "Current Loss: " + std::to_string(currentLoss) << std::endl;
-		std::cout << "Number of loss improvements: " + std::to_string(improvements) << std::endl;
-		std::cout << "Progress: " << (int)((i / ((double)iterations)) * 100) << "%" << std::endl;
+
+		if (printInfo) {
+			system("CLS");
+			std::cout << "Best Loss: " << std::to_string(bestLoss) << std::endl;
+			std::cout << "Current Loss: " + std::to_string(currentLoss) << std::endl;
+			std::cout << "Number of loss improvements: " + std::to_string(improvements) << std::endl;
+			std::cout << "Progress: " << (int)((i / ((double)iterations)) * 100) << "%" << std::endl;
+		}
+		
 	}
 
 
@@ -320,11 +324,11 @@ void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations, d
 }
 
 void NeuralNetwork::gradientDescentTraining(double targetLoss, int iterations) {
-	gradientDescentTraining(targetLoss, iterations, -50, 50, 2, 5, 10);
+	gradientDescentTraining(targetLoss, iterations, -50, 50, 2, 5, 10, true);
 }
 
 void NeuralNetwork::gradientDescentTraining(int iterations) {
-	gradientDescentTraining(0, iterations, -50, 50, 2, 5, 10);
+	gradientDescentTraining(0, iterations, -50, 50, 2, 5, 10, true);
 }
 
 
@@ -623,7 +627,7 @@ int main() {
 	
 
 
-	n.gradientDescentTraining(.001, 1000, -100, 100, 1, 5, 20);
+	n.gradientDescentTraining(.001, 1000, -100, 100, 1, 5, 20, true);
 
 	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
 
