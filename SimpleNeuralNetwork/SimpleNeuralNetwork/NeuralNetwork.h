@@ -10,6 +10,9 @@ class NeuralNetwork {
 		NeuralNetwork(int numInputs, int numOutputs, int layerCount, int nodesPerLayer);
 		~NeuralNetwork();
 
+
+
+
 		Node& pickRandomNode();
 		Connection* pickRandomConnection();
 
@@ -52,7 +55,6 @@ class NeuralNetwork {
 		void debugBiases();
 
 
-		void findMostEfficientNetworkParameters(int maxNodeCount);
 
 
 	private:

@@ -30,13 +30,6 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 		layers[layers.size() - 1].addNode(RELUNode());
 		nodeCount++;
 	}
-
-
-
-
-
-
-
 	//add connections to the layers
 	//use pointers here
 
@@ -67,6 +60,9 @@ NeuralNetwork::NeuralNetwork(int numInputs, int numOutputs, int layerCount, int 
 NeuralNetwork::~NeuralNetwork(){
 	
 }
+
+
+
 
 Node& NeuralNetwork::pickRandomNode() {
 	int nodeNumber = Helper::randomNumber(0, getNodeCount());
@@ -623,30 +619,11 @@ void NeuralNetwork::debugBiases() {
 
 
 
-void NeuralNetwork::findMostEfficientNetworkParameters(int maxNodeCount) {
-
-	int bestLayerNum = 1;
-	int bestNodesPerLayer;
-
-	double bestLoss = 9999999999999999;
-
-	int currentNodeCount = 1;
-
-	while (maxNodeCount > currentNodeCount) {
-
-
-
-
-	}
-
-
-}
-
 
 
 int main() {
 	
-	NeuralNetwork n = NeuralNetwork(1, 1, 3, 3);
+	NeuralNetwork n = NeuralNetwork(1, 1, 1, 5);
 	
 	//n.saveWeights();
 	//n.saveBiases();
@@ -668,17 +645,7 @@ int main() {
 	n.setTrainingOutputs(Helper::csvToTable("c:/Users/Jason/Source/Repos/SimpleCppNeuralNetwork/SimpleNeuralNetwork/SimpleNeuralNetwork/TOutputs.csv", "\n", ",", 1, 20, 0, 0));
 	
 
-
-	n.gradientDescentTraining(.001, 1000, -100, 100, 1, 5, 20, true);
-
-	std::cout << "Loss: " << n.calculateCurrentLoss() << std::endl;
-
-	for (int i = -10; i < 11; i++) {
-		test.push_back(i);
-		std::cout << i << ": " << n.forwardCompute(test)[0] << std::endl;
-		test.clear();
-	}
-
+	n.gradientDescentTraining(0, 100, -100, 100, 2, 10, 10, true);
 
 	return 0;
 }

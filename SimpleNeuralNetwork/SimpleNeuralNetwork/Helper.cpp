@@ -9,10 +9,21 @@ Helper::~Helper() {
 }
 
 int Helper::randomNumber(int a, int b) {
+
+	if (a == b) {
+		return a;
+	}
+
+
 	return a + (int)(rand() % (b - a));
 }
 
 double Helper::randomNumber(double a, double b) {
+	if (a == b) {
+		return a;
+	}
+
+
 	return a + (rand() / ((double)RAND_MAX)) * (b-a);
 }
 
