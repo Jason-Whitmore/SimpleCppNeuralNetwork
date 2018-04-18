@@ -78,7 +78,6 @@ class NeuralNetwork {
 
 		double extractDoubleFromString(std::string s);
 
-		void cleanOutNetwork();
 
 		
 };

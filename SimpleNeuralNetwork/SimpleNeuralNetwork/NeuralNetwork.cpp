@@ -224,7 +224,6 @@ std::vector<double> NeuralNetwork::forwardCompute(std::vector<double> inputs) {
 		results.push_back(layers[layers.size() - 1].getNodes()[i].getValue());
 	}
 
-	cleanOutNetwork();
 
 
 	return results;
@@ -555,16 +554,6 @@ double NeuralNetwork::extractDoubleFromString(std::string s) {
 	s = s.substr(spaceIndex);
 
 	return std::stoi(d);
-}
-
-void NeuralNetwork::cleanOutNetwork() {
-	for (unsigned long long i = 0; i < getConnectionCount(); i++) {
-		getConnection(i)->setValue(0);
-	}
-
-	for (unsigned long long i = 0; i < getNodeCount(); i++) {
-		getNode(i).setValue(0);
-	}
 }
 
 
