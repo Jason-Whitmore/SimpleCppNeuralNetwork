@@ -1,14 +1,16 @@
 #pragma once
 class NodeLayer {
 	public:
-	NodeLayer();
+	NodeLayer(int numInputs, int numNodes);
 	~NodeLayer();
+
+	void multiplyAndApplyBias();
 
 	private:
 
 	double* inputArray;
 
-	double* inputWeights;
+	double** inputWeights;
 
 	double* outputs;
 

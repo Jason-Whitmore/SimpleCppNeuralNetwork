@@ -21,13 +21,19 @@ double* Data::getRow(int rowIndex) {
 	double* r = new double[numCols];
 
 	for(int i = 0; i < numCols; i++) {
-		r[i] = array[(rowIndex * numCols) + i];
+		r[i] = getIndex(rowIndex, i);
 
 	}
 
 	return r;
 }
 
+
 double Data::getIndex(int row, int column) {
 	return array[(row * numCols) + column];
+}
+
+
+void Data::setIndex(int row, int column, double value) {
+	array[(row * numCols) + column] = value;
 }

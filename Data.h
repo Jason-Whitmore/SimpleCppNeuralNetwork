@@ -8,6 +8,8 @@ class Data {
 
 	double getIndex(int row, int column);
 
+	void setIndex(int row, int column, double value);
+
 	private:
 
 	int numRows;
