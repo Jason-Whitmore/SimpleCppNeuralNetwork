@@ -1,4 +1,5 @@
 #pragma once
+#include "Helper.h"
 class NodeLayer {
 	public:
 	NodeLayer(int numInputs, int numNodes);
@@ -15,6 +16,10 @@ class NodeLayer {
 	double* outputs;
 
 	double* outputBiases;
+
+	int numInputs;
+
+	int numOutputs;
 
 };
 
