@@ -10,11 +10,13 @@ class Data {
 
 	void setIndex(int row, int column, double value);
 
+	
+
 	private:
 
 	int numRows;
 	int numCols;
 
-	double* array;
+	double** array;
 };
 

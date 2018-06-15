@@ -5,7 +5,12 @@ Data::Data(int rows, int columns) {
 	numRows = rows;
 	numCols = columns;
 
-	array = new double[rows * columns];
+	array = new double*[rows];
+
+	for (int i = 0; i < rows; i++) {
+		array[i] = new double[columns];
+	}
+
 
 }
 
@@ -30,10 +35,10 @@ double* Data::getRow(int rowIndex) {
 
 
 double Data::getIndex(int row, int column) {
-	return array[(row * numCols) + column];
+	return array[row][column];
 }
 
 
 void Data::setIndex(int row, int column, double value) {
-	array[(row * numCols) + column] = value;
+	array[row][column] = value;
 }

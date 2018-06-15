@@ -2,11 +2,14 @@
 
 
 
-NeuralNetwork::NeuralNetwork() {
+
+NeuralNetwork::NeuralNetwork(int inputs, int outputs, std::vector<int> layers) {
+
+
 }
 
-
 NeuralNetwork::~NeuralNetwork() {
+	delete layers;
 }
 
 int main() {
