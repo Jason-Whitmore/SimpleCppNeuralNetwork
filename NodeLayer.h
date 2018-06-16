@@ -5,7 +5,14 @@ class NodeLayer {
 	NodeLayer(int numInputs, int numNodes);
 	~NodeLayer();
 
-	void multiplyAndApplyBias();
+	void dotProductAndApplyBias();
+	void dotProduct();
+
+	void setInputArray(double a[]);
+	void setInputArray(std::vector<double> v);
+
+	double* getOutputArray();
+	std::vector<double> getOutputVector();
 
 	private:
 
@@ -13,7 +20,7 @@ class NodeLayer {
 
 	double** inputWeights;
 
-	double* outputs;
+	double* layerOutputs;
 
 	double* outputBiases;
 

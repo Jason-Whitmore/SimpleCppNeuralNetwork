@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include "NodeLayer.h"
+#include "Data.h"
 #pragma once
 class NeuralNetwork {
 	public:
@@ -10,12 +11,23 @@ class NeuralNetwork {
 
 	std::vector<double> runNetwork(std::vector<double> inputs);
 
-	void hyperparameterOptimization(int maxNodes, double parameterMin, double parameterMax);
+	void hyperparameterOptimization(int maxNodes, double randMin, double randMax);
 
-	void trainNetwork();
+	void trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double stepSize, double randMin, double randMax, bool displayStats);
 
 
 	private:
 	std::vector<NodeLayer>* layers;
+
+	Data trainingInputs;
+
+	Data trainingOutputs;
+
+	double calculateCurrentLoss();
+
+	int numWeights;
+
+	int numBiases;
+
 };
 

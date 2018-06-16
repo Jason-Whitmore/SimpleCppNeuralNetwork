@@ -19,6 +19,8 @@ double Helper::dotProduct(double a[], double b[], int length) {
 	return result;
 }
 
+
+
 double Helper::RELUFunction(double input, double bias) {
 	double newInput = input + bias;
 
@@ -27,4 +29,20 @@ double Helper::RELUFunction(double input, double bias) {
 	} else {
 		return newInput;
 	}
+}
+
+
+
+double Helper::calculateLoss(double value1, double value2) {
+	return (value1 - value2) * (value1 - value2);
+}
+
+std::vector<double> Helper::arrayToVector(double array[], int arraySize) {
+	std::vector<double> r = std::vector<double>();
+
+	for (int i = 0; i < arraySize; i++) {
+		r.push_back(array[i]);
+	}
+
+	return r;
 }

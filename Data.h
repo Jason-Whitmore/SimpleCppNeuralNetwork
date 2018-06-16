@@ -2,6 +2,7 @@
 class Data {
 	public:
 	Data(int rows, int columns);
+	Data();
 	~Data();
 
 	double* getRow(int rowIndex);
@@ -10,6 +11,8 @@ class Data {
 
 	void setIndex(int row, int column, double value);
 
+	int getNumRows();
+	int getNumCols();
 	
 
 	private:
