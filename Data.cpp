@@ -31,9 +31,13 @@ double* Data::getRow(int rowIndex) {
 		return nullptr;
 	}
 
-	
+	double* r = new double[numCols];
 
-	return array[rowIndex];
+	for (int i = 0; i < numCols; i++) {
+		r[i] = array[rowIndex][i];
+	}
+
+	return r;
 }
 
 
@@ -46,6 +50,7 @@ double Data::getIndex(int row, int column) {
 		//exception here
 	}
 	
+	//issue with segfault i think
 	return array[row][column];
 }
 
@@ -69,5 +74,5 @@ int Data::getNumRows() {
 
 
 int Data::getNumCols() {
-	return numRows;
+	return numCols;
 }
