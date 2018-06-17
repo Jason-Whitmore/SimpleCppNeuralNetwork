@@ -14,6 +14,15 @@ class NodeLayer {
 	double* getOutputArray();
 	std::vector<double> getOutputVector();
 
+	int getNumBiases();
+	int getNumWeights();
+
+	void setBias(int index, double bias);
+	double getBias(int index);
+
+	void setWeight(int index, double weight);
+	double getWeight(int index);
+
 	private:
 
 	double* inputArray;

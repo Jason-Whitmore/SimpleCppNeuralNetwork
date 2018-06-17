@@ -90,3 +90,27 @@ std::vector<double> NodeLayer::getOutputVector() {
 
 	return r;
 }
+
+int NodeLayer::getNumBiases() {
+	return numOutputs;
+}
+
+int NodeLayer::getNumWeights() {
+	return numInputs * numOutputs;
+}
+
+void NodeLayer::setBias(int index, double bias) {
+	outputBiases[index] = bias;
+}
+
+double NodeLayer::getBias(int index) {
+	return outputBiases[index];
+}
+
+void NodeLayer::setWeight(int index, double weight) {
+	inputWeights[index / numInputs][index % numInputs] = weight;
+}
+
+double NodeLayer::getWeight(int index) {
+	return inputWeights[index / numInputs][index % numInputs];
+}

@@ -46,3 +46,14 @@ std::vector<double> Helper::arrayToVector(double array[], int arraySize) {
 
 	return r;
 }
+
+double Helper::randomDouble(double min, double max) {
+	double scalar = (double)rand() / RAND_MAX;
+
+	return min + (scalar * (max - min));
+}
+
+int Helper::randomInt(int min, int max) {
+	
+	return min + (rand() % (max - min));
+}
