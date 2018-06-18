@@ -39,8 +39,10 @@ double Helper::calculateLoss(double value1, double value2) {
 
 std::vector<double> Helper::arrayToVector(double array[], int arraySize) {
 	std::vector<double> r = std::vector<double>();
-
+	
+	double num;
 	for (int i = 0; i < arraySize; i++) {
+		num = array[i];
 		r.push_back(array[i]);
 	}
 

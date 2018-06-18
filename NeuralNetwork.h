@@ -21,15 +21,15 @@ class NeuralNetwork {
 
 	void randomizeVariables(double min, double max);
 
-	void setTrainingInputs(Data inputs);
-	void setTrainingOutputs(Data outputs);
+	void setTrainingInputs(Data* inputs);
+	void setTrainingOutputs(Data* outputs);
 
 	private:
 	std::vector<NodeLayer>* layers;
 
-	Data trainingInputs;
+	Data* trainingInputs;
 
-	Data trainingOutputs;
+	Data* trainingOutputs;
 
 	double calculateCurrentLoss();
 

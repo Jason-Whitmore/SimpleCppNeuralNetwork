@@ -36,7 +36,18 @@ NodeLayer::NodeLayer(int inputs, int outputs) {
 
 
 NodeLayer::~NodeLayer() {
+
 	
+	inputArray = nullptr;
+	inputWeights = nullptr;
+
+	outputBiases = nullptr;
+	layerOutputs = nullptr;
+
+	delete outputBiases;
+	delete inputWeights;
+	delete layerOutputs;
+	delete inputArray;
 
 }
 
@@ -108,9 +119,18 @@ double NodeLayer::getBias(int index) {
 }
 
 void NodeLayer::setWeight(int index, double weight) {
-	inputWeights[index / numInputs][index % numInputs] = weight;
+	if (numOutputs == 1) {
+		inputWeights[0][index % numInputs] = weight;
+		return;
+	}
+
+	inputWeights[index / numOutputs][index % numInputs] = weight;
 }
 
 double NodeLayer::getWeight(int index) {
-	return inputWeights[index / numInputs][index % numInputs];
+	if (numOutputs == 1) {
+		return inputWeights[0][index % numInputs];
+	}
+
+	return inputWeights[index / numOutputs][index % numInputs];
 }

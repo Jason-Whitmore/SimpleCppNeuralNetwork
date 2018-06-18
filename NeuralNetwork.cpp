@@ -74,16 +74,20 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 		currentLoss = calculateCurrentLoss();
 
 		if (bestLoss > currentLoss) {
+			bestLayers = nullptr;
+			delete bestLayers;
 			bestLayers = new std::vector<NodeLayer>(*layers);
+			bestLoss = currentLoss;
 			improvements++;
 		}
 
-		if (displayStats && i % 100 == 0) {
+		if (displayStats && i % 10 == 0) {
 			system("CLS");
 			std::cout << "Iteration: " << i << "/" << maxIterations << std::endl;
 			std::cout << "BestLoss: " << bestLoss << std::endl;
 			std::cout << "Number of Improvements to loss: " << improvements << std::endl;
 			std::cout << "Current loss: " << currentLoss << std::endl;
+			
 		}
 
 
@@ -100,15 +104,15 @@ void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, doub
 
 	if (Helper::randomDouble(0,1) > biasesToTotalVariables) {
 		//pick a weight to optimize
-		int weightIndex = Helper::randomInt(0, numWeights - 1);
+		int weightIndex = Helper::randomInt(0, numWeights);
 
 		int currentWeightIndex = 0;
-		int currentLayerIndex = 0;
+		int currentLayerIndex = 1;
 
 		//find layer that contains the right index
-		while (currentWeightIndex + layers->at(currentLayerIndex).getNumWeights() < weightIndex) {
+		while (currentWeightIndex + layers->at(currentLayerIndex).getNumWeights() <= weightIndex) {
 			currentWeightIndex += layers->at(currentLayerIndex).getNumWeights();
-
+			currentLayerIndex++;
 		}
 
 		//layer index found
@@ -135,13 +139,13 @@ void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, doub
 	} else {
 		//pick a bias to optimize
 		//pick a weight to optimize
-		int biasIndex = Helper::randomInt(0, numBiases - 1);
+		int biasIndex = Helper::randomInt(0, numBiases);
 
 		int currentBiasIndex = 0;
 		int currentLayerIndex = 0;
 
 		//find layer that contains the right index
-		while (currentBiasIndex + layers->at(currentLayerIndex).getNumBiases() < biasIndex) {
+		while (currentBiasIndex + layers->at(currentLayerIndex).getNumBiases() <= biasIndex) {
 			currentBiasIndex += layers->at(currentLayerIndex).getNumBiases();
 
 		}
@@ -187,11 +191,11 @@ void NeuralNetwork::randomizeVariables(double min, double max) {
 
 }
 
-void NeuralNetwork::setTrainingInputs(Data inputs) {
+void NeuralNetwork::setTrainingInputs(Data* inputs) {
 	trainingInputs = inputs;
 }
 
-void NeuralNetwork::setTrainingOutputs(Data outputs) {
+void NeuralNetwork::setTrainingOutputs(Data* outputs) {
 	trainingOutputs = outputs;
 }
 
@@ -203,14 +207,15 @@ double NeuralNetwork::calculateCurrentLoss() {
 
 	std::vector<double> networkOutputs = std::vector<double>();
 
-	for (int r = 0; r < trainingOutputs.getNumRows(); r++) {
+	for (int r = 0; r < trainingOutputs->getNumRows(); r++) {
 		//get the network's output
-		networkOutputs = runNetwork(Helper::arrayToVector(trainingInputs.getRow(r), trainingInputs.getNumCols()));
-
+		double* dataRow = trainingInputs->getRow(r);
+		networkOutputs = runNetwork(Helper::arrayToVector(dataRow, trainingInputs->getNumCols()));
+		delete dataRow;
 		//caclulate loss and add to sum
-		for (int c = 0; c < trainingOutputs.getNumCols(); c++) {
+		for (int c = 0; c < trainingOutputs->getNumCols(); c++) {
 			
-			totalLoss += Helper::calculateLoss(trainingOutputs.getIndex(r,c), networkOutputs[c]);
+			totalLoss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]);
 			dataPointCount++;
 		}
 	}
@@ -221,26 +226,35 @@ int main() {
 	std::vector<int> l = std::vector<int>();
 
 	l.push_back(3);
+	//l.push_back(3);
+	//l.push_back(3);
 
 	NeuralNetwork n = NeuralNetwork(1,1,l);
 	//train network
 
-	Data trainingInputs = Data(9, 1);
-	Data trainingOutputs = Data(9, 1);
+	Data* trainingInputs = new Data(9, 1);
+	Data* trainingOutputs = new Data(9, 1);
 
 	for (double i = -4; i < 5; i++) {
-		trainingInputs.setIndex(i + 4,0,i);
-		trainingOutputs.setIndex(i + 4, 0, std::pow(i,2));
+		trainingInputs->setIndex(i + 4,0,i);
+		trainingOutputs->setIndex(i + 4, 0, std::pow(2,i));
 	}
 
 	n.setTrainingInputs(trainingInputs);
 	n.setTrainingOutputs(trainingOutputs);
 
-	n.trainNetwork(0,1000000, 4, 3, 1, -5, 5, true);
+	n.trainNetwork(0.2,100000, 4, 3, 1, -5, 5, true);
 
 	std::vector<double> input = std::vector<double>();
 
-	input.push_back(2);
+	input.push_back(1);
+
+	for (int i = -4; i < 5; i++) {
+		input.clear();
+		input.push_back(i);
+
+		std::cout << i << "," << n.runNetwork(input).at(0) << std::endl;
+	}
 
 	std::cout << n.runNetwork(input).at(0) << std::endl;
 

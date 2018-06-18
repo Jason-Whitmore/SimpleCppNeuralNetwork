@@ -50,7 +50,7 @@ double Data::getIndex(int row, int column) {
 		//exception here
 	}
 	
-	//issue with segfault i think
+	
 	return array[row][column];
 }
 
