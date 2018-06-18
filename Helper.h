@@ -16,11 +16,14 @@ class Helper {
 	static double randomDouble(double min, double max);
 	static int randomInt(int min, int max);
 	static std::vector<std::vector<int>> getSetOfLayerConfigs(int numNodes);
-
+	
 
 	private:
 	
 	static std::vector<int> generateConfig(int numNodes);
 	static bool contains(std::vector<int> v, std::vector<std::vector<int>> setOfVectors);
+	static std::vector<std::string> split(std::string s, std::string splitter);
+	static bool contains(std::string s, std::string targetString);
+	
 };
 

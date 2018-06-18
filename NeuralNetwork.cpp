@@ -246,7 +246,7 @@ int main() {
 
 	std::vector<std::vector<int>> configs = std::vector<std::vector<int>>();
 
-	configs = Helper::getSetOfLayerConfigs(8);
+	//configs = Helper::getSetOfLayerConfigs(8);
 
 	for (int i = 0; i < configs.size(); i++) {
 		std::cout << "Set " << i << std::endl;
@@ -255,6 +255,10 @@ int main() {
 		}
 		std::cout << std::endl;
 	}
+
+	std::string sentence = "this is a cool sentence";
+	std::string target = "sentence";
+	std::cout << Helper::contains(sentence, target) << std::endl;
 	std::cout << "end";
 	while (true);
 
