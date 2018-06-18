@@ -59,3 +59,59 @@ int Helper::randomInt(int min, int max) {
 	
 	return min + (rand() % (max - min));
 }
+
+std::vector<std::vector<int>> Helper::getSetOfLayerConfigs(int numNodes) {
+
+	std::vector<std::vector<int>> r = std::vector<std::vector<int>>();
+
+
+	std::vector<int> currentConfig;
+	//while all configs have not been found yet....
+	while (r.size() < std::pow(2, numNodes - 1)) {
+		currentConfig = generateConfig(numNodes);
+
+		//if unique, add to return vector
+		if (!contains(currentConfig, r)) {
+			r.push_back(currentConfig);
+		}
+	}
+
+	return r;
+}
+
+std::vector<int> Helper::generateConfig(int numNodes) {
+	std::vector<int> r = std::vector<int>();
+	
+	int nodesLeft = numNodes;
+	int rand;
+
+	while(nodesLeft >= 1) {
+		if (nodesLeft == 1) {
+			r.push_back(1);
+			return r;
+		}
+		
+
+		rand = Helper::randomInt(1, nodesLeft + 1);
+
+		nodesLeft -= rand;
+		
+		r.push_back(rand);
+
+	}
+
+
+	return r;
+}
+
+bool Helper::contains(std::vector<int> v, std::vector<std::vector<int>> setOfVectors) {
+
+
+	for (int i = 0; i < setOfVectors.size(); i++) {
+		if (setOfVectors[i] == v) {
+			return true;
+		}
+	}
+
+	return false;
+}

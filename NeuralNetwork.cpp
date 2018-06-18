@@ -243,7 +243,25 @@ int main() {
 	n.setTrainingInputs(trainingInputs);
 	n.setTrainingOutputs(trainingOutputs);
 
+
+	std::vector<std::vector<int>> configs = std::vector<std::vector<int>>();
+
+	configs = Helper::getSetOfLayerConfigs(8);
+
+	for (int i = 0; i < configs.size(); i++) {
+		std::cout << "Set " << i << std::endl;
+		for (int c = 0; c < configs[i].size(); c++) {
+			std::cout << configs[i][c] << " ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "end";
+	while (true);
+
+
 	n.trainNetwork(0.2,100000, 4, 3, 1, -5, 5, true);
+
+
 
 	std::vector<double> input = std::vector<double>();
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <random>
+#include <map>
+#include <cmath>
 class Helper {
 	public:
 	Helper();
@@ -13,5 +15,12 @@ class Helper {
 
 	static double randomDouble(double min, double max);
 	static int randomInt(int min, int max);
+	static std::vector<std::vector<int>> getSetOfLayerConfigs(int numNodes);
+
+
+	private:
+	
+	static std::vector<int> generateConfig(int numNodes);
+	static bool contains(std::vector<int> v, std::vector<std::vector<int>> setOfVectors);
 };
 
