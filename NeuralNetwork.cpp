@@ -256,9 +256,9 @@ int main() {
 		std::cout << std::endl;
 	}
 
-	std::string sentence = "this is a cool sentence";
-	std::string target = "sentence";
-	std::cout << Helper::contains(sentence, target) << std::endl;
+	std::string sentence = "1,2,3,4,5";
+	std::vector<std::string> split = Helper::split(sentence, ",");
+	
 	std::cout << "end";
 	while (true);
 

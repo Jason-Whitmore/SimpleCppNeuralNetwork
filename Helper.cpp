@@ -123,7 +123,7 @@ std::vector<std::string> Helper::split(std::string s, std::string splitter) {
 	
 	while (Helper::contains(copy, splitter)) {
 		r.push_back(copy.substr(0, copy.find_first_of(splitter)));
-		copy = copy.substr(copy.find_first_of(splitter));
+		copy = copy.substr(copy.find_first_of(splitter) + 1);
 	}
 
 	r.push_back(copy);
@@ -131,6 +131,16 @@ std::vector<std::string> Helper::split(std::string s, std::string splitter) {
 
 	return r;
 	
+}
+
+std::vector<double> Helper::stringToDoubleVector(std::vector<std::string> v) {
+	std::vector<double> r = std::vector<double>();
+
+	for (int i = 0; i < v.size(); i++) {
+		r.push_back(std::stod(v[i]));
+	}
+
+	return r;
 }
 
 bool Helper::contains(std::string s, std::string targetString) {

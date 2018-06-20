@@ -3,6 +3,7 @@
 #include <random>
 #include <map>
 #include <cmath>
+#include <string>
 class Helper {
 	public:
 	Helper();
@@ -16,13 +17,14 @@ class Helper {
 	static double randomDouble(double min, double max);
 	static int randomInt(int min, int max);
 	static std::vector<std::vector<int>> getSetOfLayerConfigs(int numNodes);
-	
+	static std::vector<std::string> split(std::string s, std::string splitter);
+	static std::vector<double> stringToDoubleVector(std::vector<std::string> v);
 
 	private:
 	
 	static std::vector<int> generateConfig(int numNodes);
 	static bool contains(std::vector<int> v, std::vector<std::vector<int>> setOfVectors);
-	static std::vector<std::string> split(std::string s, std::string splitter);
+	
 	static bool contains(std::string s, std::string targetString);
 	
 };
