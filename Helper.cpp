@@ -123,7 +123,7 @@ std::vector<std::string> Helper::split(std::string s, std::string splitter) {
 	
 	while (Helper::contains(copy, splitter)) {
 		r.push_back(copy.substr(0, copy.find_first_of(splitter)));
-		copy = copy.substr(copy.find_first_of(splitter) + 1);
+		copy = copy.substr(copy.find_first_of(splitter) + splitter.length());
 	}
 
 	r.push_back(copy);

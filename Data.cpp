@@ -14,11 +14,46 @@ Data::Data(int rows, int columns) {
 
 }
 
-Data::Data() {
-	numRows = -1;
-	numCols = -1;
 
-	array = nullptr;
+Data::Data(std::string filePath, std::string rowSeparator, std::string columnSeparator) {
+
+	std::string fileContents = "";
+	std::string singleLine;
+	std::ifstream file(filePath);
+
+	if (file.is_open()) {
+
+		while (std::getline(file, singleLine)) {
+			fileContents += singleLine;
+		}
+
+
+	} else {
+		//file could not be opened
+	}
+
+	std::vector<std::string> rows = Helper::split(fileContents, rowSeparator);
+	std::vector<std::string> singleRow;
+	std::vector<double> singleRowDoubles;
+	numRows = rows.size();
+	numCols = Helper::split(rows[0], columnSeparator).size();
+
+	array = new double*[numRows];
+
+	for (int i = 0; i < numRows; i++) {
+		array[i] = new double[numCols];
+	}
+
+	for (int r = 0; r < numRows; r++) {
+		singleRow = Helper::split(rows[r], columnSeparator);
+		singleRowDoubles = Helper::stringToDoubleVector(singleRow);
+		for (int c = 0; c < numCols; c++) {
+			array[r][c] = singleRowDoubles[c];
+		}
+	}
+
+
+	
 
 }
 

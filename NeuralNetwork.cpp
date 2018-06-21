@@ -257,7 +257,7 @@ int main() {
 	}
 
 	std::string sentence = "1,2,3,4,5";
-	std::vector<std::string> split = Helper::split(sentence, ",");
+	std::vector<std::string> split = Helper::split(sentence, ",,");
 	
 	std::cout << "end";
 	while (true);

@@ -1,8 +1,11 @@
 #pragma once
+#include <string>
+#include "Helper.h"
+#include <fstream>
 class Data {
 	public:
 	Data(int rows, int columns);
-	Data();
+	Data(std::string filePath, std::string rowSeparator, std::string columnSeparator);
 	~Data();
 
 	double* getRow(int rowIndex);
