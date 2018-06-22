@@ -23,6 +23,7 @@ class NeuralNetwork {
 
 	void setTrainingInputs(Data* inputs);
 	void setTrainingOutputs(Data* outputs);
+	double calculateCurrentLoss();
 
 	Data* getTrainingInputs();
 	Data* getTrainingOutputs();
@@ -34,7 +35,7 @@ class NeuralNetwork {
 
 	Data* trainingOutputs;
 
-	double calculateCurrentLoss();
+	void debugLayers();
 
 	int numWeights;
 

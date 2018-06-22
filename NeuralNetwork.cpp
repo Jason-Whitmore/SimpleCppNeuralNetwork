@@ -114,7 +114,7 @@ std::vector<int> NeuralNetwork::hyperparameterOptimization(int maxNodes, int min
 
 
 void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double numPassesScalar, double stepSize, double randMin, double randMax, bool displayStats) {
-	std::vector<NodeLayer>* bestLayers = new std::vector<NodeLayer>(*layers);
+	std::vector<NodeLayer>* bestLayers = layers;
 	double currentLoss = calculateCurrentLoss();
 	double bestLoss = currentLoss;
 
@@ -131,9 +131,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 		currentLoss = calculateCurrentLoss();
 
 		if (bestLoss > currentLoss) {
-			bestLayers = nullptr;
-			delete bestLayers;
-			bestLayers = new std::vector<NodeLayer>(*layers);
+			bestLayers = layers;
 			bestLoss = currentLoss;
 			improvements++;
 		}
@@ -141,7 +139,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 		if (displayStats && i % 10 == 0) {
 			system("CLS");
 			std::cout << "Iteration: " << i << "/" << maxIterations << std::endl;
-			std::cout << "BestLoss: " << bestLoss << std::endl;
+			std::cout << "Best Loss: " << bestLoss << std::endl;
 			std::cout << "Number of Improvements to loss: " << improvements << std::endl;
 			std::cout << "Current loss: " << currentLoss << std::endl;
 			
@@ -149,9 +147,9 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 
 
 	}
-
-	layers = bestLayers;
-
+	std::cout << calculateCurrentLoss() << std::endl;
+	*layers = *bestLayers;
+	std::cout << calculateCurrentLoss() << std::endl;
 
 }
 
@@ -264,6 +262,27 @@ Data * NeuralNetwork::getTrainingOutputs() {
 	return trainingOutputs;
 }
 
+void NeuralNetwork::debugLayers() {
+
+	for (int i = 0; i < layers->size(); i++) {
+		std::cout << "Layer " << i << std::endl;
+
+		//incoming weights
+		std::cout << "Weights: " << std::endl;
+
+		for(int a = 0; a < layers->at(i).getNumWeights(); i++) {
+			std::cout << "Weight " << a << ":" << layers->at(i).getWeight(a) << std::endl;
+		}
+
+		//incoming biases
+		std::cout << "Biases: " << std::endl;
+
+		for (int a = 0; a < layers->at(i).getNumBiases(); i++) {
+			std::cout << "Bias " << a << ":" << layers->at(i).getBias(a) << std::endl;
+		}
+	}
+}
+
 
 
 double NeuralNetwork::calculateCurrentLoss() {
@@ -312,23 +331,20 @@ int main() {
 
 	//std::vector<int> bestConfig = n.hyperparameterOptimization(25, 3, 4, 5, 5, -5, 5);
 
-	
+	//while(true);
 	std::cout << "end";
 	std::vector<double> input = std::vector<double>();
-	
-	input.push_back(1);
-
-	for (int i = -4; i < 5; i++) {
-		input.clear();
-		input.push_back(i);
-
-		std::cout << i << "," << n.runNetwork(input).at(0) << std::endl;
-	}
 
 
-	n.trainNetwork(0.1,1000, 4, 3, 1, -5, 5, false);
+
+	std::cout << n.calculateCurrentLoss() << std::endl;
+
+	n.trainNetwork(0.1,100, 4, 3, 1, -10, 10, true);
+
+	std::cout << n.calculateCurrentLoss() << std::endl;
 
 
+	while(true);
 
 	
 
