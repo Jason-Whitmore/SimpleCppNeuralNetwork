@@ -244,20 +244,19 @@ int main() {
 	n.setTrainingOutputs(trainingOutputs);
 
 
-	std::vector<std::vector<int>> configs = std::vector<std::vector<int>>();
+	std::vector<int> configs;
 
-	//configs = Helper::getSetOfLayerConfigs(8);
 
-	for (int i = 0; i < configs.size(); i++) {
+	for (int i = 0; i < 25; i++) {
+
+		configs = Helper::generateConfig(25, 4);
 		std::cout << "Set " << i << std::endl;
-		for (int c = 0; c < configs[i].size(); c++) {
-			std::cout << configs[i][c] << " ";
+		for (int c = 0; c < configs.size(); c++) {
+			std::cout << configs[c] << " ";
 		}
 		std::cout << std::endl;
 	}
 
-	std::string sentence = "1,2,3,4,5";
-	std::vector<std::string> split = Helper::split(sentence, ",,");
 	
 	std::cout << "end";
 	while (true);
