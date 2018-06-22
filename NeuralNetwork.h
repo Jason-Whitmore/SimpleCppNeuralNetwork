@@ -13,7 +13,7 @@ class NeuralNetwork {
 
 	std::vector<double> runNetwork(std::vector<double> inputs);
 
-	void hyperparameterOptimization(int maxNodes, double randMin, double randMax);
+	std::vector<int> hyperparameterOptimization(int maxNodes, int minNodesPerLayer, double attemptScalar, int numOfSteps, double stepSize, double randMin, double randMax);
 
 	void trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double numPassesScalar, double stepSize, double randMin, double randMax, bool displayStats);
 
@@ -23,6 +23,9 @@ class NeuralNetwork {
 
 	void setTrainingInputs(Data* inputs);
 	void setTrainingOutputs(Data* outputs);
+
+	Data* getTrainingInputs();
+	Data* getTrainingOutputs();
 
 	private:
 	std::vector<NodeLayer>* layers;
@@ -37,5 +40,7 @@ class NeuralNetwork {
 
 	int numBiases;
 
+	int numInputs;
+	int numOutputs;
 };
 
