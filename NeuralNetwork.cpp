@@ -114,6 +114,8 @@ std::vector<int> NeuralNetwork::hyperparameterOptimization(int maxNodes, int min
 
 
 void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double numPassesScalar, double stepSize, double randMin, double randMax, bool displayStats) {
+	debugLayers();
+	std::vector<NodeLayer>* startLayers = layers;
 	std::vector<NodeLayer>* bestLayers = layers;
 	double currentLoss = calculateCurrentLoss();
 	double bestLoss = currentLoss;
@@ -131,8 +133,10 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 		currentLoss = calculateCurrentLoss();
 
 		if (bestLoss > currentLoss) {
-			bestLayers = layers;
+			
+			bestLayers = new std::vector<NodeLayer>(*layers);
 			bestLoss = currentLoss;
+			//layers = startLayers;
 			improvements++;
 		}
 
@@ -141,16 +145,33 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 			std::cout << "Iteration: " << i << "/" << maxIterations << std::endl;
 			std::cout << "Best Loss: " << bestLoss << std::endl;
 			std::cout << "Number of Improvements to loss: " << improvements << std::endl;
-			std::cout << "Current loss: " << currentLoss << std::endl;
+			
 			
 		}
-
+		std::cout << "Current loss: " << currentLoss << std::endl;
 
 	}
-	std::cout << calculateCurrentLoss() << std::endl;
-	*layers = *bestLayers;
-	std::cout << calculateCurrentLoss() << std::endl;
 
+
+	std::cout << "Location of current layers: " << &layers << std::endl;
+	std::cout << "Location of best layers   : " << &bestLayers << std::endl;
+	//debugLayers();
+	std::cout << "Loss: " << calculateCurrentLoss() << std::endl;
+	this->layers->clear();
+
+	for (int i = 0; i < bestLayers->size(); i++) {
+		this->layers->push_back(bestLayers->at(i));
+	}
+
+	//layers = bestLayers;
+
+	std::cout << "Location of current layers: " << &layers << std::endl;
+	std::cout << "Location of best layers   : " << &bestLayers << std::endl;
+
+
+	std::cout << "Loss: " << calculateCurrentLoss() << std::endl;
+	return;
+	//debugLayers();
 }
 
 void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, double randMin, double randMax) {
@@ -270,17 +291,203 @@ void NeuralNetwork::debugLayers() {
 		//incoming weights
 		std::cout << "Weights: " << std::endl;
 
-		for(int a = 0; a < layers->at(i).getNumWeights(); i++) {
+		for(int a = 0; a < layers->at(i).getNumWeights(); a++) {
 			std::cout << "Weight " << a << ":" << layers->at(i).getWeight(a) << std::endl;
 		}
 
 		//incoming biases
 		std::cout << "Biases: " << std::endl;
 
-		for (int a = 0; a < layers->at(i).getNumBiases(); i++) {
+		for (int a = 0; a < layers->at(i).getNumBiases(); a++) {
 			std::cout << "Bias " << a << ":" << layers->at(i).getBias(a) << std::endl;
 		}
 	}
+}
+
+void NeuralNetwork::saveWeights() {
+	std::vector<double> weights = getAllWeights();
+
+	std::string output = "";
+
+	for (int i = 0; i < weights.size(); i++) {
+		output += weights[i];
+		output += "\n";
+	}
+
+	std::ofstream file;
+	file.open("weights.txt");
+
+	file << output;
+
+	file.close();
+
+}
+
+void NeuralNetwork::saveBiases() {
+	std::vector<double> biases = getAllBiases();
+
+	std::string output = "";
+
+	for (int i = 0; i < biases.size(); i++) {
+		output += biases[i];
+		output += "\n";
+	}
+
+	std::ofstream file;
+	file.open("biases.txt");
+
+	file << output;
+
+	file.close();
+}
+
+
+std::vector<double> NeuralNetwork::getAllBiases() {
+	std::vector<double> r = std::vector<double>();
+
+	for (int i = 0; i < numBiases; i++) {
+		r.push_back(getBias(i));
+	}
+
+
+	return r;
+}
+
+std::vector<double> NeuralNetwork::getAllWeights() {
+	std::vector<double> r = std::vector<double>();
+
+	for (int i = 0; i < numWeights; i++) {
+		r.push_back(getWeight(i));
+	}
+
+
+	return r;
+}
+
+void NeuralNetwork::loadBiases(std::string filePath) {
+	std::string singleLine;
+	std::ifstream file(filePath);
+
+	double bias;
+	unsigned int counter = 0;
+
+	if (file.is_open()) {
+
+		while (std::getline(file, singleLine)) {
+			//interpret data
+			bias = std::stod(singleLine);
+			//place in correct spot
+			setBias(counter, bias);
+			counter++;
+		}
+
+
+	} else {
+		//file could not be opened
+	}
+}
+
+void NeuralNetwork::loadWeights(std::string filePath) {
+	std::string singleLine;
+	std::ifstream file(filePath);
+
+	double weight;
+	unsigned int counter = 0;
+
+	if (file.is_open()) {
+
+		while (std::getline(file, singleLine)) {
+			//interpret data
+			weight = std::stod(singleLine);
+			//place in correct spot
+			setWeight(counter, weight);
+			counter++;
+		}
+
+
+	} else {
+		//file could not be opened
+	}
+}
+
+double NeuralNetwork::getBias(int index) {
+	int biasIndex = index;
+
+	int currentBiasIndex = 0;
+	int currentLayerIndex = 0;
+
+	//find layer that contains the right index
+	while (currentBiasIndex + layers->at(currentLayerIndex).getNumBiases() <= biasIndex) {
+		currentBiasIndex += layers->at(currentLayerIndex).getNumBiases();
+
+	}
+
+	//layer index found
+	//calculate the index for the weight within the current layer
+	biasIndex = biasIndex - currentBiasIndex;
+
+
+	return layers->at(currentLayerIndex).getBias(biasIndex);
+}
+
+double NeuralNetwork::getWeight(int index) {
+
+	int weightIndex = index;
+
+	int currentWeightIndex = 0;
+	int currentLayerIndex = 1;
+
+	//find layer that contains the right index
+	while (currentWeightIndex + layers->at(currentLayerIndex).getNumWeights() <= weightIndex) {
+		currentWeightIndex += layers->at(currentLayerIndex).getNumWeights();
+		currentLayerIndex++;
+	}
+
+	//layer index found
+	//calculate the index for the weight within the current layer
+	weightIndex = weightIndex - currentWeightIndex;
+
+	return layers->at(currentLayerIndex).getWeight(weightIndex);
+}
+
+void NeuralNetwork::setBias(int index, double value) {
+	int biasIndex = index;
+
+	int currentBiasIndex = 0;
+	int currentLayerIndex = 0;
+
+	//find layer that contains the right index
+	while (currentBiasIndex + layers->at(currentLayerIndex).getNumBiases() <= biasIndex) {
+		currentBiasIndex += layers->at(currentLayerIndex).getNumBiases();
+
+	}
+
+	//layer index found
+	//calculate the index for the weight within the current layer
+	biasIndex = biasIndex - currentBiasIndex;
+
+	return layers->at(currentLayerIndex).setBias(biasIndex, value);
+
+}
+
+void NeuralNetwork::setWeight(int index, double value) {
+
+	int weightIndex = index;
+
+	int currentWeightIndex = 0;
+	int currentLayerIndex = 1;
+
+	//find layer that contains the right index
+	while (currentWeightIndex + layers->at(currentLayerIndex).getNumWeights() <= weightIndex) {
+		currentWeightIndex += layers->at(currentLayerIndex).getNumWeights();
+		currentLayerIndex++;
+	}
+
+	//layer index found
+	//calculate the index for the weight within the current layer
+	weightIndex = weightIndex - currentWeightIndex;
+
+	return layers->at(currentLayerIndex).setWeight(weightIndex, value);
 }
 
 
@@ -338,11 +545,12 @@ int main() {
 
 
 	std::cout << n.calculateCurrentLoss() << std::endl;
+	n.debugLayers();
 
-	n.trainNetwork(0.1,100, 4, 3, 1, -10, 10, true);
+	n.trainNetwork(0.1,50, 4, 3, 1, -10, 10, true);
 
 	std::cout << n.calculateCurrentLoss() << std::endl;
-
+	n.debugLayers();
 
 	while(true);
 

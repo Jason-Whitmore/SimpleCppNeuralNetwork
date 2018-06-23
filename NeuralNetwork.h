@@ -4,6 +4,7 @@
 #include "Data.h"
 #include <random>
 #include <cmath>
+#include <fstream>
 #pragma once
 class NeuralNetwork {
 	public:
@@ -28,6 +29,15 @@ class NeuralNetwork {
 	Data* getTrainingInputs();
 	Data* getTrainingOutputs();
 
+	void debugLayers();
+
+	void saveWeights();
+	void saveBiases();
+
+
+
+	
+
 	private:
 	std::vector<NodeLayer>* layers;
 
@@ -35,7 +45,17 @@ class NeuralNetwork {
 
 	Data* trainingOutputs;
 
-	void debugLayers();
+	std::vector<double> getAllBiases();
+	std::vector<double> getAllWeights();
+
+	void loadBiases(std::string filePath);
+	void loadWeights(std::string filePath);
+
+	double getBias(int index);
+	double getWeight(int index);
+
+	void setBias(int index, double value);
+	void setWeight(int index, double value);
 
 	int numWeights;
 
