@@ -159,13 +159,10 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 
 
 
-	std::cout << "Loss: " << calculateCurrentLoss() << std::endl;
 	loadBiases("biases.txt");
 	loadWeights("weights.txt");
 
 	//debugLayers();
-	std::cout << "Loss: " << calculateCurrentLoss() << std::endl;
-	while(true);
 	return;
 	//debugLayers();
 }
@@ -515,19 +512,19 @@ double NeuralNetwork::calculateCurrentLoss() {
 int main() {
 	std::vector<int> l = std::vector<int>();
 
-	l.push_back(3);
-	//l.push_back(3);
-	//l.push_back(3);
+	l.push_back(8);
+	l.push_back(8);
+	//l.push_back(8);
 
 	NeuralNetwork n = NeuralNetwork(1,1,l);
 	//train network
 
-	Data* trainingInputs = new Data(9, 1);
-	Data* trainingOutputs = new Data(9, 1);
+	Data* trainingInputs = new Data(40, 1);
+	Data* trainingOutputs = new Data(40, 1);
 
-	for (double i = -4; i < 5; i++) {
-		trainingInputs->setIndex(i + 4,0,i);
-		trainingOutputs->setIndex(i + 4, 0, std::pow(2,i));
+	for (double i = -20; i < 20; i++) {
+		trainingInputs->setIndex(i + 20,0,i);
+		trainingOutputs->setIndex(i + 20, 0, std::pow(1.1,i));
 	}
 
 	n.setTrainingInputs(trainingInputs);
@@ -545,11 +542,10 @@ int main() {
 
 	n.debugLayers();
 
-	n.trainNetwork(0.1,50, 4, 3, 1, -10, 10, true);
+	n.trainNetwork(0.1,100, 4, 5, 1, -1, 1, true);
 
 	n.debugLayers();
 
-	while(true);
 
 	
 
