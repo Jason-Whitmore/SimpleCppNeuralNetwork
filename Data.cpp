@@ -21,10 +21,14 @@ Data::Data(std::string filePath, std::string rowSeparator, std::string columnSep
 	std::string singleLine;
 	std::ifstream file(filePath);
 
+	std::vector<std::string> rows = std::vector<std::string>();
+
+	numRows = 0;
 	if (file.is_open()) {
 
 		while (std::getline(file, singleLine)) {
-			fileContents += singleLine;
+			rows.push_back(singleLine);
+			numRows++;
 		}
 
 
@@ -32,7 +36,7 @@ Data::Data(std::string filePath, std::string rowSeparator, std::string columnSep
 		//file could not be opened
 	}
 
-	std::vector<std::string> rows = Helper::split(fileContents, rowSeparator);
+	
 	std::vector<std::string> singleRow;
 	std::vector<double> singleRowDoubles;
 	numRows = rows.size();

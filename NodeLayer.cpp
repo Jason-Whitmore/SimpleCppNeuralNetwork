@@ -15,7 +15,7 @@ NodeLayer::NodeLayer(int inputs, int outputs) {
 	//remove this later
 	for (int r = 0; r < outputs; r++) {
 		for (int c = 0; c < inputs; c++) {
-			inputWeights[r][c] = 1;
+			inputWeights[r][c] = 0;
 		}
 	}
 
@@ -124,7 +124,7 @@ void NodeLayer::setWeight(int index, double weight) {
 		return;
 	}
 
-	inputWeights[index / numOutputs][index % numInputs] = weight;
+	inputWeights[index / numInputs][index % numInputs] = weight;
 }
 
 double NodeLayer::getWeight(int index) {
@@ -132,5 +132,5 @@ double NodeLayer::getWeight(int index) {
 		return inputWeights[0][index % numInputs];
 	}
 
-	return inputWeights[index / numOutputs][index % numInputs];
+	return inputWeights[index / numInputs][index % numInputs];
 }

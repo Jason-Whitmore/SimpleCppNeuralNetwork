@@ -114,7 +114,6 @@ std::vector<int> NeuralNetwork::hyperparameterOptimization(int maxNodes, int min
 
 
 void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double numPassesScalar, double stepSize, double randMin, double randMax, bool displayStats) {
-	debugLayers();
 	std::vector<NodeLayer>* startLayers = layers;
 	std::vector<NodeLayer>* bestLayers = layers;
 	double currentLoss = calculateCurrentLoss();
@@ -126,7 +125,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 		randomizeVariables(randMin, randMax);
 
 
-		for (int pass = 0; pass < (numBiases + numWeights) * numPassesScalar; pass++) {
+		for (int pass = 0; pass < ((numBiases - numInputs) + numWeights) * numPassesScalar; pass++) {
 			optimizeRandomVariable(numOfSteps, stepSize, randMin, randMax);
 		}
 
@@ -200,6 +199,7 @@ void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, doub
 				currentDelta *= -0.5;
 			}
 
+
 		}
 		
 
@@ -208,7 +208,9 @@ void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, doub
 	} else {
 		//pick a bias to optimize
 		//pick a weight to optimize
-		int biasIndex = Helper::randomInt(0, numBiases);
+		int biasIndex = Helper::randomInt(numInputs, numBiases);
+
+		
 
 		int currentBiasIndex = 0;
 		int currentLayerIndex = 0;
@@ -491,6 +493,7 @@ void NeuralNetwork::setWeight(int index, double value) {
 double NeuralNetwork::calculateCurrentLoss() {
 	double dataPointCount = 0;
 	double totalLoss = 0;
+	double loss = 0;
 
 	std::vector<double> networkOutputs = std::vector<double>();
 
@@ -501,65 +504,11 @@ double NeuralNetwork::calculateCurrentLoss() {
 		delete dataRow;
 		//caclulate loss and add to sum
 		for (int c = 0; c < trainingOutputs->getNumCols(); c++) {
-			
-			totalLoss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]);
+
+			loss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]);
 			dataPointCount++;
 		}
 	}
-	return totalLoss / dataPointCount;
+	return loss / dataPointCount;
 }
 
-int main() {
-	std::vector<int> l = std::vector<int>();
-
-	l.push_back(8);
-	l.push_back(8);
-	//l.push_back(8);
-
-	NeuralNetwork n = NeuralNetwork(1,1,l);
-	//train network
-
-	Data* trainingInputs = new Data(40, 1);
-	Data* trainingOutputs = new Data(40, 1);
-
-	for (double i = -20; i < 20; i++) {
-		trainingInputs->setIndex(i + 20,0,i);
-		trainingOutputs->setIndex(i + 20, 0, std::pow(1.1,i));
-	}
-
-	n.setTrainingInputs(trainingInputs);
-	n.setTrainingOutputs(trainingOutputs);
-
-	
-
-	//std::vector<int> bestConfig = n.hyperparameterOptimization(25, 3, 4, 5, 5, -5, 5);
-
-	//while(true);
-	std::cout << "end";
-	std::vector<double> input = std::vector<double>();
-
-
-
-	n.debugLayers();
-
-	n.trainNetwork(0.1,100, 4, 5, 1, -1, 1, true);
-
-	n.debugLayers();
-
-
-	
-
-	input.push_back(1);
-
-	for (int i = -4; i < 5; i++) {
-		input.clear();
-		input.push_back(i);
-
-		std::cout << i << "," << n.runNetwork(input).at(0) << std::endl;
-	}
-
-	std::cout << n.runNetwork(input).at(0) << std::endl;
-
-	while(true);
-
-}
