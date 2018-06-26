@@ -505,7 +505,7 @@ double NeuralNetwork::calculateCurrentLoss() {
 		//caclulate loss and add to sum
 		for (int c = 0; c < trainingOutputs->getNumCols(); c++) {
 
-			loss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]);
+			loss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]) * (1/ trainingOutputs->getNumCols());
 			dataPointCount++;
 		}
 	}
