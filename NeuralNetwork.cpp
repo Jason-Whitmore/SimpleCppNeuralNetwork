@@ -52,6 +52,18 @@ std::vector<double> NeuralNetwork::runNetwork(std::vector<double> inputs) {
 	return layers->at(layers->size()-1).getOutputVector();
 }
 
+std::vector<double> NeuralNetwork::runNetwork(double * inputs) {
+	layers->at(1).setInputArray(inputs);
+
+	for (int i = 1; i < layers->size() - 1; i++) {
+		layers->at(i).dotProductAndApplyBias();
+		layers->at(i + 1).setInputArray(layers->at(i).getOutputArray());
+	}
+	layers->at(layers->size() - 1).dotProduct();
+
+	return layers->at(layers->size() - 1).getOutputVector();
+}
+
 std::vector<int> NeuralNetwork::hyperparameterOptimization(int maxNodes, int minNodesPerLayer, double attemptScalar, int numOfSteps, double stepSize, double randMin, double randMax) {
 
 	std::vector<int> bestConfig;
@@ -497,18 +509,20 @@ double NeuralNetwork::calculateCurrentLoss() {
 
 	std::vector<double> networkOutputs = std::vector<double>();
 
+	//bug somewhere here
 	for (int r = 0; r < trainingOutputs->getNumRows(); r++) {
 		//get the network's output
 		double* dataRow = trainingInputs->getRow(r);
-		networkOutputs = runNetwork(Helper::arrayToVector(dataRow, trainingInputs->getNumCols()));
+		networkOutputs = runNetwork(dataRow);
+		//networkOutputs = runNetwork(Helper::arrayToVector(dataRow, trainingInputs->getNumCols()));
 		delete dataRow;
 		//caclulate loss and add to sum
 		for (int c = 0; c < trainingOutputs->getNumCols(); c++) {
 
-			loss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]) * (1/ trainingOutputs->getNumCols());
+			loss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]) * (1.0 / trainingOutputs->getNumCols());
 			dataPointCount++;
 		}
 	}
-	return loss / dataPointCount;
+	return loss / trainingOutputs->getNumRows();
 }
 

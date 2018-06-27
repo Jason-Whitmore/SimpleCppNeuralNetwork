@@ -77,9 +77,7 @@ void NodeLayer::dotProduct() {
 }
 
 void NodeLayer::setInputArray(double a[]) {
-	for (int i = 0; i < numInputs; i++) {
-		inputArray[i] = a[i];
-	}
+	inputArray = a;
 }
 
 void NodeLayer::setInputArray(std::vector<double> v) {
