@@ -4,6 +4,10 @@
 #include <map>
 #include <cmath>
 #include <string>
+#include <amp.h>
+#include <iostream>
+
+
 class Helper {
 	public:
 	Helper();

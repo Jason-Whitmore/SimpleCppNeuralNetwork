@@ -139,6 +139,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 
 		for (int pass = 0; pass < ((numBiases - numInputs) + numWeights) * numPassesScalar; pass++) {
 			optimizeRandomVariable(numOfSteps, stepSize, randMin, randMax);
+			std::cout << "Completed pass " << pass <<". New Loss: " << calculateCurrentLoss() << std::endl;
 		}
 
 		currentLoss = calculateCurrentLoss();
@@ -180,7 +181,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 
 void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, double randMin, double randMax) {
 	//need to find proportion of biases to totalVariables
-	double biasesToTotalVariables = numBiases / (numBiases + numWeights);
+	double biasesToTotalVariables = ((double)numBiases - numInputs) / (numBiases - numInputs + numWeights);
 
 	if (Helper::randomDouble(0,1) > biasesToTotalVariables) {
 		//pick a weight to optimize

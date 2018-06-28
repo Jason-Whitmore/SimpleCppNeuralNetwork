@@ -70,7 +70,10 @@ double* Data::getRow(int rowIndex) {
 		return nullptr;
 	}
 
+	//return array[rowIndex];
+
 	double* r = new double[numCols];
+
 
 	for (int i = 0; i < numCols; i++) {
 		r[i] = array[rowIndex][i];
