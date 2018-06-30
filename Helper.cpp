@@ -13,39 +13,13 @@ double Helper::dotProduct(double a[], double b[], int length) {
 
 	double result = 0;
 
-	//for (int i = 0; i < length; i++) {
-	//	result += a[i] * b[i];
-	//}
-
-	//return result;
-
-
-	concurrency::array_view<const double, 1> arrayA(length, a);
-	concurrency::array_view<const double, 1> arrayB(length, b);
-	double* product = new double[length];
-	concurrency::array_view<double, 1> arrayProduct(length, product);
-	
-	arrayProduct.discard_data();
-
-	concurrency::parallel_for_each(
-	
-		arrayProduct.extent,
-	
-		[=](concurrency::index<1> i) restrict(amp) {
-			arrayProduct[i] += arrayA[i] * arrayB[i];
-		}
-	
-	);
-	arrayProduct.synchronize();
-
 	for (int i = 0; i < length; i++) {
-		result += arrayProduct[i];
+		result += a[i] * b[i];
 	}
-	delete product;
+
+	return result;
 
 
-	arrayProduct.discard_data();
-	
 
 	return result;
 

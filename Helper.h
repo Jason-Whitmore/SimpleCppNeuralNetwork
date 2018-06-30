@@ -4,7 +4,6 @@
 #include <map>
 #include <cmath>
 #include <string>
-#include <amp.h>
 #include <iostream>
 
 

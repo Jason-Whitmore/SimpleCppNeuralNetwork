@@ -64,64 +64,7 @@ std::vector<double> NeuralNetwork::runNetwork(double * inputs) {
 	return layers->at(layers->size() - 1).getOutputVector();
 }
 
-std::vector<int> NeuralNetwork::hyperparameterOptimization(int maxNodes, int minNodesPerLayer, double attemptScalar, int numOfSteps, double stepSize, double randMin, double randMax) {
 
-	std::vector<int> bestConfig;
-	NeuralNetwork* bestNetwork;
-	double bestConfigLoss = DBL_MAX;
-
-	std::vector<int> currentConfig;
-	NeuralNetwork* currentNetwork;
-	double currentConfigLoss = DBL_MAX;
-	int numberOfAttempts;
-	int currentMaxNodes = minNodesPerLayer;
-
-	while (currentMaxNodes < maxNodes) {
-		//loop through multiple options of the same config parameters
-		for (int i = 0; i < currentMaxNodes * 5; i++) {
-			//generate a new config
-			currentConfig = Helper::generateConfig(currentMaxNodes, minNodesPerLayer);
-
-			//make a new NeuralNetwork
-			currentNetwork = new NeuralNetwork(numInputs, numOutputs, currentConfig);
-			currentNetwork->setTrainingInputs(getTrainingInputs());
-			currentNetwork->setTrainingOutputs(getTrainingOutputs());
-			
-			//train the network (give ample training time depending on variables
-			std::cout << "Current Loss: " << currentNetwork->calculateCurrentLoss() << std::endl;
-
-			currentNetwork->trainNetwork(0, attemptScalar * (currentNetwork->numBiases + currentNetwork->numWeights), numOfSteps, 2, stepSize, randMin, randMax, true);
-			
-			std::cout << "Current Loss: " << currentNetwork->calculateCurrentLoss() << std::endl;
-
-
-			if (currentNetwork->calculateCurrentLoss() < bestConfigLoss) {
-				bestConfigLoss = currentNetwork->calculateCurrentLoss();
-				bestConfig = currentConfig;
-				
-			}
-
-
-		}
-
-		//update stats
-
-		//system("CLS");
-		std::cout << "Best Config:" << std::endl;
-
-		for (int i = 0; i < bestConfig.size(); i++) {
-			std::cout << bestConfig[i] << " ";
-		}
-		std::cout << std::endl;
-
-		std::cout << "Best config loss: " << bestConfigLoss << std::endl;
-
-		currentMaxNodes++;
-	}
-
-	return bestConfig;
-
-}
 
 
 

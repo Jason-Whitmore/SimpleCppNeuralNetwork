@@ -16,7 +16,7 @@ class NeuralNetwork {
 
 	std::vector<double> runNetwork(double* inputs);
 
-	std::vector<int> hyperparameterOptimization(int maxNodes, int minNodesPerLayer, double attemptScalar, int numOfSteps, double stepSize, double randMin, double randMax);
+	
 
 	void trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double numPassesScalar, double stepSize, double randMin, double randMax, bool displayStats);
 
