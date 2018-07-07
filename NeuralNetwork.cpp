@@ -255,6 +255,24 @@ void NeuralNetwork::debugLayers() {
 	}
 }
 
+void NeuralNetwork::debugLayer(int layerNum) {
+	std::cout << "Layer " << layerNum << std::endl;
+
+	std::cout << "\tWeights: " << std::endl;
+
+	for (int i = 0; i < layers->at(layerNum).getNumWeights(); i++) {
+		std::cout << "\t\tWeight " << i << ":" << layers->at(layerNum).getWeight(i) << std::endl;
+	}
+
+	std::cout << "\tBiases: " << std::endl;
+
+	for (int i = 0; i < layers->at(layerNum).getNumBiases(); i++) {
+		std::cout << "\t\\tBiases " << i << ":" << layers->at(layerNum).getBias(i) << std::endl;
+	}
+
+
+}
+
 void NeuralNetwork::saveWeights() {
 	std::vector<double> weights = getAllWeights();
 

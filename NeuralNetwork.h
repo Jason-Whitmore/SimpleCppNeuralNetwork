@@ -32,6 +32,7 @@ class NeuralNetwork {
 	Data* getTrainingOutputs();
 
 	void debugLayers();
+	void debugLayer(int layerNum);
 
 	void saveWeights();
 	void saveBiases();
