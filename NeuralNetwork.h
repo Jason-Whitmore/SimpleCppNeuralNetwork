@@ -37,7 +37,7 @@ class NeuralNetwork {
 	void saveWeights();
 	void saveBiases();
 
-
+	std::vector<int> dataIndexForStrongNodeSignal(int layerIndex, int nodeIndex, double threshold);
 
 	
 
