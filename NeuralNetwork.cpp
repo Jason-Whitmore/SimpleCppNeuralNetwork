@@ -310,6 +310,31 @@ void NeuralNetwork::saveBiases() {
 	file.close();
 }
 
+void NeuralNetwork::saveNetwork(std::string filename) {
+	std::string text = "";
+
+	text += "numInputs " + std::to_string(numInputs) + "\n";
+	text += "numOutputs " + std::to_string(numOutputs) + "\n";
+
+	//include layer info
+	for (int i = 1; i < layers->size() - 1; i++) {
+		text += "layer " + std::to_string(layers->at(i).getNumBiases()) + "\n";
+	}
+
+	//bias info
+	for (int i = 0; i < numBiases; i++) {
+		text += "bias " + std::to_string(i) + " " + std::to_string(getBias(i)) + "\n";
+	}
+
+	//weight info
+
+	for (int i = 0; i < numWeights; i++) {
+		text += "weight " + std::to_string(i) + " " + std::to_string(getWeight(i)) + "\n";
+	}
+
+}
+
+
 std::vector<int> NeuralNetwork::dataIndexForStrongNodeSignal(int layerIndex, int nodeIndex, double threshold) {
 	std::vector<int> r = std::vector<int>();
 
