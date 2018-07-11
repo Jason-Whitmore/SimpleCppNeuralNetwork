@@ -332,6 +332,45 @@ void NeuralNetwork::saveNetwork(std::string filename) {
 		text += "weight " + std::to_string(i) + " " + std::to_string(getWeight(i)) + "\n";
 	}
 
+	std::ofstream file;
+	file.open(filename + ".txt");
+
+	file << text;
+
+	file.close();
+
+}
+
+void NeuralNetwork::loadNetwork(std::string filename) {
+
+	std::string singleLine;
+	std::ifstream file(filename);
+
+	double bias;
+	unsigned int counter = 0;
+
+	std::vector<std::string> lineSeparated;
+
+	if (file.is_open()) {
+
+		while (std::getline(file, singleLine)) {
+			lineSeparated = Helper::split(singleLine, " ");
+
+			if (lineSeparated[0] == "bias") {
+				setBias(std::stoi(lineSeparated[1]), std::stod(lineSeparated[2]));
+			} else if (lineSeparated[0] == "weight") {
+				setWeight(std::stoi(lineSeparated[1]), std::stod(lineSeparated[2]));
+			}
+		}
+
+
+	} else {
+		//file could not be opened
+	}
+
+	file.close();
+
+
 }
 
 
