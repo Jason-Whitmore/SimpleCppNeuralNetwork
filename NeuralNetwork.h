@@ -9,6 +9,7 @@
 class NeuralNetwork {
 	public:
 	NeuralNetwork(int inputs, int outputs, std::vector<int> layers);
+	NeuralNetwork(std::string fileName);
 
 	~NeuralNetwork();
 

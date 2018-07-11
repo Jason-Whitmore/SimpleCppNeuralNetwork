@@ -33,6 +33,71 @@ NeuralNetwork::NeuralNetwork(int inputs, int outputs, std::vector<int> layerHeig
 	numOutputs = outputs;
 }
 
+NeuralNetwork::NeuralNetwork(std::string fileName) {
+	numWeights = 0;
+	numBiases = 0;
+
+	srand(NULL);
+
+	layers = new std::vector<NodeLayer>();
+
+	std::vector<int> layerHeights = std::vector<int>();
+
+	std::string singleLine;
+	std::ifstream file(fileName);
+
+	std::vector<std::string> lineSplit;
+	if (file.is_open()) {
+
+		while (std::getline(file, singleLine)) {
+			lineSplit = Helper::split(singleLine, " ");
+			if (lineSplit[0] == "numInputs") {
+				numInputs = std::stoi(lineSplit[1]);
+			} else if (lineSplit[0] == "numOutputs") {
+				numOutputs = std::stoi(lineSplit[1]);
+			} else if (lineSplit[0] == "layer") {
+				layerHeights.push_back(std::stoi(lineSplit[1]));
+			}
+		}
+
+
+	} else {
+		//file could not be opened
+	}
+
+	file.close();
+
+	//build network
+
+	layerHeights.insert(layerHeights.begin(), numInputs);
+	layerHeights.push_back(numOutputs);
+
+
+	for (int i = 1; i < layerHeights.size(); i++) {
+		layers->push_back(NodeLayer(layerHeights[i - 1], layerHeights[i]));
+		numBiases += layerHeights[i];
+		numWeights += layerHeights[i] * layerHeights[i - 1];
+	}
+
+
+	//now assign correct values for weights and biases
+
+	std::ifstream file2(fileName);
+
+	if (file2.is_open()) {
+		while (std::getline(file, singleLine)) {
+			lineSplit = Helper::split(singleLine, " ");
+			if (lineSplit[0] == "bias") {
+				setBias(std::stoi(lineSplit[1]), std::stod(lineSplit[2]));
+			} else if (lineSplit[0] == "weight") {
+				setWeight(std::stoi(lineSplit[1]), std::stod(lineSplit[2]));
+			}
+		}
+	} else {
+		//error here
+	}
+}
+
 NeuralNetwork::~NeuralNetwork() {
 	delete layers;
 }
@@ -82,7 +147,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 
 		for (int pass = 0; pass < ((numBiases - numInputs) + numWeights) * numPassesScalar; pass++) {
 			optimizeRandomVariable(numOfSteps, stepSize, randMin, randMax);
-			std::cout << "Completed pass " << pass <<". New Loss: " << calculateCurrentLoss() << std::endl;
+			
 		}
 
 		currentLoss = calculateCurrentLoss();
@@ -92,8 +157,7 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 			//bestLayers = new std::vector<NodeLayer>(*layers);
 			bestLoss = currentLoss;
 			//layers = startLayers;
-			saveBiases();
-			saveWeights();
+			saveNetwork("networkData.txt");
 			improvements++;
 			//debugLayers();
 
@@ -333,7 +397,7 @@ void NeuralNetwork::saveNetwork(std::string filename) {
 	}
 
 	std::ofstream file;
-	file.open(filename + ".txt");
+	file.open(filename);
 
 	file << text;
 
