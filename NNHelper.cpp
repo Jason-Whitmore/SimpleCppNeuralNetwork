@@ -1,15 +1,15 @@
-#include "Helper.h"
+#include "NNHelper.h"
 
 
 
-Helper::Helper() {
+NNHelper::NNHelper() {
 }
 
 
-Helper::~Helper() {
+NNHelper::~NNHelper() {
 }
 
-double Helper::dotProduct(double a[], double b[], int length) {
+double NNHelper::dotProduct(double a[], double b[], int length) {
 
 	double result = 0;
 
@@ -28,7 +28,7 @@ double Helper::dotProduct(double a[], double b[], int length) {
 
 
 
-double Helper::RELUFunction(double input, double bias) {
+double NNHelper::RELUFunction(double input, double bias) {
 	double newInput = input + bias;
 
 	if (newInput < 0) {
@@ -40,11 +40,11 @@ double Helper::RELUFunction(double input, double bias) {
 
 
 
-double Helper::calculateLoss(double value1, double value2) {
+double NNHelper::calculateLoss(double value1, double value2) {
 	return (value1 - value2) * (value1 - value2);
 }
 
-std::vector<double> Helper::arrayToVector(double array[], int arraySize) {
+std::vector<double> NNHelper::arrayToVector(double array[], int arraySize) {
 	std::vector<double> r = std::vector<double>();
 	
 	double num;
@@ -56,20 +56,20 @@ std::vector<double> Helper::arrayToVector(double array[], int arraySize) {
 	return r;
 }
 
-double Helper::randomDouble(double min, double max) {
+double NNHelper::randomDouble(double min, double max) {
 	double scalar = (double)rand() / RAND_MAX;
 
 	return min + (scalar * (max - min));
 }
 
-int Helper::randomInt(int min, int max) {
+int NNHelper::randomInt(int min, int max) {
 	
 	return min + (rand() % (max - min));
 }
 
 
 
-std::vector<int> Helper::generateConfig(int numNodes, int minNodeCount) {
+std::vector<int> NNHelper::generateConfig(int numNodes, int minNodeCount) {
 	std::vector<int> r = std::vector<int>();
 	
 	int nodesLeft = numNodes;
@@ -82,7 +82,7 @@ std::vector<int> Helper::generateConfig(int numNodes, int minNodeCount) {
 		}
 		
 
-		rand = Helper::randomInt(minNodeCount, nodesLeft + 1);
+		rand = NNHelper::randomInt(minNodeCount, nodesLeft + 1);
 
 		nodesLeft -= rand;
 		
@@ -91,7 +91,7 @@ std::vector<int> Helper::generateConfig(int numNodes, int minNodeCount) {
 	}
 
 	while (minNodeCount > 0) {
-		r[Helper::randomInt(0,r.size())]++;
+		r[NNHelper::randomInt(0,r.size())]++;
 		minNodeCount--;
 	}
 
@@ -99,7 +99,7 @@ std::vector<int> Helper::generateConfig(int numNodes, int minNodeCount) {
 	return r;
 }
 
-bool Helper::contains(std::vector<int> v, std::vector<std::vector<int>> setOfVectors) {
+bool NNHelper::contains(std::vector<int> v, std::vector<std::vector<int>> setOfVectors) {
 
 
 	for (int i = 0; i < setOfVectors.size(); i++) {
@@ -111,12 +111,12 @@ bool Helper::contains(std::vector<int> v, std::vector<std::vector<int>> setOfVec
 	return false;
 }
 
-std::vector<std::string> Helper::split(std::string s, std::string splitter) {
+std::vector<std::string> NNHelper::split(std::string s, std::string splitter) {
 	std::vector<std::string> r = std::vector<std::string>();
 
 	std::string copy = s;
 	
-	while (Helper::contains(copy, splitter)) {
+	while (NNHelper::contains(copy, splitter)) {
 		r.push_back(copy.substr(0, copy.find_first_of(splitter)));
 		copy = copy.substr(copy.find_first_of(splitter) + splitter.length());
 	}
@@ -128,7 +128,7 @@ std::vector<std::string> Helper::split(std::string s, std::string splitter) {
 	
 }
 
-std::vector<double> Helper::stringToDoubleVector(std::vector<std::string> v) {
+std::vector<double> NNHelper::stringToDoubleVector(std::vector<std::string> v) {
 	std::vector<double> r = std::vector<double>();
 
 	for (int i = 0; i < v.size(); i++) {
@@ -138,7 +138,7 @@ std::vector<double> Helper::stringToDoubleVector(std::vector<std::string> v) {
 	return r;
 }
 
-bool Helper::contains(std::string s, std::string targetString) {
+bool NNHelper::contains(std::string s, std::string targetString) {
 	int targetLength = targetString.length();
 
 	int currentPosition = 0;
