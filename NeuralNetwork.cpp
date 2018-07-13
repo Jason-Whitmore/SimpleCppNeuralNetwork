@@ -145,14 +145,15 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 	double bestLoss = currentLoss;
 
 	int improvements = 0;
+	double progress = 0;
 
 	for(int i = 0; i < maxIterations && bestLoss > targetLoss; i++) {
 		randomizeVariables(randMin, randMax);
-
+		
 
 		for (int pass = 0; pass < ((numBiases - numInputs) + numWeights) * numPassesScalar; pass++) {
-			optimizeRandomVariable(numOfSteps, stepSize, randMin, randMax);
-			
+			optimizeRandomVariable(numOfSteps, (1 - progress)* stepSize, randMin, randMax);
+			progress = ((double)pass) / (((numBiases - numInputs) + numWeights) * numPassesScalar);
 		}
 
 		currentLoss = calculateCurrentLoss();
