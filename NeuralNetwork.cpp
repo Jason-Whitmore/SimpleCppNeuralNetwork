@@ -72,6 +72,7 @@ NeuralNetwork::NeuralNetwork(std::string fileName) {
 	layerHeights.insert(layerHeights.begin(), numInputs);
 	layerHeights.push_back(numOutputs);
 
+	layers->push_back(NodeLayer(0,numInputs));
 
 	for (int i = 1; i < layerHeights.size(); i++) {
 		layers->push_back(NodeLayer(layerHeights[i - 1], layerHeights[i]));
@@ -83,19 +84,23 @@ NeuralNetwork::NeuralNetwork(std::string fileName) {
 	//now assign correct values for weights and biases
 
 	std::ifstream file2(fileName);
+	
 
 	if (file2.is_open()) {
-		while (std::getline(file, singleLine)) {
+		while (std::getline(file2, singleLine)) {
 			lineSplit = Helper::split(singleLine, " ");
 			if (lineSplit[0] == "bias") {
 				setBias(std::stoi(lineSplit[1]), std::stod(lineSplit[2]));
 			} else if (lineSplit[0] == "weight") {
 				setWeight(std::stoi(lineSplit[1]), std::stod(lineSplit[2]));
+				std::cout << lineSplit[1] << std::endl;
 			}
 		}
 	} else {
 		//error here
 	}
+
+	file2.close();
 }
 
 NeuralNetwork::~NeuralNetwork() {
@@ -178,8 +183,9 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 
 
 
-	loadBiases("biases.txt");
-	loadWeights("weights.txt");
+	//loadBiases("biases.txt");
+	//loadWeights("weights.txt");
+	loadNetwork("networkData.txt");
 
 	//debugLayers();
 	return;
@@ -567,6 +573,10 @@ double NeuralNetwork::getWeight(int index) {
 }
 
 void NeuralNetwork::setBias(int index, double value) {
+
+	if (index >= numBiases - numOutputs) {
+		return;
+	}
 	int biasIndex = index;
 
 	int currentBiasIndex = 0;
@@ -588,6 +598,7 @@ void NeuralNetwork::setBias(int index, double value) {
 
 void NeuralNetwork::setWeight(int index, double value) {
 
+
 	int weightIndex = index;
 
 	int currentWeightIndex = 0;
@@ -603,7 +614,7 @@ void NeuralNetwork::setWeight(int index, double value) {
 	//calculate the index for the weight within the current layer
 	weightIndex = weightIndex - currentWeightIndex;
 
-	return layers->at(currentLayerIndex).setWeight(weightIndex, value);
+	layers->at(currentLayerIndex).setWeight(weightIndex, value);
 }
 
 
