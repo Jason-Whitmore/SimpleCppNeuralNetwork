@@ -5,14 +5,15 @@
 #include <cmath>
 #include <string>
 #include <iostream>
+#include <thread>
 
-
-class Helper {
+class NNHelper {
 	public:
-	Helper();
-	~Helper();
+	NNHelper();
+	~NNHelper();
 
 	static double dotProduct(double a[], double b[], int length);
+	
 	static double RELUFunction(double input, double bias);
 	static double calculateLoss(double value1, double value2);
 	static std::vector<double> arrayToVector(double array[], int arraySize);
@@ -30,5 +31,8 @@ class Helper {
 	
 	static bool contains(std::string s, std::string targetString);
 	
+	static void multiThreadedDotProduct(int threads, double* result, double a[], double b[], int length);
+
+	static void multiThreadedHelper(int threadNumber, int threadCount, double* result, double a[], double b[], int length);
 };
 

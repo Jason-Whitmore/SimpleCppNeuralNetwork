@@ -50,7 +50,7 @@ NeuralNetwork::NeuralNetwork(std::string fileName) {
 	if (file.is_open()) {
 
 		while (std::getline(file, singleLine)) {
-			lineSplit = Helper::split(singleLine, " ");
+			lineSplit = NNHelper::split(singleLine, " ");
 			if (lineSplit[0] == "numInputs") {
 				numInputs = std::stoi(lineSplit[1]);
 			} else if (lineSplit[0] == "numOutputs") {
@@ -88,7 +88,7 @@ NeuralNetwork::NeuralNetwork(std::string fileName) {
 
 	if (file2.is_open()) {
 		while (std::getline(file2, singleLine)) {
-			lineSplit = Helper::split(singleLine, " ");
+			lineSplit = NNHelper::split(singleLine, " ");
 			if (lineSplit[0] == "bias") {
 				setBias(std::stoi(lineSplit[1]), std::stod(lineSplit[2]));
 			} else if (lineSplit[0] == "weight") {
@@ -154,6 +154,8 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 		for (int pass = 0; pass < ((numBiases - numInputs) + numWeights) * numPassesScalar; pass++) {
 			optimizeRandomVariable(numOfSteps, (1 - progress)* stepSize, randMin, randMax);
 			progress = ((double)pass) / (((numBiases - numInputs) + numWeights) * numPassesScalar);
+
+			std::cout << "Loss during pass " << pass << ": " << calculateCurrentLoss() << std::endl;
 		}
 
 		currentLoss = calculateCurrentLoss();
@@ -193,13 +195,24 @@ void NeuralNetwork::trainNetwork(double targetLoss, int maxIterations, int numOf
 	//debugLayers();
 }
 
+void NeuralNetwork::gradientDescent(double targetLoss, int maxIterations, double learningRate) {
+
+	double bestLoss = calculateCurrentLoss();
+
+	for (int iterations = 0; iterations < maxIterations && bestLoss > targetLoss; iterations++) {
+		
+	}
+
+
+}
+
 void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, double randMin, double randMax) {
 	//need to find proportion of biases to totalVariables
 	double biasesToTotalVariables = ((double)numBiases - numInputs) / (numBiases - numInputs + numWeights);
 
-	if (Helper::randomDouble(0,1) > biasesToTotalVariables) {
+	if (NNHelper::randomDouble(0,1) > biasesToTotalVariables) {
 		//pick a weight to optimize
-		int weightIndex = Helper::randomInt(0, numWeights);
+		int weightIndex = NNHelper::randomInt(0, numWeights);
 
 		int currentWeightIndex = 0;
 		int currentLayerIndex = 1;
@@ -235,7 +248,7 @@ void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, doub
 	} else {
 		//pick a bias to optimize
 		//pick a weight to optimize
-		int biasIndex = Helper::randomInt(numInputs, numBiases);
+		int biasIndex = NNHelper::randomInt(numInputs, numBiases);
 
 		
 
@@ -276,13 +289,13 @@ void NeuralNetwork::randomizeVariables(double min, double max) {
 	for (int i = 0; i < layers->size(); i++) {
 		//set weights
 		for (int w = 0; w < layers->at(i).getNumWeights(); w++) {
-			layers->at(i).setWeight(w, Helper::randomDouble(min,max));
+			layers->at(i).setWeight(w, NNHelper::randomDouble(min,max));
 		}
 
 		//set biases
 
 		for (int b = 0; b < layers->at(i).getNumBiases(); b++) {
-			layers->at(i).setBias(b, Helper::randomDouble(min,max));
+			layers->at(i).setBias(b, NNHelper::randomDouble(min,max));
 		}
 
 	}
@@ -425,7 +438,7 @@ void NeuralNetwork::loadNetwork(std::string filename) {
 	if (file.is_open()) {
 
 		while (std::getline(file, singleLine)) {
-			lineSeparated = Helper::split(singleLine, " ");
+			lineSeparated = NNHelper::split(singleLine, " ");
 
 			if (lineSeparated[0] == "bias") {
 				setBias(std::stoi(lineSeparated[1]), std::stod(lineSeparated[2]));
@@ -632,12 +645,12 @@ double NeuralNetwork::calculateCurrentLoss() {
 		//get the network's output
 		double* dataRow = trainingInputs->getRow(r);
 		networkOutputs = runNetwork(dataRow);
-		//networkOutputs = runNetwork(Helper::arrayToVector(dataRow, trainingInputs->getNumCols()));
+		//networkOutputs = runNetwork(NNHelper::arrayToVector(dataRow, trainingInputs->getNumCols()));
 		delete dataRow;
 		//caclulate loss and add to sum
 		for (int c = 0; c < trainingOutputs->getNumCols(); c++) {
 
-			loss += Helper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]) * (1.0 / trainingOutputs->getNumCols());
+			loss += NNHelper::calculateLoss(trainingOutputs->getIndex(r,c), networkOutputs[c]) * (1.0 / trainingOutputs->getNumCols());
 			dataPointCount++;
 		}
 	}

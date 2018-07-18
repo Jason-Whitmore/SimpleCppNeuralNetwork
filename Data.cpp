@@ -40,7 +40,7 @@ Data::Data(std::string filePath, std::string rowSeparator, std::string columnSep
 	std::vector<std::string> singleRow;
 	std::vector<double> singleRowDoubles;
 	numRows = rows.size();
-	numCols = Helper::split(rows[0], columnSeparator).size();
+	numCols = NNHelper::split(rows[0], columnSeparator).size();
 
 	array = new double*[numRows];
 
@@ -49,8 +49,8 @@ Data::Data(std::string filePath, std::string rowSeparator, std::string columnSep
 	}
 
 	for (int r = 0; r < numRows; r++) {
-		singleRow = Helper::split(rows[r], columnSeparator);
-		singleRowDoubles = Helper::stringToDoubleVector(singleRow);
+		singleRow = NNHelper::split(rows[r], columnSeparator);
+		singleRowDoubles = NNHelper::stringToDoubleVector(singleRow);
 		for (int c = 0; c < numCols; c++) {
 			array[r][c] = singleRowDoubles[c];
 		}
@@ -70,7 +70,7 @@ double* Data::getRow(int rowIndex) {
 		return nullptr;
 	}
 
-	//return array[rowIndex];
+	
 
 	double* r = new double[numCols];
 

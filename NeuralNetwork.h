@@ -21,6 +21,13 @@ class NeuralNetwork {
 
 	void trainNetwork(double targetLoss, int maxIterations, int numOfSteps, double numPassesScalar, double stepSize, double randMin, double randMax, bool displayStats);
 
+
+
+	void gradientDescent(double targetLoss, int maxIterations, double learningRate);
+
+	std::vector<double> getLossGradient();
+
+
 	void optimizeRandomVariable(int numOfSteps, double stepSize, double randMin, double randMax);
 
 	void randomizeVariables(double min, double max);

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Helper.h"
+#include "NNHelper.h"
 #include <fstream>
 class Data {
 	public:

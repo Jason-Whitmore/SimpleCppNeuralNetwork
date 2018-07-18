@@ -57,12 +57,12 @@ void NodeLayer::dotProductAndApplyBias() {
 
 	//perform dot products
 	for (int i = 0; i < numOutputs; i++) {
-		layerOutputs[i] = Helper::dotProduct(inputArray, inputWeights[i], numInputs);
+		layerOutputs[i] = NNHelper::dotProduct(inputArray, inputWeights[i], numInputs);
 	}
 
 	//apply biases
 	for (int i = 0; i < numOutputs; i++) {
-		layerOutputs[i] = Helper::RELUFunction(layerOutputs[i], outputBiases[i]);
+		layerOutputs[i] = NNHelper::RELUFunction(layerOutputs[i], outputBiases[i]);
 	}
 
 }
@@ -71,7 +71,7 @@ void NodeLayer::dotProduct() {
 
 	//perform dot products
 	for (int i = 0; i < numOutputs; i++) {
-		layerOutputs[i] = Helper::dotProduct(inputArray, inputWeights[i], numInputs);
+		layerOutputs[i] = NNHelper::dotProduct(inputArray, inputWeights[i], numInputs);
 	}
 
 }

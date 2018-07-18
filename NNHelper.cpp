@@ -13,12 +13,22 @@ double NNHelper::dotProduct(double a[], double b[], int length) {
 
 	double result = 0;
 
-	for (int i = 0; i < length; i++) {
-		result += a[i] * b[i];
+	bool multithreaded = true;
+	int threadCount = 6;
+
+
+
+	if (length < 100000) {
+		for (int i = 0; i < length; i++) {
+			result += a[i] * b[i];
+		}
+	} else {
+		double* multiThreadResult;
+		multiThreadResult = new double;
+		*multiThreadResult = 0;
+		multiThreadedDotProduct(4, multiThreadResult,a,b, length);
+		return *multiThreadResult;
 	}
-
-	return result;
-
 
 
 	return result;
@@ -151,4 +161,35 @@ bool NNHelper::contains(std::string s, std::string targetString) {
 	}
 
 	return false;
+}
+
+void NNHelper::multiThreadedDotProduct(int threads, double * result, double a[], double b[], int length) {
+	std::vector<std::thread> allThreads = std::vector<std::thread>();
+
+
+	for (int i = 0; i < threads; i++) {
+		allThreads.push_back(std::thread(multiThreadedHelper, i, threads, result, a, b, length));
+	}
+
+
+	for (int i = 0; i < threads; i++) {
+		allThreads[i].join();
+	}
+
+
+
+}
+
+void NNHelper::multiThreadedHelper(int threadNumber, int threadCount, double * result, double a[], double b[], int length) {
+
+	double localResult = 0;
+
+	for (int i = 0; i < length; i++) {
+		if (i % threadCount == threadNumber) {
+			localResult += a[i] * b[i];
+		}
+	}
+
+	(*result) += localResult;
+
 }
