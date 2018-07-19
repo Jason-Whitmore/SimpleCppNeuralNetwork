@@ -24,6 +24,10 @@ class NNHelper {
 	static std::vector<double> stringToDoubleVector(std::vector<std::string> v);
 	static std::vector<int> generateConfig(int numNodes, int minNodeCount);
 
+
+	static std::vector<int> randomOrder(int size);
+
+
 	private:
 	
 	
@@ -34,5 +38,7 @@ class NNHelper {
 	static void multiThreadedDotProduct(int threads, double* result, double a[], double b[], int length);
 
 	static void multiThreadedHelper(int threadNumber, int threadCount, double* result, double a[], double b[], int length);
+
+	
 };
 

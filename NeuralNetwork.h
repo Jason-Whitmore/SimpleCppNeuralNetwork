@@ -25,7 +25,7 @@ class NeuralNetwork {
 
 	void gradientDescent(double targetLoss, int maxIterations, double learningRate);
 
-	std::vector<double> getLossGradient();
+	std::vector<double> getLossGradient(int trainingIndex);
 
 
 	void optimizeRandomVariable(int numOfSteps, double stepSize, double randMin, double randMax);
@@ -77,5 +77,7 @@ class NeuralNetwork {
 
 	int numInputs;
 	int numOutputs;
+
+	double calculateCurrentLoss(int dataIndex);
 };
 

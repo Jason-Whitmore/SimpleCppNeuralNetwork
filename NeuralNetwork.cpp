@@ -199,12 +199,118 @@ void NeuralNetwork::gradientDescent(double targetLoss, int maxIterations, double
 
 	double bestLoss = calculateCurrentLoss();
 
+	double currentLoss;
+
+	std::vector<int> order = std::vector<int>();
+
+	std::vector<double> gradient;
+
+	int index = 0;
 	for (int iterations = 0; iterations < maxIterations && bestLoss > targetLoss; iterations++) {
+		order = NNHelper::randomOrder(getTrainingInputs()->getNumRows());
+
+		//loop through each dataset during descent
+		for (int data = 0; data < getTrainingInputs()->getNumRows(); data++) {
+			//calculate gradient
+			gradient = getLossGradient(order[data]);
+
+			//change variables to reflect gradient
+
+			for (int i = 0; i < numWeights + numBiases; i++) {
+				if (i < numWeights) {
+					//change weights
+
+					setWeight(i, getWeight(i) - learningRate * gradient[i]);
+
+				} else {
+
+					//change biases
+
+					setBias(i - numWeights, getBias(i - numWeights) - learningRate * gradient[i]);
+				}
+			}
+
+			std::cout << "current Loss: " << calculateCurrentLoss() << std::endl;
+
+
+		}
+
+		currentLoss = calculateCurrentLoss();
+
+		if (currentLoss < bestLoss) {
+			std::cout << "New best loss found: " << currentLoss << ", iteration " << iterations << std::endl;
+
+			saveNetwork("networkData.txt");
+
+			bestLoss = currentLoss;
+		}
+
 		
 	}
 
 
 }
+
+
+
+std::vector<double> NeuralNetwork::getLossGradient(int trainingIndex) {
+	//this is used for the approximation, value must be small but not small enough to cause errors.
+
+	double veryTinyDouble = 0.01;
+
+
+	//the first part of this vector is the weights, the second part is the biases (ordered by index)
+	std::vector<double> result = std::vector<double>();
+
+
+	//calculate weight gradients
+
+	//for each weight
+
+	double placeHolder;
+	double lossBefore;
+
+	double t;
+	for (int i = 0; i < numWeights; i++) {
+		placeHolder = getWeight(i);
+
+		
+		lossBefore = calculateCurrentLoss(trainingIndex);
+		//increase the weight by just a tiny amount
+		setWeight(i, getWeight(i) + veryTinyDouble);
+		t = (calculateCurrentLoss(trainingIndex) - lossBefore) / veryTinyDouble;
+		result.push_back((calculateCurrentLoss(trainingIndex) - lossBefore) / veryTinyDouble);
+
+		setWeight(i, placeHolder);
+	}
+
+
+	//same process, but for biases
+	for (int i = 0; i < numBiases; i++) {
+
+		if (i > numInputs) {
+			placeHolder = getBias(i);
+
+
+			lossBefore = calculateCurrentLoss(trainingIndex);
+
+
+			//increase the bias by just a tiny amount
+			setBias(i, getBias(i) + veryTinyDouble);
+
+			result.push_back((calculateCurrentLoss(trainingIndex) - lossBefore) / veryTinyDouble);
+
+			setBias(i, placeHolder);
+		} else {
+			result.push_back(0);
+		}
+		
+	}
+
+	return result;
+}
+
+
 
 void NeuralNetwork::optimizeRandomVariable(int numOfSteps, double stepSize, double randMin, double randMax) {
 	//need to find proportion of biases to totalVariables
@@ -629,6 +735,23 @@ void NeuralNetwork::setWeight(int index, double value) {
 	weightIndex = weightIndex - currentWeightIndex;
 
 	layers->at(currentLayerIndex).setWeight(weightIndex, value);
+}
+
+double NeuralNetwork::calculateCurrentLoss(int dataIndex) {
+	double loss = 0;
+	std::vector<double> networkOutputs = std::vector<double>();
+
+	double* dataRow = trainingInputs->getRow(dataIndex);
+	networkOutputs = runNetwork(dataRow);
+	
+	delete dataRow;
+	//caclulate loss and add to sum
+	for (int c = 0; c < trainingOutputs->getNumCols(); c++) {
+
+		loss += NNHelper::calculateLoss(trainingOutputs->getIndex(dataIndex, c), networkOutputs[c]) * (1.0 / trainingOutputs->getNumCols());
+	}
+
+	return loss;
 }
 
 

@@ -193,3 +193,31 @@ void NNHelper::multiThreadedHelper(int threadNumber, int threadCount, double * r
 	(*result) += localResult;
 
 }
+
+std::vector<int> NNHelper::randomOrder(int size) {
+	std::vector<int> result = std::vector<int>();
+	
+	for (int i = 0; i < size; i++) {
+		result.push_back(i);
+	}
+
+	//shuffle elements around
+
+	int rand1;
+	int rand2;
+
+	int placeholder;
+
+	for (int i = 0; i < size * 2; i++) {
+		rand1 = randomInt(0, size);
+		rand2 = randomInt(0, size);
+
+		//swap elements
+
+		placeholder = result[rand1];
+		result[rand1] = result[rand2];
+		result[rand2] = placeholder;
+	}
+
+	return result;
+}
