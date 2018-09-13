@@ -25,9 +25,9 @@ struct Connection{
 class NeuralNetwork{
     std::vector<std::vector<Node*>> nodes;
 
-    std::vector<std::vector<double>> inputs;
+    std::vector<std::vector<double>> trainingInputs;
 
-    std::vector<std::vector<double>> outputs;
+    std::vector<std::vector<double>> trainingOutputs;
 
     public:int numWeights;
     public:int numNodes;
@@ -202,6 +202,113 @@ class NeuralNetwork{
             }
         }
     }
+
+    double calculateAverageError(){
+        double result = 0;
+
+        std::vector<double> input;
+        std::vector<double> output;
+        std::vector<double> actualOutput;
+        //loop through the training data
+        for(int dp = 0; dp < trainingInputs.size(); dp++){
+            input = trainingInputs[dp];
+            output = trainingOutputs[dp];
+
+            actualOutput = compute(input);
+
+            //loop through each output feature
+            for(int i = 0; i < actualOutput.size(); i++){
+                result += std::abs(actualOutput[i] - output[i]) * (1.0/actualOutput.size());
+            }
+        }
+        return result / trainingInputs.size();
+    }
+
+    void stochasticGradientDescent(double targetError, int epochs, double learningRate){
+
+        int currentEpochs = 0;
+        std::vector<double> outputs;
+        std::vector<double> actualOutputs;
+        std::vector<double> inputs;
+        std::vector<int> order;
+        int currentSample = 0;
+        std::vector<double> error = std::vector<double>();
+        std::vector<double> gradient = std::vector<double>(numWeights);
+
+        int currentWeight = numWeights;
+
+        while(currentEpochs < epochs){
+
+            if(currentEpochs >= trainingInputs.size()){
+                //shuffle the data samples
+                 order = randomOrder(trainingInputs.size());
+                 currentSample = 0;
+            }
+
+            //feed forward the first input
+            inputs = trainingInputs[order[currentSample]];
+            outputs = trainingInputs[order[currentSample]];
+            actualOutputs = compute(inputs);
+
+            //calculate error in the last layer
+            for(int i = 0; i < outputs.size(); i++){
+                error.push_back((outputs[i] - actualOutputs[i]) * actualOutputs[i] * (1 - actualOutputs[i]));
+            }
+
+            //loop through the hidden layers backwards, calculating the gradients
+            for(int layer = nodes.size() - 1; layer > 0; layer--){
+                for(int node = nodes[layer].size(); node >= 0; node--){
+                    for(int connection = nodes[layer][node]->inputs.size(); connection >=0; connection-- ){
+                        
+                        currentWeight--;
+                    }
+                }
+            }
+
+            currentSample++;
+        }
+
+        
+    }
+
+
+    std::vector<double> getWeights(){
+        std::vector<double> r = std::vector<double>();
+
+        for(int layer = 1; layer < nodes.size(); layer++){
+            for(int node = 0; node < nodes[layer].size() - 1; node++){
+                for(int connection = 0; connection < nodes[layer][node]->inputs.size(); connection++){
+                    r.push_back(nodes[layer][node]->inputs[connection]->weight);
+                }
+            }
+        }
+        return r;
+    }
+
+    std::vector<int> randomOrder(int size){
+        std::vector<int> r = std::vector<int>();
+        for(int i = 0; i < size; i++){
+            r.push_back(i);
+        }
+
+        int temp;
+        int index1;
+        int index2;
+        for(int i = 0; i < size * 2; i++){
+            //find two elements
+            index1 = (int)randomDouble(0, size);
+            index2 = (int)randomDouble(0, size);
+            
+            //swap
+            temp = r[index1];
+            r[index1] = r[index2];
+            r[index2] = temp;
+        }
+
+        return r;
+    }
+
+    
 
 };
 
