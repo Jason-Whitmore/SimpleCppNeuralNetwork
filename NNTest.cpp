@@ -13,6 +13,7 @@ struct Node{
     std::vector<Connection*> outputs = std::vector<Connection*>();
     ActivationFunction function;
     int id;
+    double inputSum;
 };
 
 struct Connection{
@@ -20,6 +21,7 @@ struct Connection{
     Node* end;
     double weight;
     int id;
+    double loss;
 };
 
 
@@ -177,6 +179,8 @@ class NeuralNetwork{
             dotProduct += n->inputs[i]->weight * n->inputs[i]->start->value;
         }
 
+        n->inputSum = dotProduct;
+
         //activation function
         ActivationFunction function = n->function;
         if(function == ActivationFunction::Tanh){
@@ -237,6 +241,91 @@ class NeuralNetwork{
             result += std::pow(actualOutput[i] - output[i], 2);
         }
         return result / output.size();
+    }
+
+    std::vector<double> getGradient(int sampleIndex){
+        std::vector<double> grad = std::vector<double>(numWeights);
+        //first, run the data sample through the network
+        std::vector<double> output = compute(trainingInputs[sampleIndex]);
+
+        double error;
+        Connection* con;
+        //set the initial error on the final weights
+        for(int n = 0; n < nodes[nodes.size() - 1].size(); n++){
+            error = 0.5 * std::pow(trainingOutputs[sampleIndex][n] - output[n], 2);
+            //loop through the node input connections
+            for(int c = 0; c < nodes[nodes.size() - 1][n]->inputs.size(); c++){
+                con = nodes[nodes.size() - 1][n]->inputs[c];
+                con->loss = con->start->value * getDerivative(nodes[nodes.size() - 1][n]);
+                grad[con->id] = con->loss;
+            }
+        }
+
+
+        //now that the weights have been computed, work backwards to compute the gradient wrt the loss
+        for(int layer = nodes.size() - 1; layer > 0; layer--){
+            for(int n = 0; n < nodes[layer].size(); n++){
+                for(int in = 0; in < nodes[layer][n]->inputs.size(); in++){
+                    con = nodes[layer][n]->inputs[in];
+                    con->loss = con->start->value * getDerivative(nodes[nodes.size() - 1][n]) * sumNodeOutputLoss(nodes[nodes.size() - 1][n]);
+                    grad[con->id] = con->loss;
+                }
+            }
+        }
+
+        //finally, return the gradient
+        return grad;
+    }
+
+    double sumNodeOutputLoss(Node* node){
+        double r = 0;
+        for(int i = 0; i < node->outputs.size(); i++){
+            r += node->outputs[i]->loss;
+        }
+        return r;
+    }
+
+    double getDerivative(Node* node){
+        return getDerivative(node->value, node->function);
+    }
+
+    double getDerivative(double x, ActivationFunction f){
+        if(f == ActivationFunction::LeakyRELU){
+            if(x >= 0){
+                return x;
+            }
+            return 0.1 * x;
+        } else if (f == ActivationFunction::RELU){
+            if(x >= 0){
+                return x;
+            }
+            return 0;
+        } else if(f == ActivationFunction::Sigmoid){
+            return (1.0 / (1 + std::exp(-x))) * (1 - (1.0 / (1 + std::exp(-x))));
+        } else if(f == ActivationFunction::Tanh){
+            return 1 - std::pow(std::tanh(x),2);
+        }
+
+
+        //just to make the compiler happy...
+        return 0;
+    }
+
+    void stochasticGradientDescent(double targetLoss, uint epochs, double learningRate){
+        std::vector<double> gradient;
+        std::vector<int> ordering;
+        for(int iter = 0; iter < epochs; iter++){
+            if(iter % trainingInputs.size() == 0){
+                ordering = randomOrder(trainingInputs.size());
+            }
+
+            gradient = getGradient(ordering[iter]);
+
+
+            if(iter % 1000 == 0 && calculateAverageLoss() < targetLoss){
+                return;
+            }
+        }
     }
 
     void stochasticGradientDescentApprox(double targetLoss, int epochs, double learningRate){
@@ -376,7 +465,7 @@ int main(){
 
     //std::cout << "test = " << n.compute(std::vector<double>(1,1)).at(0) << std::endl;
 
-    n.stochasticGradientDescentApprox(0, 1e5, 1e-5);
+    n.stochasticGradientDescentApprox(0, 1e5, 1e-6);
     input.push_back(3.4);
     std::cout << "Output = " << n.compute(input).at(0) << std::endl;
     std::cout << "Weights = " << n.numWeights << std::endl;
