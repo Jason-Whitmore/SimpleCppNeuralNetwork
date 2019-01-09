@@ -89,3 +89,16 @@ Once you are satisfied with your trained network. You can simply run it with the
 `saveNetwork(filename)`
 
 Both of these functions read/save to a simple text file with contains the parameter index then the value for each line. This means that you could manually edit weights through a text file if you desire.
+
+### Editing network through code
+
+I've made the code in defiance of OOP rules, meaning that everything in the network is public for client programs to use. This is really useful if you want to make modifications. For example, if you wanted to edit weights directly, you only need to access the correct vector:
+
+`connections[index]->weight = 0`
+
+That's it. If you have a different objective function in mind than MSE, you can easily rewrite the training and loss functions, or just edit the weights directly.
+
+
+## Conclusion
+
+This neural network library has served me as an extremely important step and tool for me to explore deep learning. I hope that the simplicity will help beginners understand how these strange models work like they helped me in the past. Likewise, I think this library will be useful to more experienced hobbyists who are looking for something simpler and lighter than the more popular libraries. Please feel free to make any changes to suit your project - I certainly have made a quite a few changes for my other projects, myself.
