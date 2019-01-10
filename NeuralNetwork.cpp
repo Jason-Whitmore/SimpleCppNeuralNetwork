@@ -14,7 +14,7 @@ NeuralNetwork::NeuralNetwork(int numInputs, int layer1, int layer2, int numOutpu
     connections = std::vector<Connection*>();
     std::vector<Node*> currentLayer = std::vector<Node*>();
     Node* n = new Node;
-    n->function = ActivationFunction::Tanh;
+    n->function = ActivationFunction::Linear;
     n->value = 1;
     n->id = numNodes;
     currentNode++;
@@ -121,6 +121,128 @@ NeuralNetwork::NeuralNetwork(int numInputs, int layer1, int layer2, int numOutpu
         connections[i]->weight = randomDouble(0,0.1);
     }
 }
+
+NeuralNetwork::NeuralNetwork(int numInputs, int numNodesLayer1, int numOutputs){
+    srand(time(NULL));
+    numNodes = numInputs + numNodesLayer1 + numOutputs;
+
+    //create first layer
+    std::vector<Node*> inputLayer = std::vector<Node*>();
+
+    for(int i = 0; i < numInputs; i++){
+        Node* n = new Node;
+        n->function = ActivationFunction::Linear;
+        n->value = 0;
+        inputLayer.push_back(n);
+    }
+
+    //create hidden layer
+    std::vector<Node*> hiddenLayer = std::vector<Node*>();
+
+    for(int i = 0; i < numNodesLayer1; i++){
+        Node* n = new Node;
+        n->function = ActivationFunction::LeakyRELU;
+        n->value = 0;
+        hiddenLayer.push_back(n);
+    }
+
+
+    //create output layer
+    std::vector<Node*> outputLayer = std::vector<Node*>();
+
+    for(int i = 0; i < numOutputs; i++){
+        Node* n = new Node;
+        n->function = ActivationFunction::Linear;
+        n->value = 0;
+        outputLayer.push_back(n);
+    }
+
+    //put all the layers into the 2d vector of nodes
+    nodes = std::vector<std::vector<Node*>>();
+    nodes.push_back(inputLayer);
+    nodes.push_back(hiddenLayer);
+    nodes.push_back(outputLayer);
+
+}
+
+NeuralNetwork::NeuralNetwork(std::vector<int> layerConfig){
+    srand(time(NULL));
+    numNodes = 0;
+
+    nodes = std::vector<std::vector<Node*>>();
+    //construct the layers
+    for(int layer = 0; layer < layerConfig.size(); layer++){
+        std::vector<Node*> currentLayer = std::vector<Node*>();
+
+        for(int n = 0; n < layerConfig[layer]; n++){
+            Node* node = new Node;
+            
+            if(layer == 0 || layer == layerConfig.size() - 1){
+                node->function = ActivationFunction::Linear;
+            } else {
+                node->function = ActivationFunction::LeakyRELU;
+            }
+            node->value = 0;
+
+        }
+        nodes.push_back(currentLayer);
+
+    }
+
+    //connect layers together with weights
+    int currentID = 0;
+    for(int layer = 1; layer < nodes.size(); layer++){
+        for(int nodeCurrent = 0; nodeCurrent < nodes[layer].size(); nodeCurrent++){
+            for(int nodePrev = 0; nodePrev < nodes[layer - 1].size(); nodePrev++){
+                Connection* c = new Connection;
+
+                c->id = currentID;
+                c->isBias = false;
+                connections.push_back(c);
+
+                //make sure pointers are arranged correctly for the connection, start, end nodes
+                Node* start = nodes[layer - 1][nodePrev];
+                Node* end = nodes[layer][nodeCurrent];
+
+                start->outputs.push_back(c);
+                end->inputs.push_back(c);
+                c->start = start;
+                c->end = end;
+
+                currentID++;
+            }
+        }
+    }
+
+
+    //now create the one bias node to be used in the network.
+    Node* biasNode = new Node;
+    biasNode->value = 1;
+    biasNode->function = ActivationFunction::Linear;
+    
+    //connect to every node except for the input nodes
+    for(int layer = 1; layer < nodes.size(); layer++){
+        for(int n = 0; n < nodes[layer].size(); n++){
+            Connection* c = new Connection;
+            c->id = currentID;
+            c->isBias = true;
+
+            connections.push_back(c);
+
+            Node* end = nodes[layer][n];
+            biasNode->outputs.push_back(c);
+            end->inputs.push_back(c);
+            c->isBias = true;
+            c->start = biasNode;
+            c->end = end;
+            
+            currentID++;
+        }
+    }
+
+}
+
+
 
 std::vector<double> NeuralNetwork::compute(std::vector<double> inputs){
     std::vector<double> outputs = std::vector<double>();
@@ -698,4 +820,57 @@ double NeuralNetwork::randomDoubleNormal(double mean, double variance){
     std::normal_distribution<double> distribution(mean, variance);
 
     return distribution(gen);
+}
+
+double NeuralNetwork::getMinParamValue(){
+
+    double min = connections[0]->weight;
+
+    for(int i = 1; i < connections.size(); i++){
+        if(connections[i]->weight < min){
+            min = connections[i]->weight;
+        }
+    }
+
+    return min;
+}
+
+double NeuralNetwork::getMaxParamValue(){
+
+    double max = connections[0]->weight;
+
+    for(int i = 1; i < connections.size(); i++){
+        if(connections[i]->weight > max){
+            max = connections[i]->weight;
+        }
+    }
+
+    return max;    
+}
+
+void NeuralNetwork::getParamDistStats(double* mean, double* standardDeviation){
+    //first, calculate the mean
+    double sum = 0;
+    for(int i = 0; i < connections.size(); i++){
+        sum += connections[i]->weight;
+    }
+
+    *mean = sum / connections.size();
+
+    //use calculated mean to find the standard deviation
+
+    double variance = 0;
+
+    for(int i = 0; i < connections.size(); i++){
+        variance += std::pow(connections[i]->weight - *mean, 2);
+    }
+    variance /= connections.size();
+
+    *standardDeviation = std::sqrt(variance);
+}
+
+int main(){
+    //Neural network example here
+    NeuralNetwork n = NeuralNetwork(1,16,16,1);
+    
 }

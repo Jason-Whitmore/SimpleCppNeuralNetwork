@@ -34,7 +34,10 @@ struct Connection{
 class NeuralNetwork {
     public:
     NeuralNetwork();
-    NeuralNetwork(int,int,int,int);
+    NeuralNetwork(int numInputs, int numNodesLayer1, int numNodesLayer2, int numOutputs);
+    NeuralNetwork(int numInputs, int numNodesLayer1, int numOutputs);
+    NeuralNetwork(std::vector<int> layerConfig);
+
     std::vector<std::vector<Node*>> nodes;
 
     std::vector<std::vector<double>> trainingInputs;
@@ -81,5 +84,9 @@ class NeuralNetwork {
     static double gradientAvgAbsValue(std::vector<double> gradient);
 
     void minibatchThreadFunction(int sampleId, std::mutex mtx, std::vector<double>* grad);
+
+    double getMinParamValue();
+    double getMaxParamValue();
+    void getParamDistStats(double* mean, double* standardDeviation);
 
 };
