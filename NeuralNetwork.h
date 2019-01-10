@@ -38,6 +38,12 @@ class NeuralNetwork {
     NeuralNetwork(int numInputs, int numNodesLayer1, int numOutputs);
     NeuralNetwork(std::vector<int> layerConfig);
 
+    //public:
+
+    static NeuralNetwork neuralNetworkInit(int numInputs, int numNodesLayer1, int numNodesLayer2, int numOutputs);
+    static NeuralNetwork neuralNetworkInit(int numInputs, int numNodesLayer1, int numOutputs);
+    static NeuralNetwork neuralNetworkInit(std::vector<int> layerConfig);
+
     std::vector<std::vector<Node*>> nodes;
 
     std::vector<std::vector<double>> trainingInputs;

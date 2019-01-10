@@ -241,8 +241,33 @@ NeuralNetwork::NeuralNetwork(std::vector<int> layerConfig){
     }
 
 }
+/**
+NeuralNetwork NeuralNetwork::neuralNetworkInit(std::vector<int> layerConfig){
+    return NeuralNetwork::NeuralNetwork(layerConfig);
+}
 
+NeuralNetwork NeuralNetwork::neuralNetworkInit(int numInputs, int numNodesLayer1, int numNodesLayer2, int numOutputs){
+    std::vector<int> config = std::vector<int>();
 
+    config.push_back(numInputs);
+    config.push_back(numNodesLayer1);
+    config.push_back(numNodesLayer2);
+    config.push_back(numOutputs);
+    
+    return NeuralNetwork::NeuralNetwork(config);
+}
+
+static NeuralNetwork neuralNetworkInit(int numInputs, int numNodesLayer1, int numOutputs){
+    std::vector<int> config = std::vector<int>();
+
+    config.push_back(numInputs);
+    config.push_back(numNodesLayer1);
+    config.push_back(numOutputs);
+    
+    return NeuralNetwork::NeuralNetwork(config);
+}
+
+**/
 
 std::vector<double> NeuralNetwork::compute(std::vector<double> inputs){
     std::vector<double> outputs = std::vector<double>();
@@ -871,6 +896,7 @@ void NeuralNetwork::getParamDistStats(double* mean, double* standardDeviation){
 
 int main(){
     //Neural network example here
-    NeuralNetwork n = NeuralNetwork(1,16,16,1);
+    std::vector<int> config = std::vector<int>({1,16,16,1});
+    NeuralNetwork n = NeuralNetwork(config);
     
 }
