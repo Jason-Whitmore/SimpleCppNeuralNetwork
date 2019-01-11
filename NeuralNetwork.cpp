@@ -174,6 +174,7 @@ NeuralNetwork::NeuralNetwork(std::vector<int> layerConfig){
     for(int layer = 0; layer < layerConfig.size(); layer++){
         std::vector<Node*> currentLayer = std::vector<Node*>();
 
+        //std::cout << layerConfig[layer] << std::endl;
         for(int n = 0; n < layerConfig[layer]; n++){
             Node* node = new Node;
             
@@ -183,6 +184,7 @@ NeuralNetwork::NeuralNetwork(std::vector<int> layerConfig){
                 node->function = ActivationFunction::LeakyRELU;
             }
             node->value = 0;
+            currentLayer.push_back(node);
 
         }
         nodes.push_back(currentLayer);
@@ -239,6 +241,9 @@ NeuralNetwork::NeuralNetwork(std::vector<int> layerConfig){
             currentID++;
         }
     }
+
+    numWeights = connections.size();
+    srand(time(NULL));
 
 }
 /**
@@ -377,11 +382,11 @@ std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
 
             con->loss = (lossAfter - lossBefore) / delta;
 
-            if(con->loss > 1){
-                con->loss = 1;
+            if(con->loss > 10){
+                con->loss = 10;
             }
-            if(con->loss < -1){
-                con->loss = -1;
+            if(con->loss < -10){
+                con->loss = -10;
             }
 
             grad[con->id] = con->loss;
@@ -408,11 +413,11 @@ std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
                 con->loss = con->start->value * getDerivative(nodes[layer][n]) * sumNodeOutputLoss(nodes[layer][n]);
                 //std::cout << "weight " << std::to_string(con->id) << " = " << con->loss << std::endl;
                 
-                if(con->loss > 1){
-                    con->loss = 1;
+                if(con->loss > 10){
+                    con->loss = 10;
                 }
-                if(con->loss < -1){
-                    con->loss = -1;
+                if(con->loss < -10){
+                    con->loss = -10;
                 }
                 grad[con->id] = con->loss;
             }
@@ -489,7 +494,7 @@ void NeuralNetwork::stochasticGradientDescent(double targetLoss, uint epochs, do
 
     double effectiveLearningRate = learningRate;
     uint currentSample = 0;
-    for(int iter = 0; iter < epochs; iter++){
+    for(int iter = 0; iter < epochs * trainingInputs.size(); iter++){
         if(iter % trainingInputs.size() == 0){
             ordering = randomOrder(trainingInputs.size());
             currentSample = 0;
@@ -508,7 +513,7 @@ void NeuralNetwork::stochasticGradientDescent(double targetLoss, uint epochs, do
             return;
         }
         if(iter % trainingInputs.size() == 0){
-            //std::cout << iter/trainingInputs.size() << " Loss = " << calculateAverageLoss() << std::endl;
+            std::cout << iter/trainingInputs.size() << " Loss = " << calculateAverageLoss() << std::endl;
             csvString += std::to_string(iter/ trainingInputs.size()) + "," + std::to_string(calculateAverageLoss()) + "\n";
             //std::cout << "Avg gradient slope = " << gradientAvgAbsValue(gradient) << std::endl;
         }
@@ -896,7 +901,28 @@ void NeuralNetwork::getParamDistStats(double* mean, double* standardDeviation){
 
 int main(){
     //Neural network example here
-    std::vector<int> config = std::vector<int>({1,16,16,1});
+    std::vector<int> config = std::vector<int>(4);
+    config[0] = 1;
+    config[1] = 16;
+    config[2] = 16;
+    config[3] = 1;
+
     NeuralNetwork n = NeuralNetwork(config);
+
+    std::vector<std::vector<double>> trainIn = std::vector<std::vector<double>>();
+    std::vector<std::vector<double>> trainOut = std::vector<std::vector<double>>();
+
+    for(double x = -10; x < 10; x+= 0.01){
+        trainIn.push_back(std::vector<double>(1,x / 10));
+        trainOut.push_back(std::vector<double>(1, (x * x) / 100));
+    }
+    n.trainingInputs = trainIn;
+    n.trainingOutputs = trainOut;
+    n.randomizeNetwork(-1,1);
+
+
+    n.stochasticGradientDescent(0, 100, 1e-4);
+
+    std::cout << "(3.3," << n.compute(std::vector<double>(1,3.3 / 10.0)).at(0) * 100 << ")" << std::endl;
     
 }
