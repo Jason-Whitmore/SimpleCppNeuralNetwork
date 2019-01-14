@@ -86,7 +86,10 @@ class NeuralNetwork {
     void loadNetwork(std::string);
     bool contains(std::string, std::string);
     std::vector<std::string> split(std::string, std::string);
+
     void randomizeNetwork(double min, double max);
+    void randomizeNetworkUniform();
+
     static double gradientAvgAbsValue(std::vector<double> gradient);
 
     void minibatchThreadFunction(int sampleId, std::mutex mtx, std::vector<double>* grad);
@@ -94,5 +97,6 @@ class NeuralNetwork {
     double getMinParamValue();
     double getMaxParamValue();
     void getParamDistStats(double* mean, double* standardDeviation);
+
 
 };

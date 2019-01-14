@@ -431,7 +431,7 @@ std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
 
 
 std::vector<double> NeuralNetwork::getGradientApprox(int sampleNumber){
-    const double delta = 1e-6;
+    const double delta = 1e-8;
     std::vector<double> grad = std::vector<double>();
 
     for(int w = 0; w < connections.size(); w++){
@@ -899,12 +899,25 @@ void NeuralNetwork::getParamDistStats(double* mean, double* standardDeviation){
     *standardDeviation = std::sqrt(variance);
 }
 
+void NeuralNetwork::randomizeNetworkUniform(){
+
+    for(int l = 1; l < nodes.size(); l++){
+        for(int n = 0; n < nodes[l].size(); n++){
+            int inputNum = nodes[l][n]->inputs.size();
+
+            for(int in = 0; in < nodes[l][n]->inputs.size(); in++){
+                nodes[l][n]->inputs[in]->weight = randomDouble(-1.0/ std::sqrt(inputNum), 1.0/ std::sqrt(inputNum));
+            }
+        }
+    }
+}
+
 int main(){
     //Neural network example here
     std::vector<int> config = std::vector<int>(4);
     config[0] = 1;
-    config[1] = 16;
-    config[2] = 16;
+    config[1] = 25;
+    config[2] = 25;
     config[3] = 1;
 
     NeuralNetwork n = NeuralNetwork(config);
@@ -912,16 +925,28 @@ int main(){
     std::vector<std::vector<double>> trainIn = std::vector<std::vector<double>>();
     std::vector<std::vector<double>> trainOut = std::vector<std::vector<double>>();
 
-    for(double x = -10; x < 10; x+= 0.01){
+    for(double x = 0; x < 10; x+= 0.001){
         trainIn.push_back(std::vector<double>(1,x / 10));
         trainOut.push_back(std::vector<double>(1, (x * x) / 100));
     }
     n.trainingInputs = trainIn;
     n.trainingOutputs = trainOut;
-    n.randomizeNetwork(-1,1);
+    n.randomizeNetworkUniform();
+
+    std::vector<double> gradApprox = n.getGradientApprox(0);
+    std::vector<double> grad = n.getGradient(0);
 
 
-    n.stochasticGradientDescent(0, 100, 1e-4);
+    n.stochasticGradientDescent(0, 50, 1e-4);
+    std::cout << "Max weight = " << n.getMaxParamValue() << std::endl;
+    std::cout << "Min weight = " << n.getMinParamValue() << std::endl;
+
+    double mean = 0;
+    double dev = 0;
+
+    n.getParamDistStats(&mean, &dev);
+
+    std::cout << "Mean = " << mean << " std = " << dev << std::endl;
 
     std::cout << "(3.3," << n.compute(std::vector<double>(1,3.3 / 10.0)).at(0) * 100 << ")" << std::endl;
     
