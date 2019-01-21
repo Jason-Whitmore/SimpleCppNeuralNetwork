@@ -34,15 +34,7 @@ struct Connection{
 class NeuralNetwork {
     public:
     NeuralNetwork();
-    NeuralNetwork(int numInputs, int numNodesLayer1, int numNodesLayer2, int numOutputs);
-    NeuralNetwork(int numInputs, int numNodesLayer1, int numOutputs);
     NeuralNetwork(std::vector<int> layerConfig);
-
-    //public:
-
-    static NeuralNetwork neuralNetworkInit(int numInputs, int numNodesLayer1, int numNodesLayer2, int numOutputs);
-    static NeuralNetwork neuralNetworkInit(int numInputs, int numNodesLayer1, int numOutputs);
-    static NeuralNetwork neuralNetworkInit(std::vector<int> layerConfig);
 
     std::vector<std::vector<Node*>> nodes;
 
@@ -54,45 +46,120 @@ class NeuralNetwork {
 
     int numWeights;
     int numNodes;
-    int currentNode;
 
     Node* biasNode;
 
     double randomDouble(double,double);
     static double randomDoubleNormal(double mean, double variance);
-    std::vector<double> compute(std::vector<double>);
+    
+    
+    /**
+     * Runs the current network with specified input. Similar to predict() in tensorflow.
+     * 
+     * Input is a vector of doubles. Although not recommended, this vector can be smaller
+     * than the size of the first layer. If it's larger than the first layer, it will crash.
+     * 
+     * Returns a vector of doubles as output
+     */
+    std::vector<double> compute(std::vector<double> input);
 
+    /**
+     * Performs the dot product and activation function output.
+     */
     static double getNodeOutput(Node*);
 
+    /**
+     * Returns the Loss wrt all training examples, averaged.
+     */
     double calculateAverageLoss();
-    double calculateLoss(int);
-    std::vector<double> getGradient(int);
-    std::vector<double> getGradient();
-    std::vector<double> getGradientApprox(int);
-    double getDerivative(Node*);
 
+    /**
+     * Returns the loss wrt a single training example, given by index.
+     */
+    double calculateLoss(int index);
+
+    /**
+     * Returns the gradient of the loss function wrt a single training example, given by index.
+     */
+    std::vector<double> getGradient(int index);
+    
+    /**
+     * Returns the gradient of the loss function wrt all training examples, averaged. "True gradient"
+     */
+    std::vector<double> getGradient();
+
+    /**
+     * Returns the derivative of the activation function of the node evaluated at the dot product.
+     */
+    double getDerivative(Node* n);
+
+    /**
+     * Returns the sum of all of the outputs' loss. Used in backpropogation.
+     */
     double sumNodeOutputLoss(Node*);
+
+    /**
+     * Explicitly gives the derivative of function f evaluated at input x.
+     */
     double getDerivative(double x, ActivationFunction f);
 
+    /**
+     * Standard SGD training algorithm.
+     * 
+     * targetLoss is the loss which will stop the training if the loss reaches it.
+     * 
+     * epochs is the number of times the training will do a full pass of the training examples
+     * 
+     * learning rate is the stepsize in which the parameters are adjusted
+     */
     void stochasticGradientDescent(double targetLoss, uint epochs, double learningRate);
-    void jasonTrain(double targetLoss, uint iterations, double learningRate);
-    void stochasticGradientDescentApprox(double targetLoss, uint epochs, double learningRate);
-    std::vector<int> randomOrder(int);
 
-    Node* getNode(int);
-    void setActivationFunction(int, ActivationFunction);
+    /**
+     * Returns a vector of integers that are randomized between 0 and n, without replacement
+     * Used in SGD.
+     */
+    std::vector<int> randomOrder(int n);
+
+    /**
+     * Sets the activation function of n to function f.
+     */
+    void setActivationFunction(Node * n, ActivationFunction f);
+    
+    
+    /**
+     * Returns the current weights/parameters as a vector of doubles.
+     */
     std::vector<double> getWeights();
-    void saveNetwork(std::string);
-    void loadNetwork(std::string);
+
+    /**
+     * Saves the network weights to a text file with name. Format is "[weight id] [value]".
+     * Example:
+     * 
+     * 0 3.14159
+     * 1 2.719
+     * 2 1.337
+     */
+    void saveNetwork(std::string name);
+    
+    /**
+     * Loads the network parameters to a text file with name. Format is "[param id] [value]".
+     * Example:
+     * 
+     * 0 3.14159
+     * 1 2.719
+     * 2 1.337
+     */
+    void loadNetwork(std::string name);
+
+    /**
+     * 
+     */
     bool contains(std::string, std::string);
     std::vector<std::string> split(std::string, std::string);
 
     void randomizeNetwork(double min, double max);
     void randomizeNetworkUniform();
 
-    static double gradientAvgAbsValue(std::vector<double> gradient);
-
-    void minibatchThreadFunction(int sampleId, std::mutex mtx, std::vector<double>* grad);
 
     double getMinParamValue();
     double getMaxParamValue();
