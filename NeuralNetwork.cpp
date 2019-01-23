@@ -361,97 +361,7 @@ void NeuralNetwork::stochasticGradientDescent(double targetLoss, uint epochs, do
 
 }
 
-void NeuralNetwork::jasonTrain(double targetLoss, uint iterations, double learningRate){
-    std::vector<double> gradient;
-    std::vector<int> ordering = randomOrder(trainingInputs.size());
 
-    const double lambda = 0.04;
-    const double epsilon = 1e-4;
-    std::string csvString = "";
-    
-
-    double oldLoss = calculateAverageLoss();
-    double currentLoss = calculateAverageLoss();
-
-    double bestLoss = calculateAverageLoss();
-    std::vector<double> bestParams = getWeights();
-    
-    uint currentSample = 0;
-    for(uint iter = 0; iter < iterations; iter++){
-        if(iter % trainingInputs.size() == 0){
-            ordering = randomOrder(trainingInputs.size());
-            currentSample = 0;
-        }
-        gradient = getGradient(ordering[currentSample]);
-        //apply learning rate to gradient
-        Connection* c;
-        for(int i = 0; i < gradient.size(); i++){
-            c = connections[i];
-            c->weight = c->weight - (learningRate * gradient[i]) - learningRate * lambda * c->weight;
-        }   
-    
-
-
-        if(iter % trainingInputs.size() == 0){
-
-            
-            oldLoss = currentLoss;
-            currentLoss = calculateAverageLoss();
-
-            
-
-            if(currentLoss < targetLoss){
-                return;
-            }
-
-
-            if(currentLoss < bestLoss){
-                bestLoss = currentLoss;
-                bestParams = getWeights();
-            }
-
-            std::cout << "Loss = " << currentLoss << std::endl;
-            csvString += std::to_string(iter / trainingInputs.size()) + "," + std::to_string(currentLoss) + "\n";
-            
-            double avgSlope = gradientAvgAbsValue(getGradient());
-            //std::cout << "Avg slope = " << avgSlope << std::endl;
-            //"kick" out of a local minimum
-            if(avgSlope < epsilon){
-                std::cout << "In a minimum" << std::endl;
-                Connection* c;
-                for(int i = 0; i < gradient.size(); i++){
-                    c = connections[i];
-                    c->weight = c->weight + randomDoubleNormal(0,1);
-                }
-            }
-            
-        }
-        currentSample++;
-    }
-
-
-    std::ofstream file;
-    file.open("gradData.csv");
-    file << csvString;
-    file.close();
-
-    //set weights to whatever the best one it found was
-    for(int w = 0; w < connections.size(); w++){
-        connections[w]->weight = bestParams[w];
-    }
-}
-
-
-Node* NeuralNetwork::getNode(int ID){
-    for(int layer = 0; layer < nodes.size(); layer++){
-        for(int node = 0; node < nodes[layer].size(); node++){
-            if(nodes[layer][node]->id == ID){
-                return nodes[layer][node];
-            }
-        }
-    }
-    return nullptr;
-}
 
 void NeuralNetwork::setActivationFunction(int layerNum, ActivationFunction f){
 
@@ -570,28 +480,6 @@ void NeuralNetwork::randomizeNetwork(double min, double max){
     }
 }
 
-std::vector<double> NeuralNetwork::getGradient(){
-    std::vector<double> r = std::vector<double>(connections.size());
-
-    int numSamples = std::fmax(10, trainingInputs.size() * 0.1);
-    //std::cout << "In cool get gradient" << std::endl;
-    for(int n = 0; n < numSamples; n++){
-        int s = rand() % trainingInputs.size();
-        std::vector<double> grad = getGradient(s);
-
-        for(int i = 0; i < r.size(); i++){
-            r[i] += grad[i];
-        }
-        
-    }
-
-    for(int i = 0; i < r.size(); i++){
-        r[i] /= numSamples;
-    }
-
-    return r;
-}
-
 
 double NeuralNetwork::randomDoubleNormal(double mean, double variance){
     std::default_random_engine gen;
@@ -677,8 +565,6 @@ int main(){
     n.trainingOutputs = trainOut;
     n.randomizeNetworkUniform();
 
-    std::vector<double> gradApprox = n.getGradientApprox(0);
-    std::vector<double> grad = n.getGradient(0);
 
 
     n.stochasticGradientDescent(0.0001, 100000, 1e-4);

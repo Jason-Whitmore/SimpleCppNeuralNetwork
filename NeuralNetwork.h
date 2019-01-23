@@ -123,7 +123,7 @@ class NeuralNetwork {
     /**
      * Sets the activation function of n to function f.
      */
-    void setActivationFunction(Node * n, ActivationFunction f);
+    void setActivationFunction(int layer, ActivationFunction f);
     
     
     /**
@@ -152,17 +152,39 @@ class NeuralNetwork {
     void loadNetwork(std::string name);
 
     /**
-     * 
+     * Returns true if s contains targetString
      */
-    bool contains(std::string, std::string);
-    std::vector<std::string> split(std::string, std::string);
+    bool contains(std::string s, std::string targetString);
 
+
+    /**
+     * Splits string s into a vector of strings with delimiter splitter
+     */
+    std::vector<std::string> split(std::string s, std::string splitter);
+
+    /**
+     * Randomizes network parameters between (min, max) using a uniform distribution.
+     */
     void randomizeNetwork(double min, double max);
+
+    /**
+     * Randomizes network parameters using a normal distribution between (-1/sqrt(i), 1/sqrt(i)) where i is the number of inputs for a node.
+     */
     void randomizeNetworkUniform();
 
-
+    /**
+     * Returns the smallest param value for the network.
+     */
     double getMinParamValue();
+
+    /**
+     * Returns the largest param value for the network.
+     */
     double getMaxParamValue();
+
+    /**
+     * Populates parameters with the mean and standard distribution for the network's parameter values.
+     */
     void getParamDistStats(double* mean, double* standardDeviation);
 
 
