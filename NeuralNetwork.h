@@ -114,6 +114,15 @@ class NeuralNetwork {
      */
     void stochasticGradientDescent(double targetLoss, uint epochs, double learningRate);
 
+
+    static void minibatchSGD(uint epochs, double learningRate, uint minibatchSize, uint numThreads);
+
+
+
+
+    std::vector<std::vector<int>> getMinibatchIndicies(uint totalNumSamples, uint minibatchSize);
+
+
     /**
      * Returns a vector of integers that are randomized between 0 and n, without replacement
      * Used in SGD.

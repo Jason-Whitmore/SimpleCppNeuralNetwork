@@ -316,6 +316,41 @@ double NeuralNetwork::getDerivative(double x, ActivationFunction f){
     return 0;
 }
 
+std::vector<std::vector<int>> NeuralNetwork::getMinibatchIndicies(uint totalNumSamples, uint minibatchSize){
+    //generate a vector with all of the indicies
+    std::vector<int> indiciesRemaining = std::vector<int>();
+
+    for(int i = 0; i < totalNumSamples; i++){
+        indiciesRemaining.push_back(i);
+    }
+
+    std::vector<std::vector<int>> minibatchIndicies = std::vector<std::vector<int>>();
+
+    std::vector<int> currentMiniBatch = std::vector<int>();
+
+    while(indiciesRemaining.size() > 0){
+        //randomly pull from vector of indicies left
+        int index = rand() % indiciesRemaining.size();
+        int number = indiciesRemaining[index];
+
+        //remove it fully from vector
+        indiciesRemaining.erase(indiciesRemaining.begin() + index);
+
+        currentMiniBatch.push_back(number);
+
+        //done with current minibatch?
+        if(currentMiniBatch.size() >= minibatchSize){
+            minibatchIndicies.push_back(currentMiniBatch);
+
+            currentMiniBatch.clear();
+        }
+        
+    }
+
+
+    return minibatchIndicies;
+}
+
 void NeuralNetwork::stochasticGradientDescent(double targetLoss, uint epochs, double learningRate){
     std::vector<double> gradient;
     std::vector<int> ordering;
