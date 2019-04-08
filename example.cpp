@@ -9,16 +9,18 @@ int main(){
     std::vector<std::vector<double>> trainIn = std::vector<std::vector<double>>();
     std::vector<std::vector<double>> trainOut = std::vector<std::vector<double>>();
 
+    //fitting f(x) = x^2 where x is in range [0,10)
     for(double x = 0; x < 10; x+= 0.01){
         trainIn.push_back(std::vector<double>(1,x / 10));
         trainOut.push_back(std::vector<double>(1, (x * x)/ 100.0));
     }
+
+    
     n.trainingInputs = trainIn;
     n.trainingOutputs = trainOut;
     n.randomizeNetworkUniform();
 
 
-    //n.stochasticGradientDescent(0, 1000,1e-4);
     n.stochasticGradientDescent(1000, 1e-4);
     std::cout << "Loss = " << n.calculateAverageLoss() << std::endl;
     std::cout << "Max weight = " << n.getMaxParamValue() << std::endl;
