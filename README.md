@@ -9,28 +9,21 @@ I've created this library to have a nice balance between simplicity and function
 
 Structurally, this library constructs neural networks almost identically to what diagrams portray with nodes and edges, rather than with matricies. This is meant to be beginner friendly, while also simplifing many things such as gradient updates.
 
-Overall, this library should be useful to beginners and to C++ programmers who find heavy deep learning libraries inappropriate for their projects.
 
 ## Main Features
 As mentioned before, this library keeps some higher level features that I've found very useful for training and testing.
 
 ### Creating Networks
 
-Neural networks can be created in several ways:
-
-First, a simple 3 layer network (1 hidden layer):
-
-`NeuralNetwork n = NeuralNetwork(3,16,1)`
-
-Second, a simple 4 layer network (2 hidden layers):
-
-`NeuralNetwork n = NeuralNetwork(3,16,16,1)`
-
-Finally, an arbitrarily sized neural network:
+Neural Networks can be created with arbitrary structure:
 
 `std::vector<int> config = //index 0 for input layer size, etc.`
 
-`NeuralNetwork n = NeuralNetwork(config)`
+`NeuralNetwork n = NeuralNetwork(config);`
+
+or conversely:
+
+`NeuralNetwork n = NeuralNetwork({1,64,64,1});`
 
 ### Editing Networks
 
@@ -50,23 +43,14 @@ Training data is done through 2D vectors of doubles. These can be loaded manuall
 
 `n.trainingOutputs = outputs`
 
-Additionally, you can also supply testing data, which will help when determining if your network is overfitting your data.
-
-`n.testInputs = testIn`
-
-`n.testOutputs = testOut`
 
 ### Training the network
 
 Training is done through a standard Stochastic Gradient Descent algorithm. There are many overloaded variants of this function to accomodate your needs. The generic function has arguments like this:
 
-`stochasticGradientDescent(double targetLoss, int epochs, double learningRate, boolean verbose, boolean recordProgress)`
+`stochasticGradientDescent(int epochs, double learningRate)`
 
-Every epoch, the network will check the loss against the targetLoss. If it's less, then it will finish training early, else it will keep training another epoch, or until the max number of epochs is hit.
-
-The "verbose" argument is very similar to Tensorflow's verbose option: if set to true, it will print out training (and testing, if applicable) loss every epoch.
-
-"recordProgress" will write the verbose text out to a .csv file so you can visualize the progress of training over time in your favorite data visualizer (I personally plot the points in LibreOffice Calc ;) ).
+Hyperparameters like minibatch size and a regularization variable are found in the function definition.
 
 ### Analyzing the network
 
@@ -101,4 +85,4 @@ That's it. If you have a different objective function in mind than MSE, you can 
 
 ## Conclusion
 
-This neural network library has served me as an extremely important step and tool for me to explore deep learning. I hope that the simplicity will help beginners understand how these strange models work like they helped me in the past. Likewise, I think this library will be useful to more experienced hobbyists who are looking for something simpler and lighter than the more popular libraries. Please feel free to make any changes to suit your project - I certainly have made a quite a few changes for my other projects, myself.
+This neural network library has served me as an extremely important step and tool for me to explore deep learning. I hope that the simplicity will help beginners understand how these strange models work like they helped me in the past. Please feel free to make any changes to suit your project - I certainly have made a quite a few changes for my other projects, myself.
