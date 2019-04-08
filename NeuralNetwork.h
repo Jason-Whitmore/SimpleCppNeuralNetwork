@@ -34,23 +34,44 @@ struct Connection{
 class NeuralNetwork {
     public:
     NeuralNetwork();
+
     NeuralNetwork(std::vector<int> layerConfig);
 
+    ~NeuralNetwork();
+
+
+    //Structure to hold the nodes in the network
     std::vector<std::vector<Node*>> nodes;
 
+    //Training inputs. Should all be the same size and have a corresponding output
     std::vector<std::vector<double>> trainingInputs;
 
+    //Training outputs. Should all be the same size and have a corresponding input
     std::vector<std::vector<double>> trainingOutputs;
 
+    //Connections between the nodes. This replaces the matrix multiplication/addition found in most implementations
     std::vector<Connection*> connections;
 
-    int numWeights;
     int numNodes;
 
+    //Implementation detail. Use an independent node to represent bias
     Node* biasNode;
 
-    double randomDouble(double,double);
-    static double randomDoubleNormal(double mean, double variance);
+    /**Returns a random double from a uniform distribution
+     * 
+     * min: lower bound
+     * max: upper bound
+     * 
+     */
+    double randomDouble(double min, double max);
+
+    /**Returns a random double using a normal distribution
+     * 
+     * mean: the mean of the distribution
+     * stddev: the standard deviation of the distribution
+     * 
+     */
+    static double randomDoubleNormal(double mean, double stddev);
     
     
     /**
@@ -106,21 +127,31 @@ class NeuralNetwork {
     /**
      * Standard SGD training algorithm.
      * 
-     * targetLoss is the loss which will stop the training if the loss reaches it.
-     * 
      * epochs is the number of times the training will do a full pass of the training examples
-     * 
      * learning rate is the stepsize in which the parameters are adjusted
+     * 
+     * More hyperparameters inside the function definition
      */
-    void stochasticGradientDescent(double targetLoss, uint epochs, double learningRate);
+    void stochasticGradientDescent(uint epochs, double learningRate);
 
 
-    static void minibatchSGD(uint epochs, double learningRate, uint minibatchSize, uint numThreads);
+    /** Calculates gradient w.r.t. multiple training examples.
+     * 
+     * indicies: The indicies corresponding to specific training examples
+     * 
+     * Returns the gradient averaged across training examples
+     */
+    std::vector<double> getMiniBatchGradient(std::vector<int> indicies);
 
 
-
-
-    std::vector<std::vector<int>> getMinibatchIndicies(uint totalNumSamples, uint minibatchSize);
+    /**Splits up training indicies in preparation for minibatch SGD
+     * 
+     * totalNumSamples: number of training examples overall
+     * minibatchSize: number of indicies per batch
+     * 
+     * Returns a 2d array of minibatch indicies.
+     */
+    static std::vector<std::vector<int>> getMinibatchIndicies(uint totalNumSamples, uint minibatchSize);
 
 
     /**
