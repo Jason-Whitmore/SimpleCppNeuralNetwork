@@ -35,6 +35,7 @@ class NeuralNetwork {
     public:
     NeuralNetwork();
 
+    //constructor allows for arbitrary sizes. index 0 are inputs, last index are outputs
     NeuralNetwork(std::vector<int> layerConfig);
 
     ~NeuralNetwork();
