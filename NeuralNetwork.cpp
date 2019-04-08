@@ -363,7 +363,7 @@ void NeuralNetwork::stochasticGradientDescent(uint epochs, double learningRate){
 
     //more hyperparameters to adjust
     const double lambda = 0.00;
-    const uint minibatchSize = 32;
+    const uint minibatchSize = 1;
 
     for(uint e = 0; e < epochs; e++){
         //start of epoch, shuffle sample indicies
