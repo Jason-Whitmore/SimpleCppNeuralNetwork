@@ -30,7 +30,7 @@ int main(){
     //Initialize network parameters randomly to help with learning
     n.randomizeNetworkUniform();
 
-    std::cout << "Training started... (Warning: This may take a while)"
+    std::cout << "Training started... (Warning: This may take a while)" << std::endl;
     //Train the model for 10 epochs, and print out relevant statistics after each epoch.
     for(int i = 0; i < 20; i++){
         n.stochasticGradientDescent(1, 1e-4);
@@ -46,10 +46,10 @@ int main(){
 
         std::cout << "Mean = " << mean << " std = " << dev << std::endl;
 
-        double testInput = 3.3
+        double testInput = 3.3;
 
         std::cout << "Predicting f(" << testInput << ") = " << n.compute(std::vector<double>(1, testInput / 10)).at(0) * 100 << std::endl;
-        std::cout << "Real answer:" testInput * testInput << std::endl << std::endl;
+        std::cout << "Real answer: " << (testInput * testInput) << std::endl << std::endl;
     }
 
     

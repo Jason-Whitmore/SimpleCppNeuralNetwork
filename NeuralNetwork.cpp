@@ -192,7 +192,7 @@ double NeuralNetwork::calculateLoss(int sampleIndex){
 std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
 
     const double delta = 1e-6;
-    const double clip = 1
+    const double clip = 1;
     std::vector<double> grad = std::vector<double>(connections.size());
     //first, run the data sample through the network
     std::vector<double> output = compute(trainingInputs[sampleIndex]);
