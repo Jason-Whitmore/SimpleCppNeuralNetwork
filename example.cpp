@@ -1,7 +1,8 @@
+//Include the header file like any other library
 #include "NeuralNetwork.h"
 
 int main(){
-    //Neural network example here
+    //Neural network example
 
     //Network architecture defined here
     std::vector<int> config = std::vector<int>({1, 64, 64, 1});
@@ -16,6 +17,8 @@ int main(){
 
     //fitting f(x) = x^2 where x is in range [0,10). Important to have lots of data
     for(double x = 0; x < 10; x+= 0.0001){
+
+        //Scale these inputs and outputs such that they are in the range [0,1] to prevent unstable learning.
         trainIn.push_back(std::vector<double>(1, x / 10));
         trainOut.push_back(std::vector<double>(1, (x * x)/ 100.0));
     }
@@ -27,7 +30,7 @@ int main(){
     //Initialize network parameters randomly to help with learning
     n.randomizeNetworkUniform();
 
- 
+    std::cout << "Training started... (Warning: This may take a while)"
     //Train the model for 10 epochs, and print out relevant statistics after each epoch.
     for(int i = 0; i < 20; i++){
         n.stochasticGradientDescent(1, 1e-4);
@@ -43,8 +46,10 @@ int main(){
 
         std::cout << "Mean = " << mean << " std = " << dev << std::endl;
 
-        std::cout << "Predicting f(3.3) = " << n.compute(std::vector<double>(1, 3.3 / 10)).at(0) * 100 << std::endl;
-        std::cout << "Real answer: 10.89" << std::endl;
+        double testInput = 3.3
+
+        std::cout << "Predicting f(" << testInput << ") = " << n.compute(std::vector<double>(1, testInput / 10)).at(0) * 100 << std::endl;
+        std::cout << "Real answer:" testInput * testInput << std::endl << std::endl;
     }
 
     

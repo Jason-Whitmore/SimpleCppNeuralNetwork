@@ -7,8 +7,6 @@ NeuralNetwork::NeuralNetwork(){
 }
 
 
-
-
 NeuralNetwork::NeuralNetwork(std::vector<int> layerConfig){
     srand(time(NULL));
     numNodes = 0;
@@ -118,6 +116,7 @@ std::vector<double> NeuralNetwork::compute(std::vector<double> inputs){
         }
     }
 
+    //retrieve output
     for(int i = 0; i < nodes[nodes.size() - 1].size(); i++){
         outputs.push_back(getNodeOutput(nodes[nodes.size() - 1][i]));
     }
@@ -128,6 +127,7 @@ double NeuralNetwork::getNodeOutput(Node* n){
     if(n->inputs.size() == 0){
         return n->value;
     }
+
     double dotProduct = 0;
 
     for(int i = 0; i < n->inputs.size(); i++){
@@ -136,7 +136,7 @@ double NeuralNetwork::getNodeOutput(Node* n){
     
     n->inputSum = dotProduct;
 
-    //activation function
+    //Apply activation function
     ActivationFunction function = n->function;
     if(function == ActivationFunction::Tanh){
         return tanh(dotProduct);
@@ -192,6 +192,7 @@ double NeuralNetwork::calculateLoss(int sampleIndex){
 std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
 
     const double delta = 1e-6;
+    const double clip = 1
     std::vector<double> grad = std::vector<double>(connections.size());
     //first, run the data sample through the network
     std::vector<double> output = compute(trainingInputs[sampleIndex]);
@@ -209,19 +210,12 @@ std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
             connections[id]->loss = 2 * (output[n] - trainingOutputs[sampleIndex][n]) *
                                     con->start->value * getDerivative(con->end) * scalar;
 
-            /**
-            double lossBefore = calculateLoss(sampleIndex);
-            con->weight += delta;
-            double lossAfter = calculateLoss(sampleIndex);
-            con->weight -= delta;
-
-            con->loss = (lossAfter - lossBefore) / delta;
-            **/
-            if(con->loss > 1){
-                con->loss = 10;
+            //clip the gradients to help stablize learning
+            if(con->loss > clip){
+                con->loss = clip;
             }
-            if(con->loss < -1){
-                con->loss = -1;
+            if(con->loss < -clip){
+                con->loss = -clip;
             }
 
             grad[con->id] = con->loss;
@@ -234,25 +228,17 @@ std::vector<double> NeuralNetwork::getGradient(int sampleIndex){
     for(int layer = nodes.size() - 2; layer > 0; layer--){
         for(int n = 0; n < nodes[layer].size(); n++){
             for(int in = 0; in < nodes[layer][n]->inputs.size(); in++){
-                //connection is either a bias or a weight
-                if(nodes[layer][n]->inputs[in]->isBias){
-                    //bias
-                } else {
-                    //weight
-                }
                 con = nodes[layer][n]->inputs[in];
 
-                //double lossWRToutput = con->start->value * getDerivative(nodes[layer][n]) * sumNodeOutputLoss(nodes[layer][n]);
                 
                 
                 con->loss = con->start->value * getDerivative(nodes[layer][n]) * sumNodeOutputLoss(nodes[layer][n]);
-                //std::cout << "weight " << std::to_string(con->id) << " = " << con->loss << std::endl;
                 
-                if(con->loss > 1){
-                    con->loss = 1;
+                if(con->loss > clip){
+                    con->loss = clip;
                 }
-                if(con->loss < -1){
-                    con->loss = -1;
+                if(con->loss < -clip){
+                    con->loss = -clip;
                 }
                 grad[con->id] = con->loss;
             }
@@ -345,9 +331,11 @@ std::vector<std::vector<int>> NeuralNetwork::getMinibatchIndicies(uint totalNumS
 std::vector<double> NeuralNetwork::getMiniBatchGradient(std::vector<int> indicies){
     std::vector<double> r = std::vector<double>(connections.size());
 
+    //For each training example in batch
     for(int i = 0; i < indicies.size(); i++){
         std::vector<double> tempGrad = getGradient(indicies[i]);
 
+        //Average together gradients
         for(int n = 0; n < connections.size(); n++){
             r[n] += (1.0 / indicies.size()) * tempGrad[n];
         }
@@ -413,6 +401,8 @@ std::vector<int> NeuralNetwork::randomOrder(int size){
     int temp;
     int index1;
     int index2;
+
+    //Shuffling loop. Not ideal but it's fairly efficient
     for(int i = 0; i < size * 2; i++){
         //find two elements
         index1 = (int)randomDouble(0, size);
@@ -458,9 +448,12 @@ bool NeuralNetwork::contains(std::string s, std::string targetString) {
 std::vector<std::string> NeuralNetwork::split(std::string s, std::string splitter) {
     std::vector<std::string> r = std::vector<std::string>();
 
+    //Make copy of the string so we don't destroy the original.
     std::string copy = s;
     
+    //While there is still splitter characters in the string copy
     while (contains(copy, splitter)) {
+        //add substring to return vector
         r.push_back(copy.substr(0, copy.find_first_of(splitter)));
         copy = copy.substr(copy.find_first_of(splitter) + splitter.length());
     }
@@ -498,7 +491,6 @@ void NeuralNetwork::randomizeNetwork(double min, double max){
             connections[i]->weight = 0;
         } else {
             connections[i]->weight = randomDouble(min,max);
-            //connections[i]->weight = randomDoubleNormal(0,0.001);
         }
     }
 }
@@ -568,6 +560,8 @@ void NeuralNetwork::randomizeNetworkUniform(){
             int inputNum = nodes[l][n]->inputs.size();
 
             for(int in = 0; in < nodes[l][n]->inputs.size(); in++){
+
+                //Commonly used equation for parameter initialization
                 nodes[l][n]->inputs[in]->weight = randomDouble(-1.0/ std::sqrt(inputNum), 1.0/ std::sqrt(inputNum));
             }
         }
