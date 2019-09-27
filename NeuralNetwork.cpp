@@ -350,7 +350,7 @@ std::vector<double> NeuralNetwork::getMiniBatchGradient(std::vector<int> indicie
 void NeuralNetwork::stochasticGradientDescent(uint epochs, double learningRate){
 
     //more hyperparameters to adjust
-    const double lambda = 0.00;
+    const double lambda = 0.01;
     const uint minibatchSize = 32;
 
     for(uint e = 0; e < epochs; e++){

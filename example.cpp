@@ -16,7 +16,7 @@ int main(){
     std::vector<std::vector<double>> trainOut = std::vector<std::vector<double>>();
 
     //fitting f(x) = x^2 where x is in range [0,10). Important to have lots of data
-    for(double x = 0; x < 10; x+= 0.0001){
+    for(double x = 0; x < 20; x+= 0.0001){
 
         //Scale these inputs and outputs such that they are in the range [0,1] to prevent unstable learning.
         trainIn.push_back(std::vector<double>(1, x / 10));
